@@ -1,0 +1,15 @@
+# 忽略 Obsidian 临时文件
+*.base
+*.canvas
+Untitled*
+未命名*
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# HTML 导出文件
+*.html
+
+# 临时文件
+*.tmp
