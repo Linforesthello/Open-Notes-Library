@@ -1,5 +1,6 @@
 
-#VMware_Ubuntu20-04ROS配置流程  #VMware 
+#VMware_Ubuntu20-04ROS配置流程  
+#VMware 
 # 初始化配置
 
 ### 常用配置：
