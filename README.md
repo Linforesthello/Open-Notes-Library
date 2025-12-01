@@ -1,3 +1,3 @@
-﻿# Open-Notes-Library
+# Open-Notes-Library
 
 markdown＋obsidian
