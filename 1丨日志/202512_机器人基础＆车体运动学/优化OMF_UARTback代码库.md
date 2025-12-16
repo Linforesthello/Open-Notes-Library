@@ -1,4 +1,5 @@
 原稿“20251209-1210-”
+#文档结构待整理 
 # 6_OMF_Feedback
 #FreeRTOS  #控制/车体控制 #优化/代码组成  #长期项目/OMF_Feedback及其合理化衍生 
 [电机正转故障分析](https://chatgpt.com/c/6937fd37-aecc-8321-b0c6-53f54de114fd)
@@ -11,6 +12,7 @@
  #长期项目/OMF_Feedback及其合理化衍生 
 [代码解析与优化建议](https://chatgpt.com/c/6938406e-a8e0-8325-83b6-6fee1182f23d)
 [代码评价与优化建议_1211](https://chatgpt.com/c/693aa487-c104-8321-87a7-093a91e97f47)
+## 1. 前置
 1. #待做 加入pid控制，使得测速task能够作用于control task
 2. #待做/已实现 freertos.c代码各部分解耦合
     1. task_motor.c
@@ -22,41 +24,95 @@
 	1. 事发：为了调控无刷电机，提高了电机控制频率到20khz，但是到直流电机上并不适用
 	2. 具体表现为：![[Pasted image 20251211184703.png]]
 	3. 换回1khz，问题解决；去查，发现可能是如下：![[Pasted image 20251211184751.png]]![[Pasted image 20251211184800.png]]
-5. 优化代码 #优化/代码组成 
-	1. command.c![[Pasted image 20251211191831.png]]![[Pasted image 20251211191848.png]]![[Pasted image 20251211192509.png]]
-	2. uart_app.c![[Pasted image 20251211192706.png]]![[Pasted image 20251211192732.png]]
-6. #优化/代码架构 [代码评价与优化建议_1211](https://chatgpt.com/c/693aa487-c104-8321-87a7-093a91e97f47)
-	1. motor.c,motor_task.c![[Pasted image 20251211210137.png]]
-	2. encoder_task.c  如图[encoder_task.c代码评价与优化建议_1211](https://chatgpt.com/c/693ac529-cce4-8321-ac32-655a5747ff24)![[Pasted image 20251211214916.png]]![[Pasted image 20251211214935.png]]
-	3. logger_task.c  [encoder_task.c代码评价与优化建议_1211](https://chatgpt.com/c/693ac529-cce4-8321-ac32-655a5747ff24)
-		1. ![[Pasted image 20251212110023.png]]![[Pasted image 20251212110046.png]]![[Pasted image 20251212110533.png]]![[Pasted image 20251212111012.png]]
-	4. 优化freertos.c，查验覆盖问题
-			1. ![[Pasted image 20251212114138.png]]
-			2. 确实如此![[Pasted image 20251212114207.png]]
-			3. freertos入口函数/入口转发函数参数问题 #C语言/基本语法 ![[Pasted image 20251212120157.png]]
-			4. freertos对于自写的转发函数，未预定义问题![[Pasted image 20251212120130.png]]![[Pasted image 20251212120746.png]]![[Pasted image 20251212120905.png]]
-	5. 优化main.c
-			1. ![[Pasted image 20251212122704.png]]![[Pasted image 20251212130519.png]]
-	6. 至此，基本迁移完毕；见github上/stm32/ONL两个仓库
+# 优化代码 
+#优化/代码组成 
+### command.c
+1. ![[Pasted image 20251211191831.png]]![[Pasted image 20251211191848.png]]![[Pasted image 20251211192509.png]]
+### uart_app.c
+1. ![[Pasted image 20251211192706.png]]![[Pasted image 20251211192732.png]]
+### 优化/代码架构 
+#优化/代码架构 
+ [代码评价与优化建议_1211](https://chatgpt.com/c/693aa487-c104-8321-87a7-093a91e97f47)
+#### motor.c,motor_task.c
+1. ![[Pasted image 20251211210137.png]]
+#### encoder_task.c
+[encoder_task.c代码评价与优化建议_1211](https://chatgpt.com/c/693ac529-cce4-8321-ac32-655a5747ff24)
+1. 如图![[Pasted image 20251211214916.png]]![[Pasted image 20251211214935.png]]
+#### logger_task.c
+[encoder_task.c代码评价与优化建议_1211](https://chatgpt.com/c/693ac529-cce4-8321-ac32-655a5747ff24)
+1. ![[Pasted image 20251212110023.png]]![[Pasted image 20251212110046.png]]![[Pasted image 20251212110533.png]]![[Pasted image 20251212111012.png]]
+### 优化freertos.c
+
+#### 查验cubemx覆盖问题
+1. ![[Pasted image 20251212114138.png]]
+2. ![[Pasted image 20251212114207.png]]
+#### freertos入口函数/入口转发函数参数问题
+#C语言/基本语法 
+	1. ![[Pasted image 20251212120157.png]]
+
+#### for(;;)到底该出现在哪里？
+[分支 · main.c 优化建议](https://chatgpt.com/c/6940ccbd-fdb4-8320-983d-d73fca17bcb5)
+1. 
+
+#### freertos对于自写的转发函数，未预定义问题
+1. ![[Pasted image 20251212120130.png]]![[Pasted image 20251212120746.png]]![[Pasted image 20251212120905.png]]
+##### 优化main.c
+1. ![[Pasted image 20251212122704.png]]![[Pasted image 20251212130519.png]]
+2. 至此，基本迁移完毕；见github上/stm32/ONL两个仓库
 		1. #存在问题 当前输入的映射仅有-50~0~50，并不是-1000~0~1000
 		2. #存在问题 当前各部分基础代码（或者叫做驱动代码），仍然不够优化
 		3. #存在问题 当前代码仍然是一个黑箱，串口输入命令后，并无串口反馈
 		4. #存在问题 当前并无统一的数据栈，用于反馈上位机读取/调用
-	7. 优化command.c/command.h  [细化每一份.c/.h代码-encoder_task.c代码评价与优化建议_1211](https://chatgpt.com/c/693ba457-e854-8323-a091-a21558a36d8e)
-		1. ![[Pasted image 20251212170651.png]]
-		2. ![[Pasted image 20251212171107.png]]
-		3. ![[Pasted image 20251212172758.png]]
-	8. logger.c
-		1. ![[Pasted image 20251212182328.png]]
-		2. 没看明白， #存在问题  ，**==有大量待优化部分==**![[Pasted image 20251212182553.png]]
-	9. 电机映射确认![[Pasted image 20251214183325.png]]
+##### logger.c
+1. ![[Pasted image 20251212182328.png]]
+2. 没看明白， #存在问题  ，**==有大量待优化部分==**![[Pasted image 20251212182553.png]]
+3. 电机映射确认![[Pasted image 20251214183325.png]]
 		1. 这个是根据arr走的，比如50-1：“-50~0~50”;100-1"-100~0~100"
-	10. command_task.c  #优化/代码组成/反馈设计 
-		1. [main.c 优化建议](https://chatgpt.com/c/693c064e-5580-8324-b8eb-7f0b7836a96f)
-		2. ![[Pasted image 20251214182800.png]]
-		3. ![[Pasted image 20251214182817.png]]
-		4. 出问题了
-			1. ![[Pasted image 20251214192900.png]]
-			2. ![[Pasted image 20251214193137.png]]![[Pasted image 20251214193155.png]]
-			3. #FreeRTOS/Queue ![[Pasted image 20251214194102.png]]
-			4. 修改了cubemx中的设置，可能是把usart1的dma删掉了![[Pasted image 20251214201251.png]]
+
+##### 优化command.c/command.h  
+[细化每一份.c/.h代码-encoder_task.c代码评价与优化建议_1211](https://chatgpt.com/c/693ba457-e854-8323-a091-a21558a36d8e)
+1. ![[Pasted image 20251212170651.png]]
+2. ![[Pasted image 20251212171107.png]]
+3. ![[Pasted image 20251212172758.png]]
+
+###### command_task.c  
+#优化/代码组成/反馈设计 
+[main.c 优化建议](https://chatgpt.com/c/693c064e-5580-8324-b8eb-7f0b7836a96f)
+1. ![[Pasted image 20251214182800.png]]
+2. ![[Pasted image 20251214182817.png]]
+###### 出问题了丨已查出，是队列冲突
+#存在问题/Freertos/Queue    
+1. ![[Pasted image 20251214192900.png]]
+2. ![[Pasted image 20251214193137.png]]![[Pasted image 20251214193155.png]]
+3. #FreeRTOS/Queue ![[Pasted image 20251214194102.png]]
+	1. 修改了cubemx中的设置，可能是把usart1的dma删掉了![[Pasted image 20251214201251.png]]
+	2. 20251216,上传github代码，并保持本地正确运行
+	3. [main.c 优化建议](https://chatgpt.com/c/693c064e-5580-8324-b8eb-7f0b7836a96f)
+###### 遇到架构问题，是不熟悉freeertos导致的 
+#存在问题/代码架构  #存在问题/Freertos/Queue  
+1. ![[Pasted image 20251216103625.png]]![[Pasted image 20251216104442.png]]
+2. 审查代码，发现是串口二在起作用，接受收到的命令，之前改变串口一，导致死机到底发生了什么？ #存在问题/代码架构  #优化/代码审查  
+	1. 排查线路，发现串口1是作为电机控制器dma实时转发的接口![[Pasted image 20251216105816.png]]
+	2. 为了加入usart3，把原本的pb10更换到pa7，已经成功测试运行，验证成功
+	3. 改动freertos/queue，现在解耦的好处增加：
+	4. 改动task/queue后，原有内容可能被覆盖，在之前出现过一次，现在高度解耦，原freertos.c中，仅仅保留任务函数入口![[Pasted image 20251216110259.png]]
+	5. ![[Pasted image 20251216110538.png]]
+###### 改动cubemx-queue设计
+#存在问题/代码架构  
+1. ![[Pasted image 20251216111253.png]]
+2. ![[Pasted image 20251216111920.png]]
+	1. ![[Pasted image 20251216120258.png]]
+	2. 不能这么搞，堆栈溢出了；现在可行，如图![[Pasted image 20251216120217.png]]
+3. ![[Pasted image 20251216111930.png]]
+4. 文件改动＆放置位置
+5. ![[Pasted image 20251216112723.png]]
+6. ![[Pasted image 20251216112710.png]]
+7. ackqueue
+	1. 也就是说，当前的反馈，仅仅是对下发命令的反馈，并不是执行状态反馈![[Pasted image 20251216123045.png]]
+	2. ![[Pasted image 20251216124535.png]]
+	3. 又遇到了堆栈问题，如图，可行
+		1. ![[Pasted image 20251216131246.png]]
+		2. ![[Pasted image 20251216131657.png]]
+		3. 遇到烧录问题。   #存在问题 #STM32/烧录  
+			1. 先烧录再上电，显示烧录失败；但确实能够改变当前程序运行，
+			2. 当再次遇到类似问题时，一定要重新、多次烧录，进行覆盖
