@@ -113,6 +113,15 @@
 	3. 又遇到了堆栈问题，如图，可行
 		1. ![[Pasted image 20251216131246.png]]
 		2. ![[Pasted image 20251216131657.png]]
-		3. 遇到烧录问题。   #存在问题 #STM32/烧录  
+		3.   #待做  ![[Pasted image 20251217094835.png]]
+	4. 遇到烧录问题。   #存在问题 #STM32/烧录  
 			1. 先烧录再上电，显示烧录失败；但确实能够改变当前程序运行，
 			2. 当再次遇到类似问题时，一定要重新、多次烧录，进行覆盖
+##### 优化控制链路回传机制
+[main.c 优化建议](https://chatgpt.com/c/693c064e-5580-8324-b8eb-7f0b7836a96f)
+###### uart2-ISR->ACKtask+ACKqueue
+1.  #FreeRTOS/Task/静态-动态 
+	1. [静态-动态 · main.c 优化建议](https://chatgpt.com/c/6942111e-ca14-8323-af83-924d5e8a45e8)
+	2. ![[Pasted image 20251217101513.png]]
+	3.  #FreeRTOS/区块占用 
+		1. ![[Pasted image 20251217104630.png]]
