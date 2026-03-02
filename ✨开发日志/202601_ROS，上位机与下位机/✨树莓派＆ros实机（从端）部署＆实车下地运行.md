@@ -1,3 +1,4 @@
+#回顾/复现 
 ubuntu20.04.6
 # 1. 串口通信
 [路径梳理与发展](https://chatgpt.com/c/69578ce8-ce60-8323-8a9f-8cc8b7c60ba5)

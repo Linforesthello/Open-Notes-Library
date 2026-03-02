@@ -1,5 +1,5 @@
 [Hector SLAM——分支 · 分支 · 分支 · 比赛与职业规划建议](https://chatgpt.com/c/699045e8-c72c-8322-85cb-3be49a3e6fd3)
-#lidar/LD06_ros1noetic #slam/hector #obsidian/note总结 
+#lidar/LD06_ros1noetic #SLAM/Hector #obsidian/note总结 
 ## 原本的hector运行不了，时间参数是写死的，所以自建了一个launch文件，从自建的launch文件启动，成功建图，并进行了多次重复，得已进行评估；
 1. 如图，时间参数，自行设置的"false"不可行，因原本的硬性（文件只读）为"true"![[Pasted image 20260215132509.png]]![[Pasted image 20260215132838.png]]
 ## 发现在地形变化较大、且较为单一的地方，大概率偏移

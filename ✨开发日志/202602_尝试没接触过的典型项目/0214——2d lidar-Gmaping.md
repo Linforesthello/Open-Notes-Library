@@ -1,4 +1,4 @@
-#lidar/LD06_ros1noetic #slam/gmaping #obsidian/note总结  
+#lidar/LD06_ros1noetic #SLAM/Gmaping #obsidian/note总结  
 在vmware中测试gamping，刚开始顺利运行，但过一段时间后，建图停止了，激光雷达launch的窗口出现红字，rqt_console出现220条报错；
 取消这些后，重新运行gmaping，gmaping的terminal显示黄字，
 在之后，设置了vmware的重连串口，
