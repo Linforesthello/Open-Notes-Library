@@ -1,11 +1,11 @@
 # 想通过astra-pro实现没有头显下，全身追踪，并应用于vrchat
 ## "Tree"，linux下的工具，可以树状显示文件结构
-#Tools/linux/tree #回顾  
+#Tools/linux/tree  
 其实"ls -R"也可以，但是看不太惯。
 From"[查询launch文件路径](https://chatgpt.com/c/6979a630-84b0-8323-b4e2-c728ce622b81)"
 1. ![[Pasted image 20260128150722.png]]
 2. ![[Pasted image 20260220180404.png]]
-3.   #问题/tree可以单独对某一个下属文件夹展开吗？  
+3.   #Problems/unsolved/obsidian-tree？  
 
 ## 提问ai问题的方法
 [查询launch文件路径](https://chatgpt.com/c/6979a630-84b0-8323-b4e2-c728ce622b81)

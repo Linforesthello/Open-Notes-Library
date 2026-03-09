@@ -586,7 +586,7 @@ yolo predict model=/home/lin/models/yolov8n.pt source=0 show=True
 
 ---
 ##   关于astrapro摄像头每次开机需要设置usb权限
-#问题/重复出现＆已解决/关于astrapro摄像头每次开机需要设置usb权限 
+#Problems/recurring＆已解决/关于astrapro摄像头每次开机需要设置usb权限 
 [ROS节点分析方法](https://chatgpt.com/c/69958d5c-dd1c-83a3-9aaf-14b3ababa4cb)
 
 > [!NOTE]

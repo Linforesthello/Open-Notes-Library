@@ -53,7 +53,8 @@ jlink我这是
 项目的.elf文件+jlink地址，即可
 1. ![[Pasted image 20260303190438.png]]
 2. 注意！这张图片有问题，elf之前的路径缺少一个”Debug“![[Pasted image 20260303190449.png]]
-3. tasks.json
+3. tasks.json    #回顾/复现/解决遗留问题 
+![[Pasted image 20260308213020.png]]
 > [!NOTE]
 > {
 > 
@@ -89,7 +90,8 @@ jlink我这是
 > 
 >   ]
 > 
-> 
+> }
+
 4. flash.jlink
 > [!NOTE]
 > r
