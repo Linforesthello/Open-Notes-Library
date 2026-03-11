@@ -3,51 +3,183 @@
 #VMware 
 # 初始化配置
 
-### 常用配置：
+## 常用配置：
 - 全屏vmware；切换Ctrl+G~Ctrl+Alt~Alt+Tab
 - 重启vmtools服务：sudo systemctl restart open-vm-tools
 - 挂载共享文件夹：sudo vmhgfs-fuse .host:/virtual /mnt/hgfs -o allow_other
-### 一般步骤：
-1. 配置NAT，处理器，硬盘，
-2. 进入系统后配置
-	1. **系统更新**，防止后续意外错误
+## 一般步骤：
+### 配置NAT，处理器，硬盘，
+### 进入系统后配置
+1. **系统更新**，防止后续意外错误
 		1. sudo apt update
 		2. sudo apt upgrade
-	2. **安装vmware-tools**；得以启用复制粘贴、共享文件夹等等
-		1. sudo apt update
-		2. sudo apt install open-vm-tools open-vm-tools-desktop -y
-		3. sudo reboot
-		4. 验证：
+### **安装vmware-tools**；得以启用复制粘贴、共享文件夹等等
+1. sudo apt update
+		1. sudo apt install open-vm-tools open-vm-tools-desktop -y
+		2. sudo reboot
+		3. 验证：
 			1. systemctl status open-vm-tools
 			2. Active: active (running)![[Pasted image 20251019111428.png]]
-	3. **设置共享文件夹**
-			1. 若走平台，会遇到问题（[Ubuntu与Windows文件共享](https://chatgpt.com/c/68f4531a-00ec-8324-b3b0-92af21b6af73)）![[Pasted image 20251019113420.png]]
-			2. 设置了文件夹自动挂载([Google Gemini](https://gemini.google.com/app/8fd881de1d9a764e?hl=zh-cn&pli=1))![[Pasted image 20251019194657.png]]
-			3. VMware与Ubuntu均需要设置，vmware只是对接接口，并无使能
-			4. 共享的文件夹名称是”virtual“
+### **设置共享文件夹**
+1. 若走平台，会遇到问题（[Ubuntu与Windows文件共享](https://chatgpt.com/c/68f4531a-00ec-8324-b3b0-92af21b6af73)）![[Pasted image 20251019113420.png]]
+			1. 设置了文件夹自动挂载([Google Gemini](https://gemini.google.com/app/8fd881de1d9a764e?hl=zh-cn&pli=1))![[Pasted image 20251019194657.png]]
+			2. VMware与Ubuntu均需要设置，vmware只是对接接口，并无使能
+			3. 共享的文件夹名称是”virtual“
 				1. ==sudo vmhgfs-fuse .host:/virtual /mnt/hgfs -o allow_other==
-	4. **检查vmware-ubuntu网络，至少保证本地网络-桥接-畅通**
-		1. ubuntu系统本地设置代理端口，（别export，也别bashrc；；出问题不好找）[Linux 网络代理推荐](https://chatgpt.com/c/68f45015-e254-8322-a24c-da4d88404947)![[Pasted image 20251019171121.png]]![[Pasted image 20251019181657.png]]
-		2. 需要本机关闭防火墙，
+### **检查vmware-ubuntu网络，至少保证本地网络-桥接-畅通**
+1. ubuntu系统本地设置代理端口，（别export，也别bashrc；；出问题不好找）[Linux 网络代理推荐](https://chatgpt.com/c/68f45015-e254-8322-a24c-da4d88404947)![[Pasted image 20251019171121.png]]![[Pasted image 20251019181657.png]]
+		1. 需要本机关闭防火墙，
 			1. **当设置网络为”内部网络“时，可以仅放开内部网络用的防火墙；而外部保持开启**
 			2. **引来注意事项：保持内部网络链条整洁**![[Pasted image 20251019181610.png]]
-	5. 安装输入法——fcitx(4)
-		1. fcitx配置界面：
+### 安装输入法——fcitx(4)
+1. fcitx配置界面：
 			1. 需要注意，“拼音”需要另外下载，
 			2. 拼音选择在”键盘-英语（美国）“之下，保证英语为默认输入语言，避免来回切换（且拼音shift到英文偶尔消失）![[Pasted image 20251019181804.png]]
 			3. 遗漏了一点，设置输入法![[Pasted image 20251019182741.png]]
 			4. 个人习惯，左shift用于切换输入法![[Pasted image 20251019182148.png]]
-		3. 系统语言选项
+		2. 系统语言选项
 			1. ”添加“，简体中文；（上次配置时，遇到有些字符【比如”桥“等等】，仍为繁体）
 			2. ”添加“后，中文选项默认在最后，且为灰色，不可点击；需要长按拖动，使其变为黑色，得以使能
 			3. 注意，更改后，需要”apply“到系统，才算完成设置![[Pasted image 20251019182226.png]]
 			4. 设置时间显示的国区形式，具体如图；注意apply![[Pasted image 20251019182629.png]]
-	6. 安装常用工具链
-	 - [**Ubuntu 20.04 下基于 ROS 的完整开发环境与工具链配置指南**——Ubuntu与Windows文件共享](https://chatgpt.com/c/68f4531a-00ec-8324-b3b0-92af21b6af73)
+### 安装常用工具链
+- [**Ubuntu 20.04 下基于 ROS 的完整开发环境与工具链配置指南**——Ubuntu与Windows文件共享](https://chatgpt.com/c/68f4531a-00ec-8324-b3b0-92af21b6af73)
 		1. 软件：
 			1. edge
 			2. vscode
 			3. clion
 		2. tools：
 			1. ![[Pasted image 20251019183122.png]]
-			2. 
+
+
+
+# 优化，vmware建立ubuntu20.04虚拟机，网络配置，dns，以及ros硬件接入测试
+#VMware/DNS #VMware_Ubuntu20-04ROS配置流程 #长期项目/vmware下ubuntu20_04_desktop＆ros1noetic配置 #obsidian/迁移 
+[虚拟磁盘文件解释](https://chatgpt.com/c/6919e717-6b80-8324-81ed-c9e5f85b0535)
+## 当前网络环境
+1. clash![[Pasted image 20251117030053.png]]
+	1. windows![[Pasted image 20251117030119.png]]
+2. 核心、处理器、内存、磁盘选择
+## nat转桥接没dns
+1. 但是可以互相ping主机、网关，浏览器也能正常观看youtube、google；但是网络图标并未显示已连接（gui：云+？）
+	1. 如图，“cat /etc/resolv.conf”![[Pasted image 20251117015108.png]]
+	2. 如图，“sudo nano /etc/systemd/resolved.conf”
+		1. ![[Pasted image 20251117015443.png]]
+		2. ![[Pasted image 20251117015329.png]]
+		3. ![[Pasted image 20251117015551.png]]
+	3. 等待，并reboot
+	4. 成功，且gui图标恢复
+		1. ![[Pasted image 20251117015733.png]]
+		2. 在进行update前，记得切换到手机热点，随身路由发热降频严重（订阅端口、静态ip、网关都要改）
+			1. 订阅端口![[Pasted image 20251117015911.png]]
+			2. 静态ip、网关![[Pasted image 20251117015955.png]]
+			3. 总览图![[Pasted image 20251117020014.png]]
+## 输入法、系统文字设置
+1. 沿用上一次的教程文档（其实刚刚我就在看(●'◡'●)）
+2. ![[Pasted image 20251117020602.png]]
+3. 无法下载fcitx4、fcitx5；系统语言尝试使用原本的ibus
+4. 尝试gemini给出的"[Google Gemini](https://gemini.google.com/app/c1ac103a058e184d)"![[Pasted image 20251117022205.png]]
+	1. fcitx5无法下载tool配置，删了
+	2. fcitx添加ppa，可以下载；
+	3. fcitx配置为空
+	4. 原模原样的话，再系统由ibus（terminal运行fcitx提示冲突，“fcitx退出”；后改为fcitx），reboot后，居然又可以下载，猜测就是缺失的fcitx配置（即语言条）![[Pasted image 20251117024434.png]]
+		1. “sudo apt install fcitx fcitx-pinyin fcitx-table fcitx-googlepinyin”
+	5. 可以看到，fcitx运行无阻碍，且配置成功刷新![[Pasted image 20251117024353.png]]
+	6. 个人习惯，改“左shift”![[Pasted image 20251117024604.png]]
+	7. 删除ppa仓库
+## 安装ros1,noetic
+[安装与配置 ROS、VS Code、工具包及虚拟机环境的解决方案与调试](https://chatgpt.com/c/691a1493-12a4-8323-9dd2-18d4a5eb8fe5)
+	1. update后，会出现密钥缺失、ppa缺失（如果上一个流程没消掉的话）![[Pasted image 20251117025418.png]]
+	2. 解决![[Pasted image 20251117025537.png]]![[Pasted image 20251117025639.png]]
+	3. 开始下载ros1noetic-desktop-full
+		1. 按照提示下载缺失事项
+		2. 常见rosdep init;rosdep update问题![[Pasted image 20251117032457.png]]
+		3. ~~==catkin_make报错，没下载->缺包->冲突->一大堆“无用”文件==~~，**6. 绝对不要瞎“autoremove”，现在缺失大量文件，且之前反复验证成立，估计就是autoremove搞没的**![[Pasted image 20251117033045.png]]
+		4. remove完就能下载python-pkg了，但是仍然冲突![[Pasted image 20251117033344.png]]
+		5. 没见过的，“aptitude”![[Pasted image 20251117033420.png]]
+		6. 绝对不要瞎“autoremove”，现在缺失大量文件，且之前反复验证成立，估计就是autoremove搞没的
+		7. “sudo apt install ros-noetic-desktop-full”
+		8. 成功catkin_make![[Pasted image 20251117043944.png]]
+		9. 下载full后，注意更新环境变量“echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc“”source ~/.bashrc”
+		10. 验证“echo $ROS_PACKAGE_PATH”
+## 虚拟机快照+克隆（完整克隆）
+## 在克隆的虚拟机上，部署了工具链
+1. [安装与配置 ROS、VS Code、工具包及虚拟机环境的解决方案与调试](https://chatgpt.com/c/691a1493-12a4-8323-9dd2-18d4a5eb8fe5)
+		1. ![[Pasted image 20251117134439.png]]
+2. 常用ros相关包
+		1. sudo apt install ros-noetic-catkin-tools
+		2. sudo apt install ros-noetic-rosbash
+		3. sudo apt install ros-noetic-rviz ros-noetic-roslaunch ros-noetic-rosparam
+		4. sudo apt install ros-noetic-rqt ros-noetic-rqt-common-plugins ros-noetic-rqt-robot-steering
+		5. sudo apt install ros-noetic-rviz
+		6. sudo apt install ros-noetic-gazebo-ros-pkgs
+		7. sudo apt install ros-noetic-rqt
+		8. sudo apt install ros-noetic-rqt-common-plugins
+		9. sudo apt install python3-rosdep
+		10. sudo apt install python3-rosinstall
+		11. sudo apt install ros-noetic-turtlesim
+		12. sudo apt install ros-noetic-navigation
+		13. sudo apt install ros-noetic-perception
+		14. sudo apt install python3-rospy python3-rosparam
+		15. sudo apt install ros-noetic-sensor-msgs
+3. 常用工具 #winSCP #docker #baobab #Tools/工具链/linux 
+		1. openssh->winscp
+			1. sudo apt update
+			2. sudo apt install openssh-server
+			3. sudo systemctl start ssh
+			4. sudo systemctl enable ssh
+			5. sudo systemctl status ssh
+		2. sudo apt install terminator
+		3. sudo apt install git
+		4. sudo apt install nmap
+		5. sudo apt install curl
+		6. sudo apt install docker.io
+			1. sudo usermod -aG docker $USER
+		7. sudo apt install gparted
+		8. vscode
+			1. sudo dpkg -i code_1.106.0-1762878362_amd64.deb
+			2. "The installer would like to add the Microsoft repository andsigning key to update Vs code through apt.Add Microsoft apt repository for Visual Studio Code?"
+		9. baobab
+## 完成了ld06的验证 
+#lidar/LD06_ros1noetic 
+	1. launch时，不能独自开启roscore（launch会自己开一个）
+	2. 并第一次使用了官方的rviz配置文件,说是rviz2跑的，但是ros1rviz也能跑![[Pasted image 20251117143202.png]]
+## ld14p验证完成，同样是rviz-config包 
+#lidar/LD14P_ros1noetic 
+	1. launch时，不能独自开启roscore（launch会自己开一个）
+	2. 如图![[Pasted image 20251117145159.png]]
+## 保存了快照，并克隆保存到u盘
+1. 绝对不能拿u盘做载体，去跑虚拟机，初始、结尾延迟太大了
+## 尝试扩展磁盘 
+#VMware/ubuntu扩展磁盘 
+1. 删掉了快照
+2. 扩充完成后，建立了快照
+3. 果然出了问题，但我这一次有快照
+4. “[Google Gemini](https://gemini.google.com/app/c1ac103a058e184d)”
+5. reboot后，虚拟机改为走esc从HD-card启动（原本为远程设备启动），进入"Try Unubtu"【第一次进入这个界面】![[Pasted image 20251117173723.png]]
+6. 果然没救了，之前chatgpt给出的是垃圾，直接删掉->直接覆盖->直接丢失，真几把绝
+7. 换到gemini，一语道破“[Google Gemini](https://gemini.google.com/app/c1ac103a058e184d)”  #回顾/复现 
+8. 跟随，扩充的话，要进行live中，重启，esc选择第三项，此时底部出现两个图标，再等一下会让选择语言![[Pasted image 20251117180328.png]]
+9. 基本结束，等待开始![[Pasted image 20251117180945.png]]
+10. 确认后，跟随gemini，安全退出；重启虚拟机
+11. 原来grub程序界面长这个样子，终于见到一回，而不是冰冷的“未识别”![[Pasted image 20251117181349.png]]
+12. 成功！![[Pasted image 20251117181606.png]]
+## 安思疆深度摄像机验证 
+#depth_camera/HP60C_ros1noetic 
+	1.   暂未开展，在整理统一采购与教师队伍与场地、工具等等
+	2. 20251121，开展
+	3. 顺利运行![[Pasted image 20251121133345.png]]
+## astra_pro成功运行 
+#depth_camera/Astra_Pro_ros1noetic #Problems/recurring＆已解决/关于astrapro摄像头每次开机需要设置usb权限
+	1. ll /dev/astra_pro 查看摄像头usb接口，并赋予权限sudo chmod 666 /dev/bus/usb/003/015![[Pasted image 20251121183511.png]]
+	2. 而且，可用包是
+	3. ![[Pasted image 20251121183133.png]]
+	4. 当开启register融合输出后，出现这句话 #depth_camera/Astra_Pro_ros1noetic/Registered/point ![[Pasted image 20251121183224.png]]
+		1. 这是相机没有标定的问题
+		2. 解决方法：[系统磁盘空间管理与日志清理、工作空间优化及深度相机配置问题解决](https://chatgpt.com/c/6912e041-0de0-8320-a9d9-795eaa05e226)![[Pasted image 20251121183317.png]]
+		3. 将catkin_ws（从卖家给的文档资料中教程）更名为”astra_ws“
+			1. 成功![[Pasted image 20251121185619.png]]
+		4. 稳定性问题也解决了，就是没有标定；这在正常的相机作用流程中，并不是正确的。所以可能每处都出现问题
+	5. 复现文件夹 #回顾/复现
+		1. ![[Pasted image 20251121190028.png]]
+		2. 把这个通过winscp导入到vmware中”~/test“，后续再行mv到/src下| #winSCP ![[Pasted image 20251121190040.png]]
