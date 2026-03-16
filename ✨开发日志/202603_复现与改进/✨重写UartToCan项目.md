@@ -150,3 +150,4 @@
 2. 串口助手![[Pasted image 20260311130719.png]]
 3. 仅0x123模式![[Pasted image 20260311130632.png]]
 4. 测试结果是，载有5_TecCAN_CmakeTest_SLAVE，成功对应串口下发指令，进行pc13闪烁
+### 完全胜利，见[[✨嵌入式开发环境迁移到linux]]
