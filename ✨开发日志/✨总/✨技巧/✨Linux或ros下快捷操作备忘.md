@@ -50,3 +50,13 @@ https://chatgpt.com/c/69bb9ebf-18b4-8321-8e49-4a0677eb2403
 ### 第一次成功
 
 ![[Pasted image 20260327122813.png]]
+
+## linux下can收发
+https://chatgpt.com/c/69b411f9-6fb4-8324-871f-fb7474fa82ee
+## windows&linux下，stm32工程文件通过git/github迁移
+https://chatgpt.com/c/69b3899d-d448-8320-8785-706f6f72ed7b
+https://chatgpt.com/c/69b15a66-1adc-8322-9882-cd90e69ef5cb
+
+## cd // 是什么意思？
+
+## ros2 pkg prefix your_pkg
