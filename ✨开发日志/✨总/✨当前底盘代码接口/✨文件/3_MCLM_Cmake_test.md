@@ -37,10 +37,13 @@
 ![[Pasted image 20260323170146.png]]
 
 
+#### 当前可用指令格式
 cansend can0 124#1155
 cansend can0 124#1100
 
-cansend can0 224#0100000101
+cansend can0 224#01
+cansend can0 224#04
+cansend can0 224#05
 
 ## 当前架构梳理
 
@@ -577,3 +580,16 @@ void Encoder_Task(void *argument)
 >                                               ↓
 >                                        Logger_Task 检查 flag
 > Logger_Task 本身还是靠 TIM3 中断唤醒，只是唤醒后如果 flag=0 就直接 continue，不做任何 UART 发送，几乎零开销。
+
+### 仍未测试，当前改动基于0x123
+#### 已经测试，发现问题最大的是当前的can分线板，会脱松
+#### 0x123和0x126的接线都有问题，从反馈的曲线可以看出
+##### 0x126已经修复，timch1/ch2线没接紧，编码器负线接了3.3
+##### 0x123已经修复，timch1/ch2接反了
+
+## 260401，21:05目前全功能可用
+
+### 后续优化方向
+
+
+
