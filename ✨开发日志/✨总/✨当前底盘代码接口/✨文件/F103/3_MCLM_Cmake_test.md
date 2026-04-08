@@ -591,5 +591,8 @@ void Encoder_Task(void *argument)
 
 ### 后续优化方向
 
+## ✨encoder问题（严重）
 
-
+### 当前状态，0x123方向电机
+1. ![[Pasted image 20260403084313.png]]
+2. 
