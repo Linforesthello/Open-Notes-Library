@@ -7,3 +7,10 @@
 192.168.1.？，raspi5，ubuntu24.04，docker-ros2humble
 	astrapro
 
+# 三个jlink设置了udev别名，根据是serial来的(唯一性)
+ls -l /dev/ttyJLINK*
+
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+ls -l /dev/serial/by-id/

@@ -364,4 +364,18 @@ https://chatgpt.com/c/69e22046-fa30-83e8-a463-dbbb7c50600f
 5. 更改了logger，encoder，确认了编码器线数，将逻辑最大速度由80->90（理论计算88左右，90容量更高），现在打印电机tick、encoder数值不会出现短暂停滞
 6. 但是仍然是有这种现象：“当前程序，在输入为1155的情况下，很快达到一定的速度，然后速度持续稳定一段时间，便会降低至0，然后开始这个过程的震荡重复。当输入速度降低时，第一次速度稳定时间回增长”
 7. current_logic_speed意义重合，消去并改名为measured_speed
-8. 
+#### 改动失败，撤销codex更改内容，cubemx覆盖
+（问题未解决，电机开启后，仅cansend 125#1120，但仍然震荡。target_logic_speed没问题，震荡开始前，Pwm稳定在3528,一瞬间，current_ticks下降（此时pwm数值没有改变，仍然3528），随后measured_speed下降(此时pwm急剧上升，并随后伴随电机震荡)，对数据波形观察看到：pwm_output在5400~7200跳动，并且峰值是current_ticks跌落到0时），随后，pwm成簇状上升最后pwm中值稳定在6325左右
+1. ![[Pasted image 20260419114229.png]]
+2. ![[Pasted image 20260419114251.png]]
+3. ![[Pasted image 20260419114200.png]]
+
+#### 进行了web_ai~ide_ai的交叉验证
+
+#### 全局关闭ki（app_config），不起作用，系统中仍然有ki累计
+发现是
+#### 打印后发现ki仍没有改变，现在增加了通过速度设置（而非motor_stop）每次指令清零
+
+# 回退，新建分支，当前MCLM_t2更改过，两串口可用，can可用
+
+
