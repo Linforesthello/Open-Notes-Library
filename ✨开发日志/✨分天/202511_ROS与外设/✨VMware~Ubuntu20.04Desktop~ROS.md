@@ -193,6 +193,10 @@ libc-dev”
 #### 磁盘工具
 1. GParted（磁盘分区工具）
 	1. sudo apt install gparted
+
+#### raspi/docker
+apt install -y iproute2 iputils-ping net-tools
+apt install -y curl wget nano
 ## 完成了ld06的验证 
 #lidar/LD06_ros1noetic 
 	1. launch时，不能独自开启roscore（launch会自己开一个）
