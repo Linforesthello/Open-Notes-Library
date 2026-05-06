@@ -166,6 +166,9 @@
 		2. 测试局域网
 			1. 电脑A iperf3 -s
 			2. 电脑B iperf3 -c 192.168.1.10
+7. iftop
+	1. sudo apt install iftop
+	2. sudo iftop
 #### 系统工具
 1. Terminator（终端增强工具）
 	1. sudo apt install terminator
