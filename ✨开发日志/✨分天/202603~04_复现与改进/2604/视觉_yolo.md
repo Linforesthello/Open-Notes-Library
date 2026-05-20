@@ -1,4 +1,4 @@
-#yolo #python
+
 ## windows_yolo_pytorch_gpu
 ### miniconda
 1. ![[Pasted image 20260506155940.png]]
@@ -462,4 +462,46 @@ Successfully installed opencv-python-4.8.1.78
 	1. projects
 		1. volleyball_1
 
+[Miniconda空间查看与清理](https://chatgpt.com/c/6a0db73f-7bec-83a2-a63e-e5b15202be17)
+
+cd C:\Users\86173\Desktop\ProjectRequirement\Vision\yolo\dataset
+
+yolo predict model=runs/detect/train-6/weights/best.pt source=0 show=True
+
+
+### windows powershell
+输入以下指令，去记事本查看历史输入指令
+PS C:\Users\86173> Get-History
+PS C:\Users\86173> notepad (Get-PSReadlineOption).HistorySavePath
+PS C:\Users\86173>
+```
+& c:/MiniConda/lininstall/envs/yolo/python.exe c:/Users/86173/Desktop/ProjectRequirement/Vision/yolo/test_yolo.py
+dir C:\MiniConda\lininstall\envs\yolo\Lib\site-packages | findstr cv2
+dir C:\MiniConda\lininstall\envs\yolo\Lib\site-packages | findstr cv2
+& c:/MiniConda/lininstall/envs/yolo/python.exe c:/Users/86173/Desktop/ProjectRequirement/Vision/yolo/test_yolo.py
+git add .
+git commit -m "Windows|merge commit"
+git pull
+& c:/MiniConda/lininstall/envs/yolo/python.exe c:/Users/86173/Desktop/ProjectRequirement/Vision/yolo/test_yolo.py
+& c:/MiniConda/lininstall/envs/yolo/python.exe c:/Users/86173/Desktop/ProjectRequirement/Vision/yolo/test_yolo.py
+git add .
+git commit -m "Windows|提交"
+git push
+& C:/MiniConda/lininstall/envs/yolo/python.exe c:/Users/86173/Desktop/ProjectRequirement/Vision/yolo/other/test_yolo.py
+cd runs\detect\train-6\weights
+cd C:\Users\86173\Desktop\ProjectRequirement\Vision\yolo\dataset
+cd runs\detect\train-6\weights
+yolo predict model=best.pt source=0 show=True
+conda activate yolo
+cd ..
+conda activate yolo
+cd C:\Users\86173\Desktop\ProjectRequirement\Vision\yolo\dataset\runs\detect\train-6\weights> 
+ls
+cd .\runs\
+ls
+cd .\detect\
+cd ..
+```
+
+yolo predict model="C:\Users\86173\Desktop\ProjectRequirement\Vision\yolo\dataset\runs\detect\train-6\weights\best.pt" source=0 show=True
 
