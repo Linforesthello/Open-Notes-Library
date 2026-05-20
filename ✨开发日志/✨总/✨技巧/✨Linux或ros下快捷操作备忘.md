@@ -60,3 +60,6 @@ https://chatgpt.com/c/69b15a66-1adc-8322-9882-cd90e69ef5cb
 ## cd // 是什么意思？
 
 ## ros2 pkg prefix your_pkg
+
+## 快速杀死图形化的进程（用于卡死情况）
+

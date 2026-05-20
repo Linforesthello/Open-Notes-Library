@@ -1,3 +1,4 @@
+#Tools/linux
 https://chatgpt.com/c/69e2e7c7-1f34-83e8-8fdd-473b1b962283
 
 fcitx5 -r

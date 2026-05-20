@@ -1,4 +1,4 @@
-
+#Tools/skills/ai #obsidian #FreeRTOS
 ## can调试需要工具
 [CAN调试工具推荐](https://chatgpt.com/c/69a9420c-9d54-8321-854e-3f9d644c8605)
 打算购买mks canable2.0 pro版本

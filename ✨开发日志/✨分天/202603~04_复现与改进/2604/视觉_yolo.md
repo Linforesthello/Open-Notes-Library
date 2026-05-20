@@ -1,4 +1,4 @@
-
+#yolo #python
 ## windows_yolo_pytorch_gpu
 ### miniconda
 1. ![[Pasted image 20260506155940.png]]

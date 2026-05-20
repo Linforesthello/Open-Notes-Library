@@ -1,5 +1,6 @@
+#STM32 #嵌入式调试/宏观联调 #回顾/复现
 ## 宏观联调"3_MCLM_Cmake_test"和"5_UartToCan_cmake"
-#嵌入式调试/宏观联调 
+
 
 ## ozone找不到rtos调试，但程序包含
 [FreeRTOS和源文件问题](https://chatgpt.com/c/69a5721e-4834-8323-af62-2c99cc385e4d)

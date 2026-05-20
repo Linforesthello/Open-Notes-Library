@@ -1,3 +1,4 @@
+#日常
 https://chatgpt.com/c/69ba2d4f-9ef8-8322-b999-28152083bf3d
 
 > [!NOTE]

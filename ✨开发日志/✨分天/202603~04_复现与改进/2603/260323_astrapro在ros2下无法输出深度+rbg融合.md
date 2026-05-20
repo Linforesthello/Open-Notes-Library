@@ -1,3 +1,4 @@
+#depth_camera/Astra_Pro_ros1noetic #ROS
 	astra_pro.launch.xml
 	读取当前文件。分析作用。梳理架构
 	Read astra_pro.launch.xml
