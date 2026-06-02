@@ -1298,3 +1298,14 @@ detectnet.py /dev/video0
 
 ![[Pasted image 20260525205425.png]]
 
+## rgb单目图片不知道去哪了
+## 加装调速风扇
+全速运行
+sudo sh -c 'echo 255 > /sys/devices/pwm-fan/target_pwm'
+
+## 这次使用了tornado d2,很清晰
+
+要在docker启动前进行
+![[Pasted image 20260529171109.png]]
+
+
