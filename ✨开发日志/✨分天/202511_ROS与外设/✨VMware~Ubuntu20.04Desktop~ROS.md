@@ -105,7 +105,7 @@
 ## 在克隆的虚拟机上，部署了工具链
 1. [安装与配置 ROS、VS Code、工具包及虚拟机环境的解决方案与调试](https://chatgpt.com/c/691a1493-12a4-8323-9dd2-18d4a5eb8fe5)
 		1. ![[Pasted image 20251117134439.png]]
-### 常用ros相关包
+### 常用ros1相关包
 1. sudo apt install ros-noetic-catkin-tools
 		1. sudo apt install ros-noetic-rosbash
 		2. sudo apt install ros-noetic-rviz ros-noetic-roslaunch ros-noetic-rosparam
@@ -139,6 +139,8 @@
 3. Docker（容器开发环境）
 	1. sudo apt install docker.io
 	2. sudo usermod -aG docker $USER
+4. tmux
+	1. sudo apt install tmux
 #### 网络工具
 1. net-tools（经典网络工具）
 	1. sudo apt install net-tools
@@ -153,26 +155,29 @@
 3. Curl（网络请求工具）
 	1. sudo apt install curl
 	2. curl ipinfo.io
-4. Speedtest-cli（网络测速）
+4. wget
+	1. sudo apt install wget
+5. Speedtest-cli（网络测速）
 	1. sudo apt install speedtest-cli
 	2. speedtest-cli
-5. Nload（实时带宽监控）
+6. Nload（实时带宽监控）
 	1. sudo apt install nload
 	2. nload
-6. Iperf3（专业网络带宽测试）
+7. Iperf3（专业网络带宽测试）
 	1. sudo apt install iperf3
 	2. 公网测试：
 		1. iperf3 -c iperf.he.net
 		2. 测试局域网
 			1. 电脑A iperf3 -s
 			2. 电脑B iperf3 -c 192.168.1.10
-7. iftop
+8. iftop
 	1. sudo apt install iftop
 	2. sudo iftop
 #### 系统工具
 1. Terminator（终端增强工具）
 	1. sudo apt install terminator
-2. Baobab（磁盘占用分析）
+2. tilix
+3. Baobab（磁盘占用分析）
 	1. sudo apt install baobab
 #### 系统监控
 1. htop（系统资源监控）
