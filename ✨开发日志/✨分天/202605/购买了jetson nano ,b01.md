@@ -1309,3 +1309,144 @@ sudo sh -c 'echo 255 > /sys/devices/pwm-fan/target_pwm'
 ![[Pasted image 20260529171109.png]]
 
 
+# 帧率低检查
+https://chatgpt.com/c/6a189d25-3d54-83a5-a99f-241d9fb73894
+
+已经更换到了5v4a dc 电源供电
+
+## 其他都没问题
+
+### tegrastats
+```
+@41C PMIC@50C GPU@28C AO@35.5C thermal@29C RAM 2629/3956MB (lfb 66x4MB) SWAP 74/1978MB (cached 1MB) CPU [70%@1479,97%@1479,50%@1479,46%@1479] EMC_FREQ 0% GR3D_FREQ 99% PLL@27C CPU@29.5C iwlwifi@41C PMIC@50C GPU@28.5C AO@36C thermal@29C RAM 2610/3956MB (lfb 68x4MB) SWAP 74/1978MB (cached 1MB) CPU [73%@1479,83%@1479,33%@1479,69%@1479] EMC_FREQ 0% GR3D_FREQ 3% PLL@27C CPU@30C iwlwifi@41C PMIC@50C GPU@28C AO@35.5C thermal@29C RAM 2610/3956MB (lfb 68x4MB) SWAP 74/1978MB (cached 1MB) CPU [78%@1479,65%@1479,68%@1479,52%@1479] EMC_FREQ 0% GR3D_FREQ 99% PLL@27.5C CPU@30C iwlwifi@39C PMIC@50C GPU@28C AO@35.5C thermal@29C RAM 2610/3956MB (lfb 68x4MB) SWAP 74/1978MB (cached 1MB) CPU [47%@1479,96%@1479,73%@1479,37%@1479] EMC_FREQ 0% GR3D_FREQ 99% PLL@27.5C CPU@30C iwlwifi@40C PMIC@50C GPU@28.5C AO@35.5C thermal@29C RAM 2627/3956MB (lfb 67x4MB) SWAP 74/1978MB (cached 1MB) CPU [48%@1479,96%@1479,66%@1479,55%@1479] EMC_FREQ 0% GR3D_FREQ 99% PLL@27C CPU@30C iwlwifi@41C PMIC@50C GPU@28C AO@35.5C thermal@29C RAM 2610/3956MB (lfb 68x4MB) SWAP 74/1978MB (cached 1MB) CPU [81%@1479,55%@1479,89%@1479,45%@1479] EMC_FREQ 0% GR3D_FREQ 0% PLL@27C CPU@30C iwlwifi@41C PMIC@50C GPU@28C AO@35.5C thermal@29C
+
+```
+### sudo jetson_clocks --show
+
+```
+lin@lin-desktop:~$ sudo jetson_clocks --show                                                                                      [90/90]
+[sudo] password for lin:                                                                                                                 
+SOC family:tegra210  Machine:NVIDIA Jetson Nano Developer Kit                                                                            
+Online CPUs: 0-3                                                                                                                         
+cpu0: Online=1 Governor=schedutil MinFreq=1200000 MaxFreq=1479000 CurrentFreq=1479000 IdleStates: WFI=1 c7=1                             
+cpu1: Online=1 Governor=schedutil MinFreq=1200000 MaxFreq=1479000 CurrentFreq=1479000 IdleStates: WFI=1 c7=1                             
+cpu2: Online=1 Governor=schedutil MinFreq=1200000 MaxFreq=1479000 CurrentFreq=1479000 IdleStates: WFI=1 c7=1                             
+cpu3: Online=1 Governor=schedutil MinFreq=1200000 MaxFreq=1479000 CurrentFreq=1479000 IdleStates: WFI=1 c7=1                             
+GPU MinFreq=76800000 MaxFreq=921600000 CurrentFreq=921600000                                                                             
+EMC MinFreq=204000000 MaxFreq=1600000000 CurrentFreq=1600000000 FreqOverride=0                                                           
+Fan: PWM=255                                                                                                                             
+NV Power Mode: MAXN 
+
+```
+#### 先test.py
+```
+import cv2
+
+import time
+
+  
+
+cap = cv2.VideoCapture(0)
+
+  
+
+for i in range(100):
+
+  
+
+t0 = time.perf_counter()
+
+  
+
+ret, frame = cap.read()
+
+  
+
+t1 = time.perf_counter()
+
+  
+
+if not ret:
+
+continue
+
+  
+
+# 模拟推理
+
+time.sleep(0.01)
+
+  
+
+t2 = time.perf_counter()
+
+  
+
+# 模拟后处理
+
+time.sleep(0.01)
+
+  
+
+t3 = time.perf_counter()
+
+  
+
+print(
+
+f"cap={(t1-t0)*1000:.1f}ms "
+
+f"infer={(t2-t1)*1000:.1f}ms "
+
+f"post={(t3-t2)*1000:.1f}ms "
+
+f"total={(t3-t0)*1000:.1f}ms"
+
+)
+
+  
+
+cap.release()
+
+
+```
+
+root@lin-desktop:/jetson-inference# cd data/
+root@lin-desktop:/jetson-inference/data# python3 test.py
+[ WARN:0] global /opt/opencv/modules/videoio/src/cap_gstreamer.cpp (935) open OpenCV | GStreamer warning: Cannot query video position: status=0, value=-1, duration=-1
+cap=19.3ms infer=10.2ms post=10.3ms total=39.7ms
+cap=487.2ms infer=10.3ms post=10.3ms total=507.8ms
+cap=593.2ms infer=10.3ms post=10.3ms total=613.8ms
+cap=497.5ms infer=12.5ms post=10.3ms total=520.2ms
+cap=596.5ms infer=10.1ms post=10.3ms total=616.9ms
+cap=472.6ms infer=10.3ms post=10.2ms total=493.2ms
+cap=630.3ms infer=10.2ms post=10.3ms total=650.8ms
+cap=527.7ms infer=10.2ms post=10.3ms total=548.1ms
+cap=527.4ms infer=10.2ms post=10.1ms total=547.7ms
+cap=508.3ms infer=10.2ms post=10.2ms total=528.7ms
+cap=609.5ms infer=10.2ms post=10.2ms total=629.9ms
+
+https://chatgpt.com/c/6a20038b-c118-83a5-947e-c516d41b3b40
+
+```
+v4l2-ctl --get-fmt-video
+```
+```
+v4l2-ctl -d /dev/video0 \
+  --set-fmt-video=width=640,height=480,pixelformat=MJPG
+```
+```
+v4l2-ctl --stream-mmap --stream-count=100
+```
+
+
+## 放弃当前道路（raw TensorRT），可能是gpu瓶颈，转向DeepStream + YOLO Docker
+
+成功运行，但是还是不行，后续更换方向
+```
+root@lin-desktop:/opt/nvidia/deepstream/deepstream-6.0# cd /opt/nvidia/deepstream/deepstream-6.0/samples/configs/deepstream-app root@lin-desktop:/opt/nvidia/deepstream/deepstream-6.0/samples/configs/deepstream-app# ls config_infer_primary.txt source12_1080p_dec_infer-resnet_tracker_tiled_display_fp16_tx2.txt config_infer_primary_nano.txt source1_csi_dec_infer_resnet_int8.txt config_infer_secondary_carcolor.txt source1_usb_dec_infer_resnet_int8.txt config_infer_secondary_carmake.txt source2_1080p_dec_infer-resnet_demux_int8.txt config_infer_secondary_vehicletypes.txt source2_csi_usb_dec_infer_resnet_int8.txt config_preprocess.txt source30_1080p_dec_infer-resnet_tiled_display_int8.txt config_tracker_DeepSORT.yml source30_1080p_dec_preprocess_infer-resnet_tiled_display_int8.txt config_tracker_IOU.yml source4_1080p_dec_infer-resnet_tracker_sgie_tiled_display_int8.txt config_tracker_NvDCF_accuracy.yml source6_csi_dec_infer_resnet_int8.txt config_tracker_NvDCF_max_perf.yml source8_1080p_dec_infer-resnet_tracker_tiled_display_fp16_nano.txt config_tracker_NvDCF_perf.yml source8_1080p_dec_infer-resnet_tracker_tiled_display_fp16_tx1.txt root@lin-desktop:/opt/nvidia/deepstream/deepstream-6.0/samples/configs/deepstream-app# source1_usb_dec_infer_resnet_int8.txt bash: source1_usb_dec_infer_resnet_int8.txt: command not found root@lin-desktop:/opt/nvidia/deepstream/deepstream-6.0/samples/configs/deepstream-app# cd /opt/nvidia/deepstream/deepstream-6.0/samples/configs/deepstream-a pp root@lin-desktop:/opt/nvidia/deepstream/deepstream-6.0/samples/configs/deepstream-app# deepstream-app -c source1_usb_dec_infer_resnet_int8.txt ERROR: Deserialize engine failed because file path: /opt/nvidia/deepstream/deepstream-6.0/samples/configs/deepstream-app/../../models/Primary_Detector/resne t10.caffemodel_b30_gpu0_int8.engine open error 0:00:05.429939643 25 0x37670270 WARN nvinfer gstnvinfer.cpp:635:gst_nvinfer_logger:<primary_gie> NvDsInferContext[UID 1]: Warning fro m NvDsInferContextImpl::deserializeEngineAndBackend() <nvdsinfer_context_impl.cpp:1889> [UID = 1]: deserialize engine from file :/opt/nvidia/deepstream/deep stream-6.0/samples/configs/deepstream-app/../../models/Primary_Detector/resnet10.caffemodel_b30_gpu0_int8.engine failed 0:00:05.431822969 25 0x37670270 WARN nvinfer gstnvinfer.cpp:635:gst_nvinfer_logger:<primary_gie> NvDsInferContext[UID 1]: Warning fro m NvDsInferContextImpl::generateBackendContext() <nvdsinfer_context_impl.cpp:1996> [UID = 1]: deserialize backend context from engine from file :/opt/nvidia /deepstream/deepstream-6.0/samples/configs/deepstream-app/../../models/Primary_Detector/resnet10.caffemodel_b30_gpu0_int8.engine failed, try rebuild 0:00:05.431879781 25 0x37670270 INFO nvinfer gstnvinfer.cpp:638:gst_nvinfer_logger:<primary_gie> NvDsInferContext[UID 1]: Info from N vDsInferContextImpl::buildModel() <nvdsinfer_context_impl.cpp:1914> [UID = 1]: Trying to create engine from model files WARNING: INT8 not supported by platform. Trying FP16 mode. 0:02:44.566303273 25 0x37670270 INFO nvinfer gstnvinfer.cpp:638:gst_nvinfer_logger:<primary_gie> NvDsInferContext[UID 1]: Info from N vDsInferContextImpl::buildModel() <nvdsinfer_context_impl.cpp:1947> [UID = 1]: serialize cuda engine to file: /opt/nvidia/deepstream/deepstream-6.0/samples/ models/Primary_Detector/resnet10.caffemodel_b1_gpu0_fp16.engine successfully INFO: [Implicit Engine Info]: layers num: 3 0 INPUT kFLOAT input_1 3x368x640 1 OUTPUT kFLOAT conv2d_bbox 16x23x40 2 OUTPUT kFLOAT conv2d_cov/Sigmoid 4x23x40 0:02:44.997741677 25 0x37670270 INFO nvinfer gstnvinfer_impl.cpp:313:notifyLoadModelStatus:<primary_gie> [UID 1]: Load new model:/opt /nvidia/deepstream/deepstream-6.0/samples/configs/deepstream-app/config_infer_primary.txt sucessfully Runtime commands: h: Print this help q: Quit p: Pause r: Resume NOTE: To expand a source in the 2D tiled display and view object details, left-click on the source. To go back to the tiled display, right-click anywhere on the window. **PERF: FPS 0 (Avg) **PERF: 0.00 (0.00) ** INFO: <bus_callback:194>: Pipeline ready ** INFO: <bus_callback:180>: Pipeline running **PERF: 6.71 (6.58) **PERF: 6.71 (6.71) **PERF: 6.71 (6.67) **PERF: 6.72 (6.70) **PERF: 6.65 (6.68) **PERF: 6.72 (6.70) **PERF: 6.71 (6.69) **PERF: 6.72 (6.70) **PERF: 6.73 (6.69) **PERF: 6.71 (6.70) **PERF: 6.72 (6.71) **PERF: 6.72 (6.70) ^C** ERROR: <_intr_handler:140>: User Interrupted.. Quitting App run successful root@lin-desktop:/opt/nvidia/deepstream/deepstream-6.0/samples/configs/deepstream-app#
+```
+
+## 因为要自己的模型，所以转到YOLOv5/YOLOv8 → ONNX → TensorRT engine + EfficientNMS plugin
+
+
