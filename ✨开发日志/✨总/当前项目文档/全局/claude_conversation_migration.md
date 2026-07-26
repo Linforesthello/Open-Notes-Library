@@ -164,3 +164,45 @@ cp "$SRC/b790632d-7aa9-4171-996a-b7dac609d188.jsonl" "$DST/"
 ```
 
 **结果**：全局会话出现在 `0_Workspace` 的聊天历史中，不再与 MCLM 会话混合。
+
+---
+
+### 2026-07-25：迁移 ProjectLearner（单文件夹）→ learnmap.code-workspace（多根工作区）
+
+**背景**：Windows 本地开发，VSCode 原以单文件夹形式打开 `ProjectLearner`，后创建 `learnmap.code-workspace` 将 `ProjectLearner`（LearnMap）与 `Open_Notes_Library`（Notes）组合为多根工作区。
+
+**路径哈希对照**：
+
+| 工作区 | 项目哈希 |
+|--------|---------|
+| 单文件夹 `ProjectLearner`（源） | `c--Users-86173-Desktop-ProjectLearner` |
+| 工作区 `learnmap.code-workspace`（目标） | `c--Users-86173-Desktop-ProjectLearner-learnmap-code-workspace` |
+
+**操作步骤（PowerShell）**：
+
+```powershell
+# 1. 创建目标目录
+mkdir "$env:USERPROFILE\.claude\projects\c--Users-86173-Desktop-ProjectLearner-learnmap-code-workspace"
+
+# 2. 复制所有会话
+Copy-Item "$env:USERPROFILE\.claude\projects\c--Users-86173-Desktop-ProjectLearner\*.jsonl" `
+          "$env:USERPROFILE\.claude\projects\c--Users-86173-Desktop-ProjectLearner-learnmap-code-workspace\"
+
+# 3. 验证
+Get-ChildItem "$env:USERPROFILE\.claude\projects\c--Users-86173-Desktop-ProjectLearner-learnmap-code-workspace\"
+```
+
+**已迁移的会话（共 4 条）**：
+
+| 会话 | 大小 | 说明 |
+|------|------|------|
+| `31c9d321...` | 12KB | 新工作区首次对话（你好） |
+| `431fa52e...` | 1.7MB | 主要设计对话（Schema + Pipeline + 可视化） |
+| `5dfa3941...` | 142KB | 早期对话 |
+| `aec53410...` | 2.1MB | HTTP 服务器调试对话 |
+
+**注意事项**：
+- Windows 路径哈希规则：`C:\path\to\folder` → `c--path-to-folder`（小写驱动器字母 + `--` + 路径段以 `-` 连接）
+- 工作区文件内嵌于项目根目录时，哈希在原有单文件夹哈希后追加 `-learnmap-code-workspace`
+- 迁移前需在目标工作区触发至少一次 Claude 对话以自动创建哈希目录，或手动 `mkdir`
+- 迁移后重启 VSCode 以使聊天历史列表刷新
