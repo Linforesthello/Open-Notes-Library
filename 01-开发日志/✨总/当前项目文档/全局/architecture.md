@@ -172,3 +172,15 @@
 当前 VS Code 工作区文件：`robot.code-workspace`（位于项目根目录）
 
 包含模块：MPU6050、BMP280、AK09911C、VL53L0、MT6701、LED、电机控制器(3_MCLM_t2)、底盘控制器(5_ChassisController_t1)
+
+## 项目命名约束
+
+> 2026-06-24: 踩坑记录 — 项目重命名后 VS Code STM32 扩展的 map 文件缓存问题
+
+当在 CubeMX 中修改 `.ioc` 项目名（例如 `3_SteeringArm` → `3_SteeringArm_t1`）时，必须注意：
+
+**STM32CubeIDE VS Code 扩展（`stm32cube-ide-build-analyzer`）的缓存 key 是工作区文件夹名，而非 `.ioc` 内的项目名。** 如果文件夹名与最终编译产物的项目名不一致，扩展会用文件夹名查找 `xxx.map`，与实际生成的 `<项目名>.map` 不匹配，导致 "Map file data is not available" 错误。
+
+**解决：** 确保**文件夹名** = **`CMAKE_PROJECT_NAME`**（即 `.ioc` 中设定的项目名）。改名时两者同步改，或先修改文件夹名再生成 CubeMX 代码。
+
+**修复（如果不一致）：** 删除 VS Code workspace storage 中对应工作区的 `state.vscdb`（位于 `~/.config/Code/User/workspaceStorage/<hash>/`），重载 VS Code 窗口。
