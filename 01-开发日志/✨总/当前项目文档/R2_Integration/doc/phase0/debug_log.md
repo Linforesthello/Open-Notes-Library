@@ -180,17 +180,20 @@ python3 ~/Lin_workspace/r2_integration/scripts/calibrate_direction.py
 
 ```
 ~/Lin_workspace/r2_integration/
-├── README.md                              # 五阶段集成方案总纲
-├── r2_chassis_definition.md               # 底盘完整定义文档
-├── phase0_complete.md                     # Phase 0 完成记录
-├── r2_bringup/                            # ROS2 包
+├── README.md              # 入口导航
+├── doc/
+│   ├── 01-plan.md         五阶段集成方案总纲
+│   ├── 02-progress.md     全局进度
+│   ├── 03-current_state.md 当前完成状态
+│   ├── 04-chassis_definition.md  底盘定义
+│   ├── 05-phase0_complete.md    Phase 0 记录
+│   ├── 06-debug_log.md    踩坑日志 ← 本文件
+│   └── 07-handover.md     状态交接
+├── r2_bringup/            # ROS2 包
 │   ├── package.xml / setup.py
-│   ├── r2_bringup/
-│   │   └── chassis_node.py                # 底盘控制节点
-│   ├── launch/
-│   │   └── chassis.launch.py
-│   └── config/
-│       └── r2_params.yaml                 # 实车标定参数
+│   ├── r2_bringup/chassis_node.py
+│   ├── launch/chassis.launch.py
+│   └── config/r2_params.yaml
 └── scripts/
     ├── measure_r2_ticks.py                # 编码器标定
     ├── map_chassis.py                     # CAN ID → 物理位置映射
