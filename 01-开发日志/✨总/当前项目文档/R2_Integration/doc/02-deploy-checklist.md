@@ -198,5 +198,5 @@ python3 ~/Lin_workspace/r2_integration/r2_bringup/r2_bringup/teleop_keyboard.py
 |:-----|:------|:--------|
 | USB-CAN 适配器 | USB-A | 设备路径 `/dev/ttyACMx`（当前为 `/dev/ttyACM0`） |
 | JLink OB Mini (G354) | USB-A | 设备路径 `/dev/ttyACMx`（当前为 `/dev/ttyACM1`） |
-| VLP16 LiDAR | 以太网 | ✅ 已使用（Phase 2），设备 IP 10.10.3.6 |
+| VLP16 LiDAR | 以太网 | ✅ 已使用（Phase 2），设备 IP 10.18.18.6 |
 | D435 相机 | USB-A | Phase 4 才需要 |

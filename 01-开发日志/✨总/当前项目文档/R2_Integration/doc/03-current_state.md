@@ -83,7 +83,7 @@ user_vy = -formula_vx
 | Phase | 目标 | 前置 | 状态 |
 |:------|:-----|:------|:------|
 | **1** | G354 IMU + 轮速 → EKF 融合 | Phase 0 | ⏳ IMU 驱动完成，EKF 联调中 |
-| **2** | 3D LiDAR SLAM (VLP16 + KISS-ICP) | Phase 0 | ✅ VLP16驱动+里程计已跑通 |
+| **2** | 3D LiDAR SLAM (VLP16 + KISS-ICP) | Phase 0 | ✅ 驱动+里程计+键盘建图全跑通 |
 | **3** | VLP16 + Nav2 导航 | Phase 1+2 | ⏳ |
 | **4** | D435 + Jetson YOLO 视觉 | Phase 0 | ⏳ |
 | **5** | 气动+异常处理+Robocon编排 | 全部 | ⏳ |
@@ -101,11 +101,12 @@ VLP-16 上尝试了四种 SLAM 方案（详见 `retrospect/vlp16_slam_exploratio
 
 ### 当前 VLP-16 工作状态
 
-- [x] VLP-16 驱动（`device_ip:=10.10.3.6`, 目标 IP: `10.10.3.20`）
+- [x] VLP-16 驱动（`device_ip:=10.18.18.6`, 目标 IP: `10.18.18.20`，2026-08-02 网段从 10.10.3.x 迁移）
 - [x] TF 标定（`base_footprint → velodyne`, z=0.77m, 车顶水平安装）
 - [x] KISS-ICP 3D 里程计（topic `/velodyne_points` → odom + 注册点云）
-- [ ] 键盘控制 + 点云采集建图
-- [ ] IMU 融合（G354 EKF）
+- [x] 键盘控制 + 点云采集建图（2026-08-02 实车跑通，RViz 中 `odom_lidar` 系点云地图随车累积）
+- [ ] IMU 融合（G354 EKF，实车验证挂起中，见 [phase1/ekf-verification.md](phase1/ekf-verification.md)）
+- [ ] 雷达闭环运动（基于 `/kiss_icp/odometry` 的 waypoint 节点，待做）
 
 ---
 

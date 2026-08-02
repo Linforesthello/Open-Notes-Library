@@ -56,7 +56,7 @@ Phase 5 系统集成     ━○○○○○○○○○  0%  ⏳
 
 | 模块 | 状态 | 备注 |
 |:-----|:----:|:------|
-| VLP-16 驱动 | ✅ 已安装 | velodyne_driver，设备 IP 10.10.3.6 |
+| VLP-16 驱动 | ✅ 已安装 | velodyne_driver，设备 IP 10.18.18.6 |
 | G354 IMU | ✅ 已就绪 | 已接入 EKF（见 Phase 1） |
 | TF 标定 | ✅ 已完成 | base_footprint→velodyne，z=0.77m |
 | KISS-ICP 建图 | ✅ 已跑通 | /velodyne_points → odom |
@@ -65,7 +65,7 @@ Phase 5 系统集成     ━○○○○○○○○○  0%  ⏳
 
 | 模块 | 状态 | 备注 |
 |:-----|:----:|:------|
-| VLP16 网络配置 | ✅ 已完成 | 设备 IP 10.10.3.6，目标 IP 10.10.3.20 |
+| VLP16 网络配置 | ✅ 已完成 | 设备 IP 10.18.18.6，目标 IP 10.18.18.20（2026-08-02 从 10.10.3.x 迁移） |
 | VLP16 ROS2 驱动 | ✅ 已跑通 | |
 | KISS-ICP | ✅ 已跑通 | 属于 Phase 2；/velodyne_points → odom |
 | slam_toolbox 建图 | ❌ 已否决 | 不适合 VLP-16，见 [vlp16_slam_exploration.md](retrospect/vlp16_slam_exploration.md) |
@@ -128,6 +128,6 @@ Phase 0  Phase 1    Phase 2+3    Phase 4+5
 
 | 风险 | 阶段 | 可能性 | 缓解 |
 |:-----|:----:|:------:|:-----|
-| VLP16 网络配置 | Phase 2 | 🟡 中 | ✅ 已解决（2026-07-31）：设备 IP 10.10.3.6，目标 IP 10.10.3.20 |
+| VLP16 网络配置 | Phase 2 | 🟡 中 | ✅ 已解决：设备 IP 10.18.18.6，目标 IP 10.18.18.20（2026-08-02 从 10.10.3.x 迁移） |
 | Jetson/N97 跨版本通信 | Phase 4 | 🟡 中 | 先用简单话题验证 |
 

@@ -1,17 +1,20 @@
 # VLP-16 SLAM 方案探索记录
 
-#lidar/vlp16/SLAM/方案探索 #SLAM/kiss_icp
-
 > R2 底盘 + VLP-16 + N97 MiniPC ROS2 Humble
 
 ## 硬件环境
 
 | 项目 | 内容 |
 |------|------|
-| 雷达 | VLP-16，IP: 10.10.3.6，目标 IP: 10.10.3.20 |
-| 主机 | N97 MiniPC (x86), enp1s0: 10.10.3.20/24 |
+| 雷达 | VLP-16，IP: 10.18.18.6，目标 IP: 10.18.18.20 |
+| 主机 | N97 MiniPC (x86), enp1s0: 10.18.18.20/24 |
 | 系统 | Ubuntu 22.04, ROS2 Humble |
 | IMU | G354（未接入 FAST-LIO 流程） |
+
+> **网络变更记录（2026-08-02）**：原网段 10.10.3.x（雷达 10.10.3.6 / N97 10.10.3.20）
+> 整体迁移至 10.18.18.x（雷达 10.18.18.6 / N97 10.18.18.20）。
+> 雷达 IP 在 VMware 中通过 VLP-16 Web 配置页修改，`velodyne_n97.launch.py` 中
+> `device_ip` 需同步更新为 10.18.18.6（否则驱动与雷达的交互通道断开，日志持续告警）。
 
 ---
 
@@ -167,11 +170,11 @@ pip3 install kiss-icp
 ros2 launch ~/.ros/velodyne_n97.launch.py
 
 # 终端 2：KISS-ICP
-source ~/livox_ros_driver2/install/setup.bash
 source ~/kiss_icp_ws/install/setup.bash
 ros2 launch kiss_icp odometry.launch.py \
   topic:=/velodyne_points \
-  visualize:=false \    # SSH 无 GUI 时设 false
+  use_sim_time:=false \ # ⚠️ 必须显式设 false！launch 默认 true，实车无 /clock 时里程计不走
+  visualize:=false \    # SSH 无 GUI 时设 false，本地显示器可设 true 自动开 RViz
   base_frame:=velodyne
 ```
 
@@ -206,6 +209,7 @@ ros2 launch kiss_icp odometry.launch.py \
 | **未来的 FAST-LIO2** | 3D LIO | ⏳ 等完善 | — | 等官方 ROS2 支持 |
 
 ## 下一步建议
-1. **键盘控制 + 点云采集** — KISS-ICP 跑着的时候推/遥控车走一圈，录 bag 或存 pcd
-2. **IMU 融合** — 接入 G354 IMU，robot_localization EKF 提高定位
-3. **换 FAST-LIO** — 等 ROS2 分支稳定后再试，或者用 docker 已有环境
+1. **键盘控制 + 点云采集** — ✅ 已完成（2026-08-02 实车跑通：雷达+KISS-ICP+WASD 键盘，RViz 中 `odom_lidar` 系点云地图随车累积）
+2. **雷达闭环运动** — 基于 `/kiss_icp/odometry` 写 waypoint 节点，车自动走距离/转角度/到目标点（P 控制，见 [ekf-verification.md](../phase1/ekf-verification.md) 同期的 r2_bringup 扩展）
+3. **IMU 融合** — 接入 G354 IMU，robot_localization EKF 提高定位（Phase 1 实车验证挂起中，清单见 [ekf-verification.md](../phase1/ekf-verification.md)）
+4. **换 FAST-LIO** — 等 ROS2 分支稳定后再试，或者用 docker 已有环境

@@ -36,6 +36,7 @@ r2_integration/
 │   │   └── ekf-verification.md       EKF 实车验证清单（测试方法+判合格标准）
 │   │
 │   └── retrospect/                   ← 事件记录（按日期排序）
+│       ├── 2026-08-02_ekf_tf_fusion_fix.md    EKF/TF 融合排障全记录（7 问题）
 │       ├── 2026-07-31_chassis_launch_fix.md   chassis.launch.py 路径修复
 │       └── vlp16_slam_exploration.md          VLP-16 SLAM 方案探索
 │
@@ -101,7 +102,7 @@ Phase 5 气动 + 异常处理 + Robocon 编排   ⏳
 部署时（N97 Mini PC / 192.168.1.210）
 ├──  CAN 总线: slcan 转串口 (USB-CAN 适配器) → CanCmd 工具配置
 ├──  IMU/G354: ttyACM1（JLink OB Mini 串口直连）
-├──  LiDAR:    VLP-16 以太网直连（设备 IP 10.10.3.6）
+├──  LiDAR:    VLP-16 以太网直连（设备 IP 10.18.18.6）
 ├──  视觉:     D435 USB 直连（可选 Jetson 协同）
 └──  OS:       Ubuntu 22.04 + ROS2 Humble
 ```

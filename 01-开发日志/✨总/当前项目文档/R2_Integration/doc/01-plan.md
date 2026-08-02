@@ -622,7 +622,7 @@ ros2 launch r2_bringup ekf.launch.py
 
 ```
 当前：✅ 已完成（2026-07-31 实车跑通）
-  - VLP-16 驱动就绪（设备 IP 10.10.3.6，目标 IP 10.10.3.20）
+  - VLP-16 驱动就绪（设备 IP 10.18.18.6，目标 IP 10.18.18.20）
   - KISS-ICP 实车跑通（/velodyne_points → odom + 注册点云）
   - TF 已标定（base_footprint → velodyne，z=0.77m，车顶水平安装）
 
@@ -635,15 +635,15 @@ ros2 launch r2_bringup ekf.launch.py
 
 #### 2.1 VLP-16 网络配置（半天）
 
-VLP-16 经 PoE 供电，设备 IP 为 10.10.3.6，目标 IP 为 10.10.3.20（本机 N97）：
+VLP-16 经 PoE 供电，设备 IP 为 10.18.18.6，目标 IP 为 10.18.18.20（本机 N97）：
 
 ```bash
 # 主机（N97）以太网口配置
-sudo ip addr add 10.10.3.20/24 dev eth0
-sudo ip link set eth0 up
+sudo ip addr add 10.18.18.20/24 dev enp1s0
+sudo ip link set enp1s0 up
 
 # 验证连接
-ping 10.10.3.6
+ping 10.18.18.6
 ```
 
 **踩坑记录**：VLP-16 单向 UDP 流（2368 端口）不触发 ARP 更新，改 IP 或换网段后缓存固化，需独立 IP 隔离或改雷达目标 IP，详见 `retrospect/vlp16_slam_exploration.md`。
@@ -736,17 +736,17 @@ rviz2
 
 ```bash
 # VLP16 实际配置（见 retrospect/vlp16_slam_exploration.md）：
-#   设备 IP: 10.10.3.6
-#   目标 IP: 10.10.3.20
+#   设备 IP: 10.18.18.6
+#   目标 IP: 10.18.18.20
 #   数据端口: 2368
 #   配置端口: 串口 115200 8N1
 
 # N97 以太网口配置
-sudo ip addr add 10.10.3.20/24 dev eth0
-sudo ip link set eth0 up
+sudo ip addr add 10.18.18.20/24 dev enp1s0
+sudo ip link set enp1s0 up
 
 # 验证连接
-ping 10.10.3.6
+ping 10.18.18.6
 
 # 如果 ping 不通：
 #   1. 检查 PoE 供电（PoE 注入器或 PoE 交换机）
@@ -1106,10 +1106,11 @@ ros2 launch g354_imu_driver g354_rviz.launch.py rviz:=false  # 启动 IMU 驱动
                                                               # 可视化由 rviz:=true（默认）控制
 
 # ─── VLP16 + KISS-ICP ───
-sudo ip addr add 10.10.3.20/24 dev eth0             # 配置 IP（设备 10.10.3.6）
+sudo ip addr add 10.18.18.20/24 dev enp1s0          # 配置 IP（设备 10.18.18.6）
 ros2 launch ~/.ros/velodyne_n97.launch.py           # 启动 VLP16 驱动
 source ~/kiss_icp_ws/install/setup.bash             # KISS-ICP SLAM 里程计
-ros2 launch kiss_icp odometry.launch.py topic:=/velodyne_points
+ros2 launch kiss_icp odometry.launch.py topic:=/velodyne_points \
+  use_sim_time:=false base_frame:=velodyne          # 必须 use_sim_time:=false（实车无 /clock）
 
 # ─── D435 ───
 ros2 launch realsense2_camera rs_launch.py             # 启动 D435
