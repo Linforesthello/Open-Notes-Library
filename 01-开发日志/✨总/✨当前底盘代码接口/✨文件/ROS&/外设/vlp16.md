@@ -171,3 +171,57 @@ std_srvs.srv.Empty_Response()
 lin@lin-virtual-machine:~$ 
 ```
 
+## 第三次（2026-08-02）：交换机接入方案 ✅
+
+之前的 10.10.3.x 直连方案废弃，现在雷达经交换机接入 VMware，链路已通（tcpdump 可见大量 2368 包）。
+
+### 链路
+
+```
+VLP-16 ──RJ45── 交换机（无 VLAN，管理 IP 10.18.18.251，勿改）
+    ──RJ45── Windows 宿主机有线网口
+    ──VMware 桥接── 虚拟机 ens37（静态 10.18.18.30/24）
+```
+
+### 雷达网页配置（当前生效）
+
+| 项 | 值 |
+|:---|:---|
+| Sensor (Network) IP | 10.18.18.6 / 255.255.255.0 |
+| Host (Destination) IP | 10.18.18.30（= ens37 静态地址，单播直达） |
+| Gateway | 10.18.18.1（同网段直发用不到） |
+| Data Port / Telemetry | 2368 / 8308 |
+| DHCP | Off |
+
+虚拟机：ens33 = 192.168.1.204/24（公司网），ens37 = 10.18.18.30/24（雷达网，静态，网关留空）。
+
+### 经验
+
+1. **网页改配置后必须 Save + 重启雷达才生效**（写 NVRAM，重启才应用并重建网络栈，顺带清 ARP 缓存）
+2. 换接收端 MAC 收不到 → 断电重启雷达清 ARP 固化缓存
+3. VMware 桥接要手动指定桥接到宿主机**有线网口**，不要"自动"
+4. 雷达独立网段与公司网隔离，广播不骚扰局域网
+
+### 启动（两终端）
+
+```
+# 终端 1：驱动
+ros2 run velodyne_driver velodyne_driver_node --ros-args \
+  -p device_ip:=10.18.18.6 \
+  -p frame_id:=velodyne \
+  -p model:=VLP16
+
+# 终端 2：点云转换
+ros2 run velodyne_pointcloud velodyne_transform_node --ros-args \
+  -p calibration:=/opt/ros/humble/share/velodyne_pointcloud/params/VLP16db.yaml \
+  -p model:=VLP16 \
+  -p frame_id:=velodyne \
+  -p fixed_frame:=velodyne
+
+# 验证
+ros2 topic hz /velodyne_points     # ~10Hz
+sudo tcpdump -i ens37 udp port 2368 -n -c 10
+```
+
+完整一键 launch（driver + transform + laserscan）：`/home/lin/.ros/velodyne_n97.launch.py`（其中 device_ip 需改为 10.18.18.6）
+

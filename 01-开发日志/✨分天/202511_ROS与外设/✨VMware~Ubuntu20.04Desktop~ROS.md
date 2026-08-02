@@ -122,7 +122,7 @@
 		13. sudo apt install python3-rospy python3-rosparam
 		14. sudo apt install ros-noetic-sensor-msgs
 ### 常用工具
-#winSCP #docker #baobab #Tools/工具链/linux #Tools/linux 
+#Tools/winSCP #Tools/docker #baobab #Tools/工具链/linux #Tools/linux 
 #### OpenSSH（远程登录）
 1. openssh->winscp
 	1. sudo apt update
@@ -247,7 +247,7 @@ apt install -y curl wget nano
 		4. 稳定性问题也解决了，就是没有标定；这在正常的相机作用流程中，并不是正确的。所以可能每处都出现问题
 	5. 复现文件夹 #回顾/复现
 		1. ![[Pasted image 20251121190028.png]]
-		2. 把这个通过winscp导入到vmware中”~/test“，后续再行mv到/src下| #winSCP ![[Pasted image 20251121190040.png]]
+		2. 把这个通过winscp导入到vmware中”~/test“，后续再行mv到/src下| #Tools/winSCP ![[Pasted image 20251121190040.png]]
 
 # ⑶ubuntu下，嵌入式工具链配置
 ## stm32cubemx+stm32cubeprg
