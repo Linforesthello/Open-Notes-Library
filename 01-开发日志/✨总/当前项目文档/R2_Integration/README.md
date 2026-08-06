@@ -125,9 +125,9 @@ colcon build
 #    从主页面运行 CanCmd → 选择串口设备 → 选择波特率(1M) → 确认
 python3 ~/Lin_workspace/command/can_command.py
 
-# 2. 启动底盘（在终端 1 运行）
+# 2. 启动底盘（在终端 1 运行；EKF 场景必须带 publish_tf:=false 让 EKF 统一发 TF，独立使用可不带）
 source ~/Lin_workspace/r2_integration/install/setup.bash
-ros2 launch r2_bringup chassis.launch.py
+ros2 launch r2_bringup chassis.launch.py publish_tf:=false
 
 # 3. 启动 IMU（在终端 2 运行；保持静止 3s 等校准完成）
 #    mount_axes:=y_front_x_left_z_down 是 R2 的 G354 出厂轴定义（x左/y前/z下），见 doc/phase0/sensor-mount.md
@@ -148,3 +148,4 @@ ros2 topic echo /odometry/filtered
 > 注意: 本机 colcon 会把 console_script 装在 `bin/`（而非标准 `lib/<pkg>/`），
 > `ros2 run` 无法找到入口脚本，请一律使用 `ros2 launch` 启动。
 
+python3 ~/Lin_workspace/r2_integration/r2_bringup/r2_bringup/teleop_keyboard.py

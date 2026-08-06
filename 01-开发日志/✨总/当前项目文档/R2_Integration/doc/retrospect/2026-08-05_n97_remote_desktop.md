@@ -88,6 +88,10 @@ export GDK_BACKEND=x11
 exec xfce4-session
 ```
 
+
+![[Pasted image 20260805210635.png]]
+
+
 ---
 
 ## 四、最终方案与验证
