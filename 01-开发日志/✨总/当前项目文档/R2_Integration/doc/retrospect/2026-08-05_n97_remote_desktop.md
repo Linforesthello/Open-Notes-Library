@@ -88,10 +88,6 @@ export GDK_BACKEND=x11
 exec xfce4-session
 ```
 
-
-![[Pasted image 20260805210635.png]]
-
-
 ---
 
 ## 四、最终方案与验证
@@ -99,6 +95,28 @@ exec xfce4-session
 - TigerVNC（`tigervncserver :2 -geometry 1920x1080 -depth 24 -localhost no`），xfce4 虚拟会话
 - 验证：Windows RealVNC Viewer 连 `192.168.1.210:5902` 成功，桌面可操作，rviz2 正常运行
 - 备注：VNC 虚拟桌面与本地 GNOME 桌面是两个独立会话，VNC 里看到的是 xfce4 而非本地屏幕
+
+---
+
+## 四点五、跨机 DDS（VM rviz2）适用边界修正（2026-08-06 实测）
+
+**背景**：曾计划把 rviz2 从 N97 挪到 VM（理由：N97 CPU 被 rviz2 吃满导致
+`Message Filter dropping ... queue is full`），并完成了 FastDDS 固定端口 7410 +
+单播 Peer 的跨机配置（VM 可列出 N97 全部话题、echo 实时数据）。
+
+**实测结论（推翻原方案）**：
+
+| 场景 | 结果 |
+|:-----|:-----|
+| VM 命令行查看（topic list / echo / bag 录制控制） | ✅ 正常，低带宽无压力 |
+| **VM rviz2 实时可视化（含点云）** | ❌ **掉帧严重 + queue-is-full 刷屏**；且反向拖慢 N97（EKF `Failed to meet update rate`，WiFi 发送阻塞） |
+
+**根因修正**：queue-is-full 不是 N97 CPU（当时 6.35 负载含 N97 本地 rviz2+建图），
+而是 **WiFi 跨机链路带宽/延迟抖动**——VM 的 rviz2 经 WiFi 收点云/TF 时，
+消息过滤器等 TF 超时 → 丢消息；N97 往 WiFi 发数据 → DDS 发送队列阻塞 → EKF 掉频率。
+
+**最终方案**：**rviz2 留在 N97 本地**（回环，不占 WiFi）。跨机 DDS 保留用于
+低带宽调试（命令行、bag 回放控制、数据导出）。
 
 ---
 
