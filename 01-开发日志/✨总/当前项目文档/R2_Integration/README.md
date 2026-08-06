@@ -23,6 +23,7 @@ r2_integration/
 │   ├── 01-plan.md                    五阶段集成方案总纲
 │   ├── 02-deploy-checklist.md        N97 部署清单
 │   ├── 02-progress.md                全局进度一览（各Phase完成度）
+│   ├── project_status.md              全项目现状总结（08-06）
 │   ├── 03-current_state.md           当前完成状态
 │   ├── 07-handover.md                状态交接（新会话用）
 │   │
@@ -88,10 +89,10 @@ r2_integration/
 ## 当前阶段
 
 ```
-Phase 0 底盘 ROS2 + CAN 控制            ✅ 100% 完成
-Phase 1 G354 IMU + EKF 融合            ⏳ 驱动+轴映射修复完成（8-03），实车验证待做
+Phase 0 底盘 ROS2 + CAN 控制            ✅ 100% 完成（含 08-06 里程计修复）
+Phase 1 G354 IMU + EKF 融合             ✅ 85% 实车对比验证完成（08-06 bag 验证）
 Phase 2 3D LiDAR SLAM (VLP16+KISS-ICP)  ✅ 驱动 + 3D 里程计已跑通
-Phase 3 VLP16 + Nav2 导航              ⏳
+Phase 3 VLP16 + Nav2 导航              ⏳ 建图方案缺口待定
 Phase 4 D435 + Jetson 视觉             ⏳
 Phase 5 气动 + 异常处理 + Robocon 编排   ⏳
 ```
