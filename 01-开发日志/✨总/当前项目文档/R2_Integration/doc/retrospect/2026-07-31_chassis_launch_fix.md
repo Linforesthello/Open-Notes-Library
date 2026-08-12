@@ -1,7 +1,5 @@
 # chassis.launch.py 启动失败修复全记录
 
-#Problems/solving/ROS/launch启动失败 #优化/代码架构/launch路径推导
-
 > 日期: 2026-07-31
 > 机器: 本地 VM（lin-virtual-machine）+ N97（192.168.1.210）
 > 关联: `doc/02-deploy-checklist.md`

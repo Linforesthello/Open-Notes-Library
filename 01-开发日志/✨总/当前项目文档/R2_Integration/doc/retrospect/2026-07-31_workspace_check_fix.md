@@ -1,7 +1,5 @@
 # r2_integration 工作区全面检查与修复记录
 
-#优化/开发流程/工作区检查 #优化/代码架构/launch健壮性
-
 > 日期: 2026-07-31
 > 关联: `retrospect/2026-07-31_chassis_launch_fix.md`（chassis 路径修复，同日上午）
 > 机器: 本地 VM + N97（192.168.1.210）

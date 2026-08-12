@@ -1,7 +1,5 @@
 # 让文档在 Claude for VSCode 中总是被优先读到（流程模式）
 
-#Tools/skills/ai/claude #VsCode/配置/claude自动加载
-
 > 日期: 2026-07-31
 > 状态: ✅ 已验证生效
 > 适用: 任何"想让某个文件每次会话都自动进入 Claude 上下文"的场景

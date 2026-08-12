@@ -1,7 +1,5 @@
 # 键盘控制修复全记录（teleop_twist_keyboard → R2 专用 WASD 遥控）
 
-#控制/车体控制/键盘遥控 #Problems/solving/ROS/teleop键位冲突
-
 > 日期: 2026-07-31
 > 机器: N97（192.168.1.210，SSH 操作）+ 本地 VM（lin-virtual-machine）
 > 关联: `02-deploy-checklist.md` ⑤ 键盘控制、`control/R2.py`（旧 WASD 布局）
