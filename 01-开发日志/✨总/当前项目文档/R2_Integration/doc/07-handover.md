@@ -1,8 +1,8 @@
 # R2 集成 · 状态交接
 
 > 最后更新: 2026-08-15
-> 当前进度: Phase 0 ✅ 100%｜Phase 1 ✅ 95%（08-12 yaw 方案①通过）｜Phase 2 ✅ 100%｜Phase 3 ⏳ D2 重影已消除（08-11）
-> 下一阶段: D4 地图复用验证 → Nav2
+> 当前进度: Phase 0 ✅ 100%｜Phase 1 ✅ 95%（08-12 yaw 方案①通过）｜Phase 2 ✅ 100%｜Phase 3 ⏳ 10%（Nav2 首闭环跑通 08-15）
+> 下一阶段: Nav2 全速参数验证 → 避障实测 → 长时间稳定性
 > 基础设施: 08-15 VLP-16 运行物抽包 r2_sensors（launch/r2.urdf 移入，dds 留 r2_bringup，启动命令见 §三）；08-14 两机 git 同步统一；VM 单机跑通 VLP-16（DDS 根因修复，见 §五 8-14）
 >
 > **部署环境**：N97 Mini PC（192.168.1.210，Ubuntu 22.04 + Humble），enp1s0: 10.18.18.20/24
@@ -18,7 +18,7 @@
 | 0 | 底盘 ROS2 + CAN 控制 | ✅ 100% | 四全向轮，全命令可用 |
 | 1 | G354 IMU + 轮速 EKF 融合 | ✅ 95% | 实车验证完成（08-06）；z 漂移修复（08-09）；yaw 偏差方案①实施并验证通过（08-12）；仅剩 slip 剧烈加减速严格复测 |
 | 2 | VLP16 + KISS-ICP SLAM | ✅ 100% | 驱动+里程计+键盘建图全跑通（8-02） |
-| 3 | VLP16 + Nav2 导航 | ⏳ 0% | D2 离线建图已跑通且**重影已消除**（08-11 KISS 帧率修复），见 [retrospect/2026-08-11_kiss_frame_rate_fix.md](retrospect/2026-08-11_kiss_frame_rate_fix.md)；待 D4 复用验证 + Nav2 |
+| 3 | VLP16 + Nav2 导航 | ⏳ 10% | D2 重影消除（08-11）；**D4 复用验证 + Nav2 首闭环跑通**（08-15，降额 0.2m/s），见 [retrospect/2026-08-15_nav2_bringup.md](retrospect/2026-08-15_nav2_bringup.md)；待全速验证 + 避障实测 |
 | 4 | D435 + Jetson 视觉 | ⏳ 0% | — |
 | 5 | 气动+异常+编排 | ⏳ 0% | — |
 
@@ -83,6 +83,7 @@ python3 ~/Lin_workspace/command/can_command.py
 ros2 launch r2_sensors velodyne.launch.py
 
 # 终端 2: KISS-ICP（visualize:=true 发 /kiss/points 并带 RViz；false 则无点云话题）
+#   ⚠️ Nav2 场景不启动 KISS（08-15 决策：AMCL 定位不需要，省 N97 CPU），跳到终端 7
 source ~/kiss_icp_ws/install/setup.bash
 ros2 launch kiss_icp odometry.launch.py \
   topic:=/velodyne_points base_frame:=velodyne \
@@ -105,6 +106,16 @@ ros2 launch r2_bringup ekf.launch.py
 ros2 run r2_bringup teleop_keyboard
 # 或一键（GNOME 终端环境）:
 # bash ~/Lin_workspace/r2_integration/scripts/r2_startup.sh
+
+# 终端 7: Nav2 导航（08-15 起；首次实机用降额参数 nav2_params_low，KISS 不启动）
+#   操作: rviz 出现后 2D Pose Estimate(P) 设初始位姿 → Navigation2 Goal(G) 发目标
+#   注意: 设位姿前 planner/costmap 报 "map frame does not exist" 是正常等待噪音；
+#         车静止时 AMCL 不发布 /amcl_pose 与粒子（update_min_d/a 阈值设计），动起来才有
+source ~/Lin_workspace/r2_integration/install/setup.bash
+ros2 launch r2_bringup nav2.launch.py \
+  map:=/home/lin/maps/map_0815_clean.yaml \
+  params_file:=~/Lin_workspace/r2_integration/install/r2_bringup/share/r2_bringup/config/nav2_params_low.yaml \
+  rviz:=true
 ```
 
 **IMU 独立看姿态**：`ros2 run rviz2 rviz2` → Fixed Frame 填 `imu_link` →
@@ -132,7 +143,9 @@ Add → By display type → Imu（需已装 `ros-humble-rviz-imu-plugin`）→ T
 | 日期 | 结论 | 详情 |
 |:---|:---|:---|
 | 08-15 | velodyne 抽包 r2_sensors（launch/urdf 移出 r2_bringup，启动命令改为 `ros2 launch r2_sensors velodyne.launch.py`）；g354 补 ament index marker | [retrospect](retrospect/2026-08-15_r2_sensors_extract.md) |
+| 08-15 | **干净 bag 重录（165547：9.63Hz 零空窗）+ 人形块过滤工具 filter_person_blobs.py**（空地散点=建图在场的人），清洗版导航图就绪；同日长录 170058 KISS 漂移 163° 按失败样本归档 | [clean_bag](retrospect/2026-08-15_clean_bag_rerecord.md)、[kiss_drift](retrospect/2026-08-15_kiss_drift_170058.md) |
 | 08-15 | VLP-16 链路性能调优：points 7.7~8.5 → 9.3~9.4Hz 稳定；根因=雷达供电不足 + 转换节点 CPU（organize_cloud/max_range） | [retrospect](retrospect/2026-08-15_velodyne_perf_tuning.md) |
+| 08-15 | 双录对比：长录 170058 KISS 整程漂移（旋转+38 空窗→航向漂 163°、闭环 8.08m、地图 1627 碎片块），不可作建图底图；短录 165547 可用（map_0815_clean） | [retrospect](retrospect/2026-08-15_kiss_drift_170058.md) |
 | 08-02 | EKF/TF 融合链路 7 问题全解决（网络迁移/use_sim_time/imu_link/QoS/双发布者/协方差/ekf.yaml） | [retrospect](retrospect/2026-08-02_ekf_tf_fusion_fix.md) |
 | 08-03 | G354 IMU 轴定义修复（mount_axes=y_front_x_left_z_down）；启动纪律：IMU 校准后才可起 EKF | [sensor-mount.md](phase0/sensor-mount.md) |
 | 08-05 | 底盘里程计修复 + EKF 过程噪声 225 值矩阵排障；IMU 协方差病态→EKF NaN | [chassis_ekf](retrospect/2026-08-05_chassis_ekf_debug.md)、[cov_nan](retrospect/2026-08-05_imu_covariance_ekf_nan.md) |
@@ -165,7 +178,10 @@ Add → By display type → Imu（需已装 `ros-humble-rviz-imu-plugin`）→ T
 
 待办（按优先级）：
 - [x] **performance 持久化**（08-11）：已入启动流程（§三 前置 0 步骤），每次开机手动执行；systemd 固化暂缓
-- [ ] **D4 地图复用验证**：重启全栈加载 map_run_0811_1925.pgm/yaml，rviz 回显与场地一致
+- [x] **D4 地图复用验证**（08-15 完成）：`map_0815_clean` 加载回显一致 + **Nav2 首闭环跑通**（降额 0.2m/s），见 [retrospect/2026-08-15_nav2_bringup.md](retrospect/2026-08-15_nav2_bringup.md)（⚠️ 首测有擦碰，见下条）
+- [ ] **盲区/footprint 修复复测**（08-15 已改参数，待实机验证）：雷达裁剪 min_range 0.9→0.5、local_costmap 3×3→6×6、footprint 0.62→0.84×0.66 匹配 urdf（撞障碍根因，见 [retrospect 五-2](retrospect/2026-08-15_nav2_bringup.md)）
+- [ ] **Nav2 全速验证**：降额闭环通过后切 `nav2_params.yaml`（0.5/0.3/0.8）复测
+- [ ] **Nav2 避障实测**：costmap 实时刷新已见（人体移动出膨胀圈），静态/动态障碍绕行 + 恢复行为实测
 - [x] **yaw 偏差**（08-12 完成）：方案①（odom0_config yaw=true）实施并验证通过，见 [phase1/ekf-yaw-plan.md](phase1/ekf-yaw-plan.md)
 - [ ] **z 回归项**：slip 场景剧烈加减速 z 漂 +2.5m（08-05 遗留）复测——08-12 转弯/直行全程 z 恒 0（two_d_mode 结构性钳位），仅"剧烈加减速"动作未严格复测
 - [ ] VNC 开机自启（N97 重启后远程桌面不丢）
@@ -190,8 +206,13 @@ Add → By display type → Imu（需已装 `ros-humble-rviz-imu-plugin`）→ T
 
 **资源状态**：VM 与 N97 代码同步基线 = 提交 5c46c58（main，08-12，yaw 开放）；
 bag 分析副本在 VM `~/Lin_workspace/bags/raw/`（ekf_pure_0809_2013 / ekf_yaw_test_0809 /
-map_run_0809_2133 / **map_run_0811_1925** / **ekf_yaw_v2_0812** / **stage_0812_2111**）；地图产物
-`bags/maps/map_run_0811_1925/`（ply/map.yaml）与 `bags/maps/d4/`（pgm/map.yaml，D4 部署副本 → N97 `~/maps/`）；
+map_run_0809_2133 / **map_run_0811_1925** / **ekf_yaw_v2_0812** / **stage_0812_2111** /
+**map_run_20260815_165547** 干净包 / **map_run_20260815_170058** KISS 漂移失败样本 /
+**nav2_first_loop** 首次闭环 bag，分析脚本 `bags/analysis/analyze_nav2_first_loop.py`）；截图
+`bags/rviz_nav2_first_loop.png` / `_2.png`；地图产物
+`bags/maps/map_run_0811_1925/`（ply/map.yaml）、`bags/maps/map_0815_clean/`（seg1_clean.ply +
+layers_clean + 过滤对比图）与 `bags/maps/d4/`（map.yaml/map_run_0811_1925.pgm +
+**map_0815_clean.{pgm,yaml}**，D4 部署副本 → N97 `~/maps/`）；
 stage_0812 保守录制对照地图 `bags/stage_0812_map/`（pgm/yaml + raw.ply，对比图
 `bags/raw/compare_0811_vs_0812.png`，留档未传 N97）。
 
