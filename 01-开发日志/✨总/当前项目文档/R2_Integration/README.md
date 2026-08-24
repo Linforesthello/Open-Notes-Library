@@ -29,6 +29,7 @@ r2_integration/
 │   ├── n97_remote_desktop.md         N97 远程桌面方案（TigerVNC 定型，NoMachine/RealVNC 弃用）
 │   ├── fastlio2-n97-deploy.md        FAST-LIO2 N97 实车部署手册（依赖/外参/运行纪律/验证）
 │   ├── planning-control-roadmap.md   规划控制与视觉集成路线（离线/实时两大阵营 + 标定工具线）
+│   ├── motion-control-roadmap.md     运动控制与具身智能路线（三大方向：四足/机械臂/全车协调 + SO-101+LeRobot+OXE 开源生态）
 │   ├── 02-progress.md                全局进度一览（各Phase完成度）
 │   ├── project_status.md              全项目现状总结（08-06）
 │   ├── project_landscape.md            项目全景（R2在更大系统中的位置）
@@ -48,6 +49,8 @@ r2_integration/
 │   │   └── 2026-08-04_ekf-verification-result.md  EKF 验证结果记录
 │   │
 │   └── retrospect/                   ← 事件记录（按日期排序）
+│       ├── 2026-08-24_n97_fan_control.md       N97 风扇调速（ACPI 空壳死路→IT8613E force_id=0x8622 突破，sysfs pwm2 即刻调速可撤销）
+│       ├── 2026-08-23_doc_source_traceback.md  文档真实性回溯：roadmap 全篇来源规范化（1.11 落地案例 + 可复用检查清单）
 │       ├── 2026-08-17_nav2_initialpose_inflation_fix.md  初始位姿诊断 + 膨胀参数 0.30 过缝修复（08-17 实车验证，全速暂缓）
 │       ├── 2026-08-15_nav2_bringup.md             Nav2 首闭环跑通（D4 验证 + 降额实机 + 7 条排障 + 盲区/footprint 修复）
 │       ├── 2026-08-15_kiss_drift_170058.md          KISS 长录整程漂移留档（旋转+空窗→航向漂163°，双录对比）
