@@ -1,0 +1,111 @@
+# 原始数据留档
+# 来源: 用户粘贴（N97 实车录制日志原文，来自 SSH 终端）
+# 机器: lin-Default-string (N97, 192.168.1.210)
+# session 话题: costmap 问题①证据链审查（W3 避障 bag 录制过程）
+# 日期时间: 2026-08-25 13:15（本地会话时间）
+# 说明: W3 避障验收 bag 录制原始命令与日志；含 1349/1356/1357/1401/1405 五个 bag 的完整录制记录。
+#       关键事实: 仅录制 /scan /odometry/filtered /cmd_vel /cmd_vel_smoothed /goal_pose /amcl_pose
+#       /tf /tf_static /map 九个话题——不含任何 costmap 话题（无 /costmap/*、无 /local_costmap/*）。
+
+lin@lin-Default-string:~$ ros2 bag record -o ~/Lin_workspace/r2_integration/bags/nav2_avoid_$(date +%m%d_%H%M) \
+  /scan /odometry/filtered /cmd_vel /cmd_vel_smoothed /goal_pose /amcl_pose /tf /tf_static /map
+[INFO] [1787636981.540185753] [rosbag2_recorder]: Press SPACE for pausing/resuming
+[INFO] [1787636981.553702645] [rosbag2_storage]: Opened database '/home/lin/Lin_workspace/r2_integration/bags/nav2_avoid_0825_1349/nav2_avoid_0825_1349_0.db3' for READ_WRITE.
+[INFO] [1787636981.569636752] [rosbag2_recorder]: Listening for topics...
+[INFO] [1787636981.571510683] [rosbag2_recorder]: Event publisher thread: Starting
+[INFO] [1787636981.591504193] [rosbag2_recorder]: Subscribed to topic '/tf'
+[INFO] [1787636981.599069482] [rosbag2_recorder]: Subscribed to topic '/cmd_vel_smoothed'
+[INFO] [1787636981.603123876] [rosbag2_recorder]: Subscribed to topic '/goal_pose'
+[INFO] [1787636981.613693311] [rosbag2_recorder]: Subscribed to topic '/cmd_vel'
+[INFO] [1787636981.621040032] [rosbag2_recorder]: Subscribed to topic '/amcl_pose'
+[INFO] [1787636981.621454655] [rosbag2_recorder]: Recording...
+[INFO] [1787636982.129377716] [rosbag2_recorder]: Subscribed to topic '/tf_static'
+[INFO] [1787636982.251867163] [rosbag2_recorder]: Subscribed to topic '/scan'
+[INFO] [1787636982.411113724] [rosbag2_recorder]: Subscribed to topic '/map'
+[INFO] [1787636982.427312648] [rosbag2_recorder]: Subscribed to topic '/odometry/filtered'
+[INFO] [1787636982.427478198] [rosbag2_recorder]: All requested topics are subscribed. Stopping discovery...
+[INFO] [1787637222.469899102] [rosbag2_cpp]: Writing remaining messages from cache to the bag. It may take a while
+[INFO] [1787637222.477720427] [rosbag2_recorder]: Event publisher thread: Exiting
+[INFO] [1787637222.477809614] [rosbag2_recorder]: Recording stopped
+lin@lin-Default-string:~$ ros2 bag record -o ~/Lin_workspace/r2_integration/bags/nav2_avoid_$(date +%m%d_%H%M)   /scan /odometry/filtered /cmd_vel /cmd_vel_smoothed /goal_pose /amcl_pose /tf /tf_static /map
+[INFO] [1787637389.101526394] [rosbag2_recorder]: Press SPACE for pausing/resuming
+[INFO] [1787637389.105893267] [rosbag2_storage]: Opened database '/home/lin/Lin_workspace/r2_integration/bags/nav2_avoid_0825_1356/nav2_avoid_0825_1356_0.db3' for READ_WRITE.
+[INFO] [1787637389.110040378] [rosbag2_recorder]: Listening for topics...
+[INFO] [1787637389.110172066] [rosbag2_recorder]: Event publisher thread: Starting
+[INFO] [1787637389.115395254] [rosbag2_recorder]: Subscribed to topic '/tf_static'
+[INFO] [1787637389.117785340] [rosbag2_recorder]: Subscribed to topic '/tf'
+[INFO] [1787637389.121293380] [rosbag2_recorder]: Subscribed to topic '/cmd_vel'
+[INFO] [1787637389.121537011] [rosbag2_recorder]: Recording...
+[INFO] [1787637389.125982970] [rosbag2_recorder]: Subscribed to topic '/scan'
+[INFO] [1787637389.228783209] [rosbag2_recorder]: Subscribed to topic '/amcl_pose'
+[INFO] [1787637390.053617101] [rosbag2_recorder]: Subscribed to topic '/map'
+[INFO] [1787637390.156550336] [rosbag2_recorder]: Subscribed to topic '/cmd_vel_smoothed'
+[INFO] [1787637390.157878167] [rosbag2_recorder]: Subscribed to topic '/odometry/filtered'
+[INFO] [1787637399.311387659] [rosbag2_cpp]: Writing remaining messages from cache to the bag. It may take a while
+[INFO] [1787637399.312572149] [rosbag2_recorder]: Event publisher thread: Exiting
+[INFO] [1787637399.312628425] [rosbag2_recorder]: Recording stopped
+lin@lin-Default-string:~$ ros2 bag record -o ~/Lin_workspace/r2_integration/bags/nav2_avoid_$(date +%m%d_%H%M)   /scan /odometry/filtered /cmd_vel /cmd_vel_smoothed /goal_pose /amcl_pose /tf /tf_static /map
+[ERROR] [ros2bag]: Output folder '/home/lin/Lin_workspace/r2_integration/bags/nav2_avoid_0825_1356' already exists.
+lin@lin-Default-string:~$ ros2 bag record -o ~/Lin_workspace/r2_integration/bags/nav2_avoid_$(date +%m%d_%H%M)   /scan /odometry/filtered /cmd_vel /cmd_vel_smoothed /goal_pose /amcl_pose /tf /tf_static /map
+[ERROR] [ros2bag]: Output folder '/home/lin/Lin_workspace/r2_integration/bags/nav2_avoid_0825_1356' already exists.
+lin@lin-Default-string:~$ ros2 bag record -o ~/Lin_workspace/r2_integration/bags/nav2_avoid_$(date +%m%d_%H%M)   /scan /odometry/filtered /cmd_vel /cmd_vel_smoothed /goal_pose /amcl_pose /tf /tf_static /map
+[ERROR] [ros2bag]: Output folder '/home/lin/Lin_workspace/r2_integration/bags/nav2_avoid_0825_1356' already exists.
+lin@lin-Default-string:~$ ros2 bag record -o ~/Lin_workspace/r2_integration/bags/nav2_avoid_$(date +%m%d_%H%M)   /scan /odometry/filtered /cmd_vel /cmd_vel_smoothed /goal_pose /amcl_pose /tf /tf_static /map
+[INFO] [1787637431.829065506] [rosbag2_recorder]: Press SPACE for pausing/resuming
+[INFO] [1787637431.835273466] [rosbag2_storage]: Opened database '/home/lin/Lin_workspace/r2_integration/bags/nav2_avoid_0825_1357/nav2_avoid_0825_1357_0.db3' for READ_WRITE.
+[INFO] [1787637431.854343528] [rosbag2_recorder]: Listening for topics...
+[INFO] [1787637431.855222644] [rosbag2_recorder]: Event publisher thread: Starting
+[INFO] [1787637431.865041873] [rosbag2_recorder]: Subscribed to topic '/tf'
+[INFO] [1787637431.865193329] [rosbag2_recorder]: Recording...
+[INFO] [1787637431.969868011] [rosbag2_recorder]: Subscribed to topic '/cmd_vel'
+[INFO] [1787637431.972427021] [rosbag2_recorder]: Subscribed to topic '/odometry/filtered'
+[INFO] [1787637431.973884732] [rosbag2_recorder]: Subscribed to topic '/tf_static'
+[INFO] [1787637432.886573310] [rosbag2_recorder]: Subscribed to topic '/amcl_pose'
+[INFO] [1787637432.888279599] [rosbag2_recorder]: Subscribed to topic '/map'
+[INFO] [1787637432.890392564] [rosbag2_recorder]: Subscribed to topic '/cmd_vel_smoothed'
+[INFO] [1787637432.892905831] [rosbag2_recorder]: Subscribed to topic '/scan'
+[INFO] [1787637444.595087668] [rosbag2_recorder]: Subscribed to topic '/goal_pose'
+[INFO] [1787637444.595150848] [rosbag2_recorder]: All requested topics are subscribed. Stopping discovery...
+[INFO] [1787637707.524919735] [rosbag2_cpp]: Writing remaining messages from cache to the bag. It may take a while
+[INFO] [1787637707.526534075] [rosbag2_recorder]: Event publisher thread: Exiting
+[INFO] [1787637707.526610773] [rosbag2_recorder]: Recording stopped
+lin@lin-Default-string:~$ ros2 bag record -o ~/Lin_workspace/r2_integration/bags/nav2_avoid_$(date +%m%d_%H%M)   /scan /odometry/filtered /cmd_vel /cmd_vel_smoothed /goal_pose /amcl_pose /tf /tf_static /map
+[INFO] [1787637719.865376938] [rosbag2_recorder]: Press SPACE for pausing/resuming
+[INFO] [1787637719.872531948] [rosbag2_storage]: Opened database '/home/lin/Lin_workspace/r2_integration/bags/nav2_avoid_0825_1401/nav2_avoid_0825_1401_0.db3' for READ_WRITE.
+[INFO] [1787637719.903129412] [rosbag2_recorder]: Listening for topics...
+[INFO] [1787637719.904706328] [rosbag2_recorder]: Event publisher thread: Starting
+[INFO] [1787637719.934025680] [rosbag2_recorder]: Subscribed to topic '/tf_static'
+[INFO] [1787637719.935858505] [rosbag2_recorder]: Subscribed to topic '/cmd_vel_smoothed'
+[INFO] [1787637719.941117737] [rosbag2_recorder]: Recording...
+[INFO] [1787637720.039286201] [rosbag2_recorder]: Subscribed to topic '/amcl_pose'
+[INFO] [1787637720.041174346] [rosbag2_recorder]: Subscribed to topic '/cmd_vel'
+[INFO] [1787637720.043002595] [rosbag2_recorder]: Subscribed to topic '/tf'
+[INFO] [1787637720.145581119] [rosbag2_recorder]: Subscribed to topic '/goal_pose'
+[INFO] [1787637720.962922977] [rosbag2_recorder]: Subscribed to topic '/map'
+[INFO] [1787637720.965562653] [rosbag2_recorder]: Subscribed to topic '/scan'
+[INFO] [1787637721.373416874] [rosbag2_recorder]: Subscribed to topic '/odometry/filtered'
+[INFO] [1787637721.373493530] [rosbag2_recorder]: All requested topics are subscribed. Stopping discovery...
+[INFO] [1787637866.275431247] [rosbag2_cpp]: Writing remaining messages from cache to the bag. It may take a while
+[INFO] [1787637866.276717882] [rosbag2_recorder]: Event publisher thread: Exiting
+[INFO] [1787637866.276836362] [rosbag2_recorder]: Recording stopped
+lin@lin-Default-string:~$ ros2 bag record -o ~/Lin_workspace/r2_integration/bags/nav2_avoid_$(date +%m%d_%H%M)   /scan /odometry/filtered /cmd_vel /cmd_vel_smoothed /goal_pose /amcl_pose /tf /tf_static /map
+[INFO] [1787637902.498261576] [rosbag2_recorder]: Press SPACE for pausing/resuming
+[INFO] [1787637902.529706108] [rosbag2_storage]: Opened database '/home/lin/Lin_workspace/r2_integration/bags/nav2_avoid_0825_1405/nav2_avoid_0825_1405_0.db3' for READ_WRITE.
+[INFO] [1787637902.555209685] [rosbag2_recorder]: Listening for topics...
+[INFO] [1787637902.558222641] [rosbag2_recorder]: Event publisher thread: Starting
+[INFO] [1787637902.562371913] [rosbag2_recorder]: Subscribed to topic '/tf_static'
+[INFO] [1787637902.577850430] [rosbag2_recorder]: Subscribed to topic '/map'
+[INFO] [1787637902.582472563] [rosbag2_recorder]: Recording...
+[INFO] [1787637902.718730237] [rosbag2_recorder]: Subscribed to topic '/amcl_pose'
+[INFO] [1787637902.734144641] [rosbag2_recorder]: Subscribed to topic '/tf'
+[INFO] [1787637903.046322986] [rosbag2_recorder]: Subscribed to topic '/goal_pose'
+[INFO] [1787637903.521253533] [rosbag2_recorder]: Subscribed to topic '/cmd_vel'
+[INFO] [1787637903.560091196] [rosbag2_recorder]: Subscribed to topic '/cmd_vel_smoothed'
+[INFO] [1787637903.583089280] [rosbag2_recorder]: Subscribed to topic '/scan'
+[INFO] [1787637904.333775341] [rosbag2_recorder]: Subscribed to topic '/odometry/filtered'
+[INFO] [1787637904.334067820] [rosbag2_recorder]: All requested topics are subscribed. Stopping discovery...
+[INFO] [1787638364.313645556] [rosbag2_cpp]: Writing remaining messages from cache to the bag. It may take a while
+[INFO] [1787638364.314919571] [rosbag2_recorder]: Event publisher thread: Exiting
+[INFO] [1787638364.314980631] [rosbag2_recorder]: Recording stopped
+lin@lin-Default-string:~$ Connection to 192.168.1.210 closed by remote host.
+Connection to 192.168.1.210 closed.

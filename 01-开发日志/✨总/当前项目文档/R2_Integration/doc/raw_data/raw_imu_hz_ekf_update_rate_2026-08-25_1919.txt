@@ -1,0 +1,121 @@
+# 原始数据：IMU hz 实测 + EKF 启动告警
+
+> 来源：N97（192.168.1.210）实测，用户粘贴
+> Session 话题：重录前车体健康检查（IMU hz 确认）→ EKF 启动告警分析
+> 日期时间：2026-08-25 19:19（落盘）
+> 关联文档：[07-handover.md §2.2](../07-handover.md)（hz 基线）、[relog-operation.md](../minimal-loop2/relog-operation.md)（重录操作卡）
+
+---
+
+## 用户原文粘贴（2026-08-25，N97）
+
+> 这是还没开始 nav 指令的情况下记录的数据，当
+> {ros2 topic hz /imu/data → average rate 94.150/93.868/93.767/93.849} 后，
+> 原有的 ekf 节点就
+> {ros2 launch r2_bringup ekf.launch.py → [ekf_node-2] Failed to meet update rate! Took 0.070380356000000005023seconds / 0.10161726599999999776seconds}
+> 为什么？
+
+补充（用户随后口头确认）：警告只出现了几次，后续就没有了。
+
+---
+
+## 数据要点
+
+| 项 | 实测 | 预期/基线 | 判定 |
+|:---|:---|:---|:---|
+| /imu/data 频率 | avg 94.150 / 93.868 / 93.767 / 93.849（连续 4 个窗口） | ~100Hz（07-handover 08-02 基线，std 0.0025） | 稳定、略低于标称但属正常范围 |
+| /imu/data 抖动 | min 0.009~0.010s / max 0.015s / std 0.0017s（窗口 96~379 条） | std 0.0025 基线 | 平滑无跳变 ✅ |
+| EKF update 超时 | 单次 0.070s / 0.102s ×2 次，随后自愈 | 配置 frequency 30 → 周期 33ms | 启动瞬时，非持续 |
+
+## 结论（2026-08-25）
+
+1. IMU 94Hz = G354 自身输出频率，稳定平滑，**链路正常**
+2. EKF 告警 = 启动初期瞬时超时（首几条传感器消息涌入 + 初始协方差计算超预算 2~3 倍），
+   **只出现几次后自愈，非系统性 CPU 问题**，不影响后续录制
+3. 遗留确认项（不阻塞）：N97 `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
+   应为 performance（powersave 已知会导致全链路低 Hz，07-handover §六）
+
+
+lin@lin-Default-string:~$ ros2 topic hz /imu/data
+average rate: 94.077
+	min: 0.010s max: 0.015s std dev: 0.00171s window: 95
+average rate: 93.848
+	min: 0.010s max: 0.015s std dev: 0.00173s window: 190
+average rate: 93.925
+	min: 0.010s max: 0.015s std dev: 0.00173s window: 285
+average rate: 93.829
+	min: 0.010s max: 0.015s std dev: 0.00175s window: 379
+average rate: 93.791
+	min: 0.010s max: 0.015s std dev: 0.00175s window: 474
+average rate: 93.837
+	min: 0.010s max: 0.015s std dev: 0.00175s window: 569
+average rate: 93.797
+	min: 0.010s max: 0.015s std dev: 0.00175s window: 663
+average rate: 93.776
+	min: 0.010s max: 0.015s std dev: 0.00176s window: 758
+average rate: 93.808
+	min: 0.010s max: 0.015s std dev: 0.00175s window: 853
+average rate: 93.782
+	min: 0.010s max: 0.015s std dev: 0.00175s window: 947
+^Clin@lin-Default-string:~ros2 topic hz /odometry/filtereded
+average rate: 30.003
+	min: 0.033s max: 0.034s std dev: 0.00012s window: 32
+average rate: 30.000
+	min: 0.033s max: 0.034s std dev: 0.00012s window: 62
+average rate: 29.999
+	min: 0.033s max: 0.034s std dev: 0.00012s window: 92
+average rate: 29.999
+	min: 0.033s max: 0.034s std dev: 0.00012s window: 122
+^Clin@lin-Default-string:~$ ros2 topic hz /odom_wheels
+average rate: 49.998
+	min: 0.020s max: 0.020s std dev: 0.00012s window: 52
+average rate: 49.995
+	min: 0.020s max: 0.020s std dev: 0.00012s window: 103
+average rate: 50.000
+	min: 0.020s max: 0.020s std dev: 0.00011s window: 154
+average rate: 49.999
+	min: 0.020s max: 0.020s std dev: 0.00011s window: 205
+average rate: 49.998
+	min: 0.020s max: 0.020s std dev: 0.00011s window: 256
+^Clin@lin-Default-string:~$ ros2 topic hz /odom_wheelsros2 topic hz /velodyne_points
+usage: ros2 [-h] [--use-python-default-buffering] Call `ros2 <command> -h` for more detailed usage. ...
+ros2: error: unrecognized arguments: topic hz /velodyne_points
+lin@lin-Default-string:~$ ros2 topic hz /velodyne_points
+average rate: 9.091
+	min: 0.101s max: 0.201s std dev: 0.02889s window: 11
+average rate: 9.466
+	min: 0.100s max: 0.201s std dev: 0.02140s window: 21
+average rate: 9.606
+	min: 0.100s max: 0.201s std dev: 0.01775s window: 31
+average rate: 9.681
+	min: 0.100s max: 0.201s std dev: 0.01550s window: 41
+average rate: 9.726
+	min: 0.100s max: 0.201s std dev: 0.01393s window: 51
+average rate: 9.757
+	min: 0.100s max: 0.201s std dev: 0.01276s window: 61
+average rate: 9.645
+	min: 0.100s max: 0.201s std dev: 0.01663s window: 71
+average rate: 9.558
+	min: 0.100s max: 0.202s std dev: 0.01911s window: 80
+average rate: 9.597
+	min: 0.100s max: 0.202s std dev: 0.01806s window: 90
+^Clin@lin-Default-string:~$ ros2 topic hz /scan
+average rate: 9.916
+	min: 0.090s max: 0.112s std dev: 0.00465s window: 11
+average rate: 9.917
+	min: 0.090s max: 0.112s std dev: 0.00337s window: 21
+average rate: 9.915
+	min: 0.090s max: 0.112s std dev: 0.00277s window: 31
+average rate: 9.915
+	min: 0.090s max: 0.112s std dev: 0.00241s window: 41
+average rate: 9.914
+	min: 0.090s max: 0.112s std dev: 0.00216s window: 51
+average rate: 9.897
+	min: 0.090s max: 0.112s std dev: 0.00239s window: 61
+average rate: 9.914
+	min: 0.090s max: 0.112s std dev: 0.00255s window: 72
+^Clin@lin-Default-string:~ros2 topic hz /cmd_vel_smootheded
+WARNING: topic [/cmd_vel_smoothed] does not appear to be published yet
+^Clin@lin-Default-string:~ros2 topic hz /cmd_vel_smootheded
+WARNING: topic [/cmd_vel_smoothed] does not appear to be published yet
+^Clin@lin-Default-string:~$ 

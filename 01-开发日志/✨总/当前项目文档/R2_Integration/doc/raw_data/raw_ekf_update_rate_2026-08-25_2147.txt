@@ -1,0 +1,50 @@
+# 原始数据：EKF "Failed to meet update rate" 复现（第二次）
+
+> 来源：N97（lin-Default-string）实测，用户粘贴
+> Session 话题：EKF update rate 告警复现（首次见 19:19，见 raw_imu_hz_ekf_update_rate_2026-08-25_1919.txt）
+> 日期时间：2026-08-25 21:47（落盘）
+> 关联：07-handover §2.2/§六（CPU powersave 教训）、ros2-ops.md §3/§7、进程卫生规则（08-25 定）
+
+## 用户原文粘贴（N97，ekf.launch.py）
+
+```
+[ekf_node-2] Failed to meet update rate! Took 0.06562497600000000153 seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[ekf_node-2] Failed to meet update rate! Took 0.52859305199999995217 seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+^C[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[static_transform_publisher-1] [INFO] [1787660855.931753964] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ekf_node-2] [INFO] [1787660855.931778821] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ekf_node-2] Failed to meet update rate! Took 0.48373691000000001994 seconds. Try decreasing the rate, limiting sensor output frequency, or limiting the number of sensors.
+[INFO] [static_transform_publisher-1]: process has finished cleanly [pid 5843]
+[INFO] [ekf_node-2]: process has finished cleanly [pid 5845]
+```
+
+## 与 19:19 对比
+
+| 项 | 19:19 首现 | 21:47 复现 |
+|:---|:---|:---|
+| 超时幅度 | 0.070s / 0.102s（周期 33ms 的 2~3 倍） | 0.065s / 0.53s / 0.48s（0.53s ≈ 周期 16 倍） |
+| 持续时间 | 启动初期几次后自愈 | 持续到 Ctrl+C（退出信号时仍报） |
+| 当时结论 | 启动瞬时，非系统性 CPU 问题 | 待排查（疑似 CPU 状态/进程争抢） |
+
+## 待查项（N97）
+
+- [ ] scaling_governor 是否 performance（N97 重启/长时间运行后可能掉回 powersave）
+- [ ] top 看谁在吃 CPU（残留进程？）
+- [ ] ps aux 查残留 ROS 进程（进程卫生规则）
+
+================================================================
+# 追加 2（22:0x）：EKF 一启动就持续报错（第三次复现）
+# 用户备注: 开了 greenwave_monitor (NVIDIA ISAAC ROS); N97 上进程 = ros2-daemon + rviz2(20:16, 3.5% CPU)
+================================================================
+[ekf_node-2] Failed to meet update rate! Took 0.12770919099999999968 seconds. ...
+[ekf_node-2] Failed to meet update rate! Took 0.076714093999999996565 seconds. ...
+[ekf_node-2] Failed to meet update rate! Took 0.045677848999999999535 seconds. ...
+[ekf_node-2] Failed to meet update rate! Took 0.10691071700000000233 seconds. ...
+^C → static_transform_publisher-1 / ekf_node-2 clean exit (pid 5971/5973)
+
+# 关键推理（AI 注）:
+# EKF 报 update rate 超时 = 一定有传感器消息在触发 update()
+# N97 本地 ps 只有 daemon+rviz2 → imu/odom 发布者来源存疑:
+#   a) 用户其他终端开着 IMU/底盘
+#   b) VM 侧进程通过同网段 FastDDS 多播灌数据（跨机，同日 20:0x 已清过一批）
+# 待补数据: governor / top / ros2 node list 全量 / greenwave_monitor CPU / IMU-底盘是否在跑

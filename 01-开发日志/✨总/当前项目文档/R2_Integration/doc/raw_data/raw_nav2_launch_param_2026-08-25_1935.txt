@@ -1,0 +1,46 @@
+# 来源: 用户粘贴自 VM (lin-virtual-machine) 终端, 2026-08-25 19:35 左右
+# 话题: VM 上启动 Nav2 失败排查 (r2_bringup 包找不到 + params_file 路径不存在)
+
+lin@lin-virtual-machine:~$ ros2 launch r2_bringup nav2.launch.py map:=/home/lin/maps/map_0815_clean.yaml params_file:=/home/lin/Lin_workspace/r2_integration/install/r2_bringup/share/r2_bringup/config/nav2_params_low.yaml rviz:=true
+Package 'r2_bringup' not found: "package 'r2_bringup' not found, searching: ['/home/lin/apriltag_ws/install/apriltag_ros', '/home/lin/Lin_workspace/vlp16_slam_ws/install/kiss_icp', '/home/lin/Lin_workspace/6_Mpu6050t1_ws/install/imu_serial', '/home/lin/Lin_workspace/imu_odom_ws/install/imu_odom_ws', '/home/lin/ldlidar_ros2_ws/install/ldlidar_stl_ros2', '/home/lin/astra_ws/install/astra_camera', '/home/lin/astra_ws/install/astra_camera_msgs', '/opt/ros/humble']"
+
+lin@lin-virtual-machine:~$ ros2 launch r2_bringup nav2.launch.py map:=/home/lin/maps/map_0815_clean.yaml params_file:=/home/lin/Lin_workspace/r2_integration/install/r2_bringup/share/r2_bringup/config/nav2_params_low.yaml rviz:=true
+Package 'r2_bringup' not found: "package 'r2_bringup' not found, searching: [...]"
+
+lin@lin-virtual-machine:~$ source ~/Lin_workspace/r2_integration/install/setup.bash
+lin@lin-virtual-machine:~$ ros2 launch r2_bringup nav2.launch.py map:=/home/lin/maps/map_0815_clean.yaml params_file:=/home/lin/Lin_workspace/r2_integration/install/r2_bringup/share/r2_bringup/config/nav2_params_low.yaml rviz:=true
+[INFO] [launch]: All log files can be found below /home/lin/.ros/log/2026-08-25-19-35-04-452552-lin-virtual-machine-159929
+[INFO] [launch]: Default logging verbosity is set to INFO
+[ERROR] [launch]: Caught exception in launch (see debug for traceback): [Errno 2] No such file or directory: '/home/lin/Lin_workspace/r2_integration/install/r2_bringup/share/r2_bringup/config/nav2_params_low.yaml'
+
+lin@lin-virtual-machine:~$ ros2 launch r2_bringup nav2.launch.py \
+  map:=/home/lin/maps/map_0815_clean.yaml \
+  params_file:=~/Lin_workspace/r2_integration/install/r2_bringup/share/r2_bringup/config/nav2_params_low.yaml \
+  rviz:=true
+[INFO] [launch]: All log files can be found below /home/lin/.ros/log/2026-08-25-19-35-09-906577-lin-virtual-machine-159979
+[INFO] [launch]: Default logging verbosity is set to INFO
+[ERROR] [launch]: Caught exception in launch (see debug for traceback): [Errno 2] No such file or directory: '~/Lin_workspace/r2_integration/install/r2_bringup/share/r2_bringup/config/nav2_params_low.yaml'
+
+================================================================
+# 追加: 2026-08-25 19:43, N97 (lin-Default-string) 上执行结果
+# 主题: map_server bad file (map 路径用了 VM 路径) + rviz2 无 DISPLAY
+================================================================
+lin@lin-Default-string:~$ ros2 launch r2_bringup nav2.launch.py \
+  map:=/home/lin/Lin_workspace/bags/maps/d4/map_0815_clean.yaml \
+  params_file:=/home/lin/Lin_workspace/r2_integration/install/r2_bringup/share/r2_bringup/config/nav2_params_low.yaml \
+  rviz:=true
+[INFO] [map_server-1]: process started with pid [4063]
+[INFO] [amcl-2]: process started with pid [4065]
+... (全部 Nav2 节点启动)
+[map_server-1] [INFO] [map_io]: Loading yaml file: /home/lin/Lin_workspace/bags/maps/d4/map_0815_clean.yaml
+[map_server-1] [ERROR] [map_io]: Failed processing YAML file ... for reason: bad file: ...
+[map_server-1] [FATAL] [map_server]: Lifecycle node map_server does not have error state implemented
+[lifecycle_manager-3] [ERROR] [lifecycle_manager_localization]: Failed to bring up all requested nodes. Aborting bringup.
+[rviz2-11] qt.qpa.xcb: could not connect to display
+[rviz2-11] This application failed to start because no Qt platform plugin could be initialized.
+[planner_server-4] [ERROR] [global_costmap.global_costmap]: The configured inflation radius (0.300) is smaller than the computed inscribed radius (0.340) ... (已知降额参数警告, 08-17 实车验证无碰撞)
+
+# 排障结论 (2026-08-25 SSH 查询 N97 核实):
+# - N97 上 ~/Lin_workspace/bags/maps/d4/ 不存在 (该路径是 VM 的地图分析副本)
+# - N97 正确地图位置: /home/lin/maps/map_0815_clean.{yaml,pgm} (08-15 18:02 部署)
+# - rviz2 失败: SSH 会话无 DISPLAY, 需 VNC (:2/5902) 或 rviz:=false
