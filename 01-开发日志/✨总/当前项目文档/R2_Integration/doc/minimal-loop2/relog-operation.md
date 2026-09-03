@@ -5,6 +5,8 @@
 > 按 ros2-ops.md §9 先验原则（核心输入缺失 → 重录），补录全链路数据。
 > 目标：拿到 points→scan→costmap 三层同框数据，一次闭环定位问题①断点。
 > 执行机：N97（192.168.1.210）；分析机：VM。关联：[costmap_experiment.md](costmap_experiment.md)、[ros2-ops.md §9](../ros2-ops.md)
+> ✅ **已执行（2026-09-03 21:04，relog_0903_2104，283s/1.9G 已拷 VM）**：远端刷新 1~5m 全程正常（问题① costmap 侧排除、结案）；
+> 新发现低物高度盲区。详见 [retrospect/2026-09-03_costmap_far_refresh_closed.md](../retrospect/2026-09-03_costmap_far_refresh_closed.md)
 
 ---
 
