@@ -83,7 +83,7 @@ ros2 bag record -o ~/Lin_workspace/r2_integration/bags/relog_$(date +%m%d_%H%M) 
 
 ```bash
 # bag 拷 VM（不入 git，直接 scp）
-scp -r ~/Lin_workspace/r2_integration/bags/relog_* lin@192.168.1.204:~/Lin_workspace/bags/raw/
+scp -r ~/Lin_workspace/r2_integration/bags/relog_* lin@192.168.1.204:~/Lin_workspace/r2_integration/bags/raw/
 # 记录：障碍实际距离、现场 rviz 观察现象（文字/截图）→ 发给 VM 侧留档
 ```
 

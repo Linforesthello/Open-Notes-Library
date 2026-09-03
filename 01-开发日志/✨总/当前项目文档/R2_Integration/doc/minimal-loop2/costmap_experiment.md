@@ -7,7 +7,7 @@
 > ✅ **2026-09-03 实车复录结案**：远距离判据完成（relog_0903_2104，静止+高箱 1m/2m/4m/4.5-5m，全话题三层同框）——
 > **远端 mark 正常 → costmap 侧排除，问题①结案**；另新发现「低物高度盲区」（低于雷达水平光面的物体与距离无关地不可见，细化本实验结论③）。
 > 详见 [retrospect/2026-09-03_costmap_far_refresh_closed.md](../retrospect/2026-09-03_costmap_far_refresh_closed.md)
-> 关联：planning-control-roadmap.md §5.7ter（运动模式争议点）、三 bag 分析（1357/1401/1405，`~/Lin_workspace/bags/analysis/browse_avoid_bags.py`）
+> 关联：planning-control-roadmap.md §5.7ter（运动模式争议点）、三 bag 分析（1357/1401/1405，`~/Lin_workspace/r2_integration/bags/analysis/browse_avoid_bags.py`）
 
 ---
 

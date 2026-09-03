@@ -6,6 +6,7 @@
 > [relog-operation.md](../minimal-loop2/relog-operation.md)（复录操作卡）、
 > [raw_relog_0903_observations_2026-09-03_2120.txt](../raw_data/raw_relog_0903_observations_2026-09-03_2120.txt)（现场原始记录）
 > 状态：✅ 问题① costmap 侧排除（结案）；低物盲区断点定位待 bag 三层分析收尾
+> 更新（2026-09-04）：待办 #1 bag 三层分析完成——低物盲区断点坐实 = **velodyne→scan 转换层**，见文末更新记录
 
 ---
 
@@ -58,7 +59,7 @@ a) W3 障碍可能是**低物/矮物**（见 §三 高度盲区）；b) W3 时 l
 
 | # | 项 | 内容 | 状态 |
 |:--|:---|:---|:---|
-| 1 | bag 三层断点分析 | relog_0903_2104（VM `~/Lin_workspace/bags/raw/`）：① 验证 1-5m 各段 points/scan/costmap_raw 三层同框数据齐全；② **低物时刻断点坐实**（低物在 /velodyne_points 有环数据但 /scan 无 = 转换层；points 也无 = 雷达物理）；③ 复核 /scan 实际所用线束（ring 语义 + 实测） | ☐ 待跑 |
+| 1 | bag 三层断点分析 | ✅ ①② 完成（09-04，见 [复盘](2026-09-04_lowobstacle_breakpoint.md)）：② 坐实 **低物在 /velodyne_points 有环数据（ring 0-4）但 /scan 无 = 转换层**，雷达物理排除；③ 复核 /scan 线束（ring=-1 语义）→ 待查 velodyne_laserscan 源码 | ✅ 09-04（③ ☐） |
 | 2 | W3 bag 对账 | 08-25 三 bag（1357/1401/1405）：远障碍在 costmap_raw 有无 254/100（验证 §二 候选解释 a/b/c） | ☐ 待跑 |
 | 3 | 低物盲区修法决策 | 多环 scan / 下俯环 / 加低处雷达 —— **后置**（09-10 前不实施，阶段二候选） | ☐ 后置 |
 | 4 | 文档联动 | costmap_experiment.md 状态更新（本次已做）｜ 07-handover 状态同步（滞后 08-25 起，建议 A1 收尾时统一） | ☐ 部分完成 |
@@ -70,9 +71,26 @@ a) W3 障碍可能是**低物/矮物**（见 §三 高度盲区）；b) W3 时 l
 3. **打滑后地图不匹配** = odom/AMCL 一致性边界行为（08-17 同源），记录不实施
 4. A1 判据不受影响：判据障碍口径 ≥0.3m³ 高箱（与雷达平高），本次实测恰证明该口径下 costmap 完全可靠
 
+## 更新记录（2026-09-04）：待办 #1 低物断点已坐实
+
+bag 三层精分析完成（1°×0.1m×0.1s 全前向 ±15° 重分析 + points z 剖面 vs scan 260 配对帧对照），
+完整过程/证据表/教训见 [2026-09-04_lowobstacle_breakpoint.md](2026-09-04_lowobstacle_breakpoint.md)。
+
+- **断点 = velodyne→scan 转换层**：0.3m 矮物（物顶 z -0.45~-0.59 → 高 0.19~0.32m）在 /velodyne_points
+  矮层稳定成簇（命中 ring 0-4 最低环，每帧 9~112 点，距离 1.86~3.6m 全程），同帧 /scan 对其方位
+  返回 5.42~5.43m 开阔——4 组无人静止帧（247.2~247.6 / 263.3~263.7 / 267.7~272.4 连续 4.7s /
+  277.2~277.4）。→ **雷达物理层无盲区**；现场「矮物无论多近多远都不黑」= /scan 光线高于 0.3m 矮物顶面
+- §三「配置线索」证实但需细化：/scan 垂直视场下限约在 -7°~-11°（0.3m 物全盲 + 0.6m+ 高箱可见联合
+  限定）；具体环选择机制（ring=-1 语义）待查 velodyne_laserscan 源码——不阻塞断点结论（复盘 §六-2）
+- 成本实验结论③「物理盲区」表述细化：物理层实测能照到，盲区在转换层环选择 → 修法导向 = 多环/低环
+  scan 或 costmap 改吃 /velodyne_points（非加低雷达）；是否修 = 阶段二决策（待办 #3 后置不变）
+- 方向修正：scan 负角 = 车右侧（ROS 标准 y<0），与用户操作侧一致，此前「左」解读全部反转（复盘 §二）
+- 遗留：#1 ③ 源码核查（复盘 §六-2）；4.5~5m 档 bag 无稳定驻留、待用户对账（复盘 §六-1）；
+  待办 #2 W3 bag 对账未跑
+
 ## 相关文件
 
 - 现场记录：[raw_relog_0903_observations_2026-09-03_2120.txt](../raw_data/raw_relog_0903_observations_2026-09-03_2120.txt)
 - 实验文档：[costmap_experiment.md](../minimal-loop2/costmap_experiment.md) ｜ 操作卡：[relog-operation.md](../minimal-loop2/relog-operation.md)
-- bag：N97 `~/Lin_workspace/r2_integration/bags/relog_0903_2104`（已拷 VM `~/Lin_workspace/bags/raw/`，1.9G，不入 git）
+- bag：N97 `~/Lin_workspace/r2_integration/bags/relog_0903_2104`（已拷 VM `~/Lin_workspace/r2_integration/bags/raw/`，1.9G，不入 git）
 - 关联事件：[08-17 初始位姿/膨胀](2026-08-17_nav2_initialpose_inflation_fix.md)
