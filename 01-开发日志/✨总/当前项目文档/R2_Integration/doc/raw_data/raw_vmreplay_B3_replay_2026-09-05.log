@@ -1,0 +1,4 @@
+[INFO] [1788606667.771244150] [rosbag2_storage]: Opened database '/home/lin/Lin_workspace/r2_integration/bags/raw/relog_0903_2104/relog_0903_2104_0.db3' for READ_ONLY.
+[extract] points 候选 51 scan 候选 51 → 采样 32 帧
+[replay] 开始循环重发，32 帧 @ 每帧 0.6s
+[replay] context closed at shutdown, exiting

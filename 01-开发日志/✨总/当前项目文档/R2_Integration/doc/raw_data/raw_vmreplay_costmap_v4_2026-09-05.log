@@ -1,0 +1,70 @@
+[INFO] [1788587144.476753714] [costmap.costmap]: 
+	costmap lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1788587144.477260740] [costmap.costmap]: Creating Costmap
+[INFO] [1788587151.169443589] [costmap.costmap]: Configuring
+[INFO] [1788587151.172210761] [costmap.costmap]: Using plugin "voxel_layer"
+[INFO] [1788587151.174795978] [costmap.costmap]: Subscribed to Topics: scan velodyne_low
+[INFO] [1788587151.178550242] [costmap.costmap]: Initialized plugin "voxel_layer"
+[INFO] [1788587151.178590328] [costmap.costmap]: Using plugin "inflation_layer"
+[INFO] [1788587151.178932060] [costmap.costmap]: Initialized plugin "inflation_layer"
+[ERROR] [1788587151.182516228] [costmap.costmap]: The configured inflation radius (0.300) is smaller than the computed inscribed radius (0.340) of your footprint, it is highly recommended to set inflation radius to be at least as big as the inscribed radius to avoid collisions
+[INFO] [1788587152.186347521] [costmap.costmap]: Activating
+[INFO] [1788587152.186491393] [costmap.costmap]: Checking transform
+[INFO] [1788587152.186605901] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587152.686706356] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587153.186789182] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587153.687248764] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587154.187184454] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587154.686829802] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587155.186964841] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587155.687142776] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587156.186919243] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587156.686672515] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587157.186717736] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587157.686960713] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587158.187007795] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587158.686650621] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587159.186716955] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587159.686905144] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587160.186921974] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587160.686738341] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587161.187291361] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587161.687273122] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587162.187120741] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587162.686810868] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587163.186992791] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587163.686817714] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587164.186733938] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587164.686747077] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587165.187235834] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587165.686881668] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587166.187166436] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587166.686739855] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587167.186797396] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587167.687007784] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587168.186907903] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587168.686875556] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587169.187294446] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587169.687090577] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587170.187019237] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587170.687240671] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587171.186835740] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587171.687074107] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587172.187260415] [costmap.costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1788587172.687437939] [costmap.costmap]: start
+[WARN] [1788587177.887691507] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440644.28 seconds, and it should be updated every 10.00 seconds.
+[WARN] [1788587177.887786558] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440644.29 seconds, and it should be updated every 10.00 seconds.
+[WARN] [1788587178.087791443] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440644.48 seconds, and it should be updated every 10.00 seconds.
+[WARN] [1788587178.087914116] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440644.48 seconds, and it should be updated every 10.00 seconds.
+[WARN] [1788587178.289226743] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440644.68 seconds, and it should be updated every 10.00 seconds.
+[WARN] [1788587178.289368902] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440644.68 seconds, and it should be updated every 10.00 seconds.
+[WARN] [1788587178.488427454] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440644.88 seconds, and it should be updated every 10.00 seconds.
+[WARN] [1788587178.488506620] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440644.88 seconds, and it should be updated every 10.00 seconds.
+[WARN] [1788587178.688764844] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440645.09 seconds, and it should be updated every 10.00 seconds.
+[WARN] [1788587178.688973548] [costmap.costmap]: The /velodyne_points observation buffer has not been updated for 1788440645.09 seconds, and it should be updated every 10.00 seconds.
+[INFO] [1788587466.406713168] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+Warning: class_loader.ClassLoader: SEVERE WARNING!!! Attempting to unload library while objects created by this loader exist in the heap! You should delete your objects before attempting to unload the library or destroying the ClassLoader. The library will NOT be unloaded.
+         at line 127 in ./src/class_loader.cpp
+terminate called without an active exception

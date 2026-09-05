@@ -1,0 +1,103 @@
+[INFO] [1788606674.295567611] [vm_mark_reader]: t=1788606674.28 n254=311
+[INFO] [1788606674.886084582] [vm_mark_reader]: t=1788606674.88 n254=1164
+[INFO] [1788606675.482592310] [vm_mark_reader]: t=1788606675.48 n254=1164
+[INFO] [1788606676.082509190] [vm_mark_reader]: t=1788606676.08 n254=1244
+[INFO] [1788606676.682022725] [vm_mark_reader]: t=1788606676.68 n254=1290
+[INFO] [1788606677.289353669] [vm_mark_reader]: t=1788606677.28 n254=1290
+[INFO] [1788606677.881358641] [vm_mark_reader]: t=1788606677.88 n254=1290
+[INFO] [1788606678.481248577] [vm_mark_reader]: t=1788606678.48 n254=1349
+[INFO] [1788606679.081493975] [vm_mark_reader]: t=1788606679.08 n254=1369
+[INFO] [1788606679.688236086] [vm_mark_reader]: t=1788606679.68 n254=1369
+[INFO] [1788606680.287422000] [vm_mark_reader]: t=1788606680.28 n254=1389
+[INFO] [1788606680.883213076] [vm_mark_reader]: t=1788606680.88 n254=1432
+[INFO] [1788606681.481422362] [vm_mark_reader]: t=1788606681.48 n254=1432
+[INFO] [1788606682.092576495] [vm_mark_reader]: t=1788606682.08 n254=1432
+[INFO] [1788606682.695785373] [vm_mark_reader]: t=1788606682.69 n254=1432
+[INFO] [1788606683.285726111] [vm_mark_reader]: t=1788606683.28 n254=1468
+[INFO] [1788606683.883522368] [vm_mark_reader]: t=1788606683.88 n254=1473
+[INFO] [1788606684.489823496] [vm_mark_reader]: t=1788606684.48 n254=1504
+[INFO] [1788606685.089719201] [vm_mark_reader]: t=1788606685.08 n254=1513
+[INFO] [1788606685.681244395] [vm_mark_reader]: t=1788606685.68 n254=1531
+[INFO] [1788606686.284107977] [vm_mark_reader]: t=1788606686.28 n254=1540
+[INFO] [1788606686.885046150] [vm_mark_reader]: t=1788606686.88 n254=1540
+[INFO] [1788606687.488986646] [vm_mark_reader]: t=1788606687.48 n254=1540
+[INFO] [1788606688.090559474] [vm_mark_reader]: t=1788606688.08 n254=1555
+[INFO] [1788606688.683068397] [vm_mark_reader]: t=1788606688.68 n254=1553
+[INFO] [1788606689.287563000] [vm_mark_reader]: t=1788606689.28 n254=1553
+[INFO] [1788606689.883437968] [vm_mark_reader]: t=1788606689.88 n254=1547
+[INFO] [1788606690.490267646] [vm_mark_reader]: t=1788606690.48 n254=1542
+[INFO] [1788606691.085873517] [vm_mark_reader]: t=1788606691.08 n254=1559
+[INFO] [1788606691.686431397] [vm_mark_reader]: t=1788606691.68 n254=1572
+[INFO] [1788606692.285135325] [vm_mark_reader]: t=1788606692.28 n254=1563
+[INFO] [1788606692.891284554] [vm_mark_reader]: t=1788606692.88 n254=1565
+[INFO] [1788606693.489354709] [vm_mark_reader]: t=1788606693.48 n254=1571
+[INFO] [1788606694.090007455] [vm_mark_reader]: t=1788606694.09 n254=1571
+[INFO] [1788606694.690054502] [vm_mark_reader]: t=1788606694.68 n254=1571
+[INFO] [1788606695.281096238] [vm_mark_reader]: t=1788606695.28 n254=1565
+[INFO] [1788606695.889675909] [vm_mark_reader]: t=1788606695.88 n254=1568
+[INFO] [1788606696.490556946] [vm_mark_reader]: t=1788606696.48 n254=1568
+[INFO] [1788606697.086225323] [vm_mark_reader]: t=1788606697.08 n254=1568
+[INFO] [1788606697.688106823] [vm_mark_reader]: t=1788606697.68 n254=1570
+[INFO] [1788606698.288363949] [vm_mark_reader]: t=1788606698.28 n254=1573
+[INFO] [1788606698.883500169] [vm_mark_reader]: t=1788606698.88 n254=1573
+[INFO] [1788606699.488286086] [vm_mark_reader]: t=1788606699.48 n254=1574
+[INFO] [1788606700.084274317] [vm_mark_reader]: t=1788606700.08 n254=1569
+[INFO] [1788606700.687032444] [vm_mark_reader]: t=1788606700.68 n254=1569
+[INFO] [1788606701.293124793] [vm_mark_reader]: t=1788606701.29 n254=1569
+[INFO] [1788606701.888372746] [vm_mark_reader]: t=1788606701.88 n254=1569
+[INFO] [1788606702.494326909] [vm_mark_reader]: t=1788606702.49 n254=1567
+[INFO] [1788606703.088667257] [vm_mark_reader]: t=1788606703.08 n254=1563
+[INFO] [1788606703.688013522] [vm_mark_reader]: t=1788606703.68 n254=1563
+[INFO] [1788606704.293445517] [vm_mark_reader]: t=1788606704.28 n254=1566
+[INFO] [1788606704.890626505] [vm_mark_reader]: t=1788606704.88 n254=1572
+[INFO] [1788606705.491010035] [vm_mark_reader]: t=1788606705.48 n254=1576
+[INFO] [1788606706.088880855] [vm_mark_reader]: t=1788606706.09 n254=1564
+[INFO] [1788606706.682444089] [vm_mark_reader]: t=1788606706.68 n254=1555
+[INFO] [1788606707.288036302] [vm_mark_reader]: t=1788606707.28 n254=1574
+[INFO] [1788606707.885649639] [vm_mark_reader]: t=1788606707.88 n254=1567
+[INFO] [1788606708.483108955] [vm_mark_reader]: t=1788606708.48 n254=1596
+[INFO] [1788606709.084512134] [vm_mark_reader]: t=1788606709.08 n254=1583
+[INFO] [1788606709.682544505] [vm_mark_reader]: t=1788606709.68 n254=1560
+[INFO] [1788606710.288375881] [vm_mark_reader]: t=1788606710.28 n254=1575
+[INFO] [1788606710.885057576] [vm_mark_reader]: t=1788606710.88 n254=1579
+[INFO] [1788606711.482371641] [vm_mark_reader]: t=1788606711.48 n254=1566
+[INFO] [1788606712.084099930] [vm_mark_reader]: t=1788606712.08 n254=1571
+[INFO] [1788606712.690785779] [vm_mark_reader]: t=1788606712.68 n254=1577
+[INFO] [1788606713.293516745] [vm_mark_reader]: t=1788606713.29 n254=1577
+[INFO] [1788606713.881831096] [vm_mark_reader]: t=1788606713.88 n254=1577
+[INFO] [1788606714.495359802] [vm_mark_reader]: t=1788606714.49 n254=1568
+[INFO] [1788606715.084597445] [vm_mark_reader]: t=1788606715.08 n254=1571
+[INFO] [1788606715.689961641] [vm_mark_reader]: t=1788606715.68 n254=1571
+[INFO] [1788606716.289121431] [vm_mark_reader]: t=1788606716.28 n254=1571
+[INFO] [1788606716.884901275] [vm_mark_reader]: t=1788606716.88 n254=1571
+[INFO] [1788606717.489661275] [vm_mark_reader]: t=1788606717.48 n254=1574
+[INFO] [1788606718.085980574] [vm_mark_reader]: t=1788606718.08 n254=1572
+[INFO] [1788606718.687484494] [vm_mark_reader]: t=1788606718.68 n254=1573
+[INFO] [1788606719.287461011] [vm_mark_reader]: t=1788606719.28 n254=1573
+[INFO] [1788606719.881005727] [vm_mark_reader]: t=1788606719.88 n254=1573
+[INFO] [1788606720.481998010] [vm_mark_reader]: t=1788606720.48 n254=1573
+[INFO] [1788606721.084296445] [vm_mark_reader]: t=1788606721.08 n254=1573
+[INFO] [1788606721.683500269] [vm_mark_reader]: t=1788606721.68 n254=1571
+[INFO] [1788606722.282243309] [vm_mark_reader]: t=1788606722.28 n254=1567
+[INFO] [1788606722.884737108] [vm_mark_reader]: t=1788606722.88 n254=1567
+[INFO] [1788606723.484554637] [vm_mark_reader]: t=1788606723.48 n254=1570
+[INFO] [1788606724.081586246] [vm_mark_reader]: t=1788606724.08 n254=1576
+[INFO] [1788606724.681553101] [vm_mark_reader]: t=1788606724.68 n254=1580
+[INFO] [1788606725.286316971] [vm_mark_reader]: t=1788606725.28 n254=1566
+[INFO] [1788606725.885049680] [vm_mark_reader]: t=1788606725.88 n254=1557
+[INFO] [1788606726.486611725] [vm_mark_reader]: t=1788606726.48 n254=1576
+[INFO] [1788606727.094379990] [vm_mark_reader]: t=1788606727.09 n254=1569
+Traceback (most recent call last):
+  File "/tmp/vm_read_marks.py", line 31, in <module>
+    rclpy.spin(r)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

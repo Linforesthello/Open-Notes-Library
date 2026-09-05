@@ -1,0 +1,17 @@
+[play] 13:46:17
+=== 75s 状态 ===
+Type: sensor_msgs/msg/LaserScan
+Publisher count: 1
+Subscription count: 1
+Unknown topic '/velodyne_points'
+Type: nav2_msgs/msg/Costmap
+Publisher count: 1
+Subscription count: 1
+--- costmap log 关键行 ---
+	Waiting on external lifecycle transitions to activate
+[ERROR] [1788587151.182516228] [costmap.costmap]: The configured inflation radius (0.300) is smaller than the computed inscribed radius (0.340) of your footprint, it is highly recommended to set inflation radius to be at least as big as the inscribed radius to avoid collisions
+[INFO] [1788587172.687437939] [costmap.costmap]: start
+--- bagplay log 尾 ---
+[INFO] [1788587177.782683505] [rosbag2_player]: Press CURSOR_DOWN for Decrease Rate 10%
+[INFO] [1788587177.783024099] [rosbag2_storage]: Opened database '/home/lin/Lin_workspace/r2_integration/bags/raw/relog_0903_2104/relog_0903_2104_0.db3' for READ_ONLY.
+[play done] 13:51:01
