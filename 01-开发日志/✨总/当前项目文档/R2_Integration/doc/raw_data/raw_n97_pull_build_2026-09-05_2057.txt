@@ -1,0 +1,212 @@
+# N97 pull + colcon build 实录（2026-09-05 20:5x，用户终端粘贴）
+
+来源: N97 (lin-Default-string) 终端，session 话题 = r2_integration 双仓 commit+push 收尾 → N97 同步验证
+背景: VM 推 6ee128b..60d85d1 全批(09-02~09-05 含修法B配置+全部落档) 后 N97 执行 git pull + colcon build
+
+---
+
+lin@lin-Default-string:~$ cd Lin_workspace/r2_integration
+lin@lin-Default-string:~/Lin_workspace/r2_integration$ ls
+bags  build  CLAUDE.md  doc  g354_driver  install  log  r2_bringup  r2_sensors  README.md  scripts
+lin@lin-Default-string:~/Lin_workspace/r2_integration$ git pull
+remote: Enumerating objects: 284, done.
+remote: Counting objects: 100% (284/284), done.
+remote: Compressing objects: 100% (151/151), done.
+remote: Total 244 (delta 137), reused 200 (delta 93), pack-reused 0 (from 0)
+接收对象中: 100% (244/244), 1.92 MiB | 1.00 MiB/s, 完成.
+处理 delta 中: 100% (137/137), 完成 38 个本地对象.
+来自 github.com:Linforesthello/r2_integration
+   6ee128b..60d85d1  main       -> origin/main
+更新 6ee128b..60d85d1
+Fast-forward
+ .gitignore                                                  |   10 +-
+ README.md                                                   |  166 +-
+ bags/.gitignore                                             |   12 +
+ bags/README.md                                              |   84 +
+ bags/analysis/analyze_audit.py                              |   98 +
+ bags/analysis/analyze_bags.py                               |   97 +
+ bags/analysis/analyze_kiss_vs_ekf.py                        |  106 +
+ bags/analysis/analyze_nav2_first_loop.py                    |   76 +
+ bags/analysis/analyze_nav2_goal_error.py                    |  105 +
+ bags/analysis/analyze_relog_layers.py                       |  106 +
+ bags/analysis/analyze_stray_points.py                       |  168 +
+ bags/analysis/analyze_w3_scan.py                            |   70 +
+ bags/analysis/browse_avoid_bags.py                          |  179 ++
+ bags/analysis/build_map.py                                  |  103 +
+ bags/analysis/filter_person_blobs.py                        |  138 +
+ bags/analysis/inspect_relog_frames.py                       |  156 ++
+ bags/analysis/lowobstacle_0904/box_top_height.py            |   77 +
+ bags/analysis/lowobstacle_0904/points_anchor.py             |   91 +
+ bags/analysis/lowobstacle_0904/points_scan_low.py           |  125 +
+ bags/analysis/lowobstacle_0904/points_scan_low_out.txt      |  263 ++
+ bags/analysis/lowobstacle_0904/points_ybin.py               |   67 +
+ bags/analysis/lowobstacle_0904/ring_angle_table.py          |   49 +
+ bags/analysis/lowobstacle_0904/ring_angles_out.txt          |   17 +
+ bags/analysis/lowobstacle_0904/scan_frontlanes.py           |   46 +
+ bags/analysis/lowobstacle_0904/scan_highres.py              |  134 +
+ bags/analysis/lowobstacle_0904/scan_highres2.py             |   70 +
+ bags/analysis/lowobstacle_0904/scan_highres2_out.txt        |  133 +
+ bags/analysis/lowobstacle_0904/scan_highres_out.txt         |  264 ++
+ bags/analysis/lowobstacle_0904/scan_panorama.py             |   49 +
+ bags/analysis/lowobstacle_0904/scan_process.py              |  104 +
+ bags/analysis/lowobstacle_0904/scan_process_out.txt         |  779 +++++
+ bags/analysis/out/avoid_0825_1357_1401_1405_full.txt        | 1113 +++++++
+ bags/analysis/pcd_to_map.py                                 |   72 +
+ bags/analysis/relog_timeline_err.txt                        |    1 +
+ bags/analysis/relog_timeline_out.txt                        |  285 ++
+ bags/analysis/scan_map.py                                   |  112 +
+ bags/analysis/stats_map_run.py                              |  125 +
+ bags/analysis/w3_scan_recon_out.txt                         |   31 +
+ bags/csv/r2_slip_test.bag.csv                               | 6127 +++++++++++++++++++++++++++++++++++++
+ bags/csv/r2_slip_test_after.csv                             | 4735 ++++++++++++++++++++++++++++
+ bags/csv/r2_square_test.bag.csv                             | 2814 +++++++++++++++++
+ bags/csv/r2_square_test_after.csv                           | 3252 ++++++++++++++++++++
+ bags/csv/r2_turn_test.bag.csv                               | 3743 ++++++++++++++++++++++
+ bags/csv/r2_turn_test_after.csv                             | 3838 +++++++++++++++++++++++
+ bags/rviz_nav2_first_loop.png                               |  Bin 0 -> 721175 bytes
+ bags/rviz_nav2_first_loop_2.png                             |  Bin 0 -> 723791 bytes
+ doc/01-plan.md                                              |   14 +-
+ doc/02-progress.md                                          |   16 +-
+ doc/03-current_state.md                                     |  133 +-
+ doc/07-handover.md                                          |  272 +-
+ doc/analysis-methods.md                                     |   98 +
+ doc/{ => archive}/project_landscape.md                      |    8 +-
+ doc/{ => archive}/project_status.md                         |   30 +-
+ doc/doc-engineering.md                                      |  104 +
+ doc/minimal-loop/0audit.md                                  |    2 +-
+ doc/minimal-loop/map-verify-flow.md                         |   14 +-
+ doc/minimal-loop/nav2-bringup.md                            |    2 +-
+ doc/minimal-loop/plan.md                                    |    2 +-
+ doc/minimal-loop/w1-operation.md                            |   56 +-
+ doc/minimal-loop/w2-operation.md                            |   10 +-
+ doc/minimal-loop/w3-operation.md                            |    4 +-
+ doc/minimal-loop2/costmap_experiment.md                     |    9 +-
+ doc/minimal-loop2/execution.md                              |   12 +-
+ doc/minimal-loop2/plan.md                                   |    8 +-
+ doc/minimal-loop2/relog-operation.md                        |    6 +-
+ doc/{ => n97}/02-deploy-checklist.md                        |    0
+ doc/{ => n97}/fastlio2-n97-deploy.md                        |   18 +-
+ doc/{ => n97}/greenwave-monitor-deploy.md                   |   10 +-
+ doc/{ => n97}/n97_remote_desktop.md                         |    0
+ doc/{ => n97}/n97info.md                                    |    4 +-
+ doc/{ => n97}/velodyne_r2.patch                             |    0
+ doc/pending-tasks.md                                        |   73 +
+ doc/phase0/sensor-mount.md                                  |    2 +-
+ doc/profiles/README.md                                      |    1 +
+ doc/profiles/spec.md                                        |   94 +
+ doc/retrospect/2026-08-02_vlp16_switch_network.md           |    4 +-
+ doc/retrospect/2026-08-09_map_double_ghost.md               |    2 +-
+ doc/retrospect/2026-08-13_layer_map_3d2d.md                 |    2 +-
+ doc/retrospect/2026-08-13_map_chain_investigation.md        |    2 +-
+ doc/retrospect/2026-08-15_clean_bag_rerecord.md             |    2 +-
+ doc/retrospect/2026-08-15_kiss_drift_170058.md              |   18 +-
+ doc/retrospect/2026-08-15_nav2_bringup.md                   |    4 +-
+ doc/retrospect/2026-08-15_velodyne_perf_tuning.md           |    4 +-
+ doc/retrospect/2026-08-18_fast_lio2_deploy.md               |    6 +-
+ doc/retrospect/2026-08-18_fastlio_laser_map_debug.md        |    2 +-
+ doc/retrospect/2026-08-23_doc_source_traceback.md           |    6 +-
+ doc/retrospect/2026-08-24_fastlio2_verification.md          |    6 +-
+ doc/retrospect/2026-08-24_n97_fan_control.md                |    4 +-
+ doc/retrospect/2026-09-03_costmap_far_refresh_closed.md     |  113 +
+ doc/retrospect/2026-09-03_doc_engineering.md                |  117 +
+ doc/retrospect/2026-09-04_bags_migration.md                 |   77 +
+ doc/retrospect/2026-09-04_experience-layer-decision.md      |   69 +
+ doc/retrospect/2026-09-04_lowobstacle_breakpoint.md         |  259 ++
+ doc/retrospect/2026-09-05_lowobstacle_fixB_vm_acceptance.md |  127 +
+ doc/retrospect/README.md                                    |   64 +
+ doc/{ => roadmaps}/motion-control-roadmap.md                |    8 +-
+ doc/{ => roadmaps}/nav2-knowledge-tree.md                   |   16 +-
+ doc/{ => roadmaps}/planning-control-roadmap.md              |   20 +-
+ doc/{ => roadmaps}/recruitment-learning-plan-review.md      |   12 +-
+ doc/{ => roadmaps}/recruitment-learning-plan.md             |   34 +-
+ doc/standards.md                                            |  117 +-
+ doc/startup.md                                              |  158 +
+ doc/surveys/3d-lidar-2d-navigation-survey.md                |  236 ++
+ r2_bringup/config/nav2_params_low.yaml                      |   21 +-
+ scripts/check_doc_links.py                                  |   60 +
+ 105 files changed, 32205 insertions(+), 613 deletions(-)
+ create mode 100644 bags/.gitignore
+ create mode 100644 bags/README.md
+ create mode 100644 bags/analysis/analyze_audit.py
+ create mode 100644 bags/analysis/analyze_bags.py
+ create mode 100644 bags/analysis/analyze_kiss_vs_ekf.py
+ create mode 100644 bags/analysis/analyze_nav2_first_loop.py
+ create mode 100644 bags/analysis/analyze_nav2_goal_error.py
+ create mode 100644 bags/analysis/analyze_relog_layers.py
+ create mode 100644 bags/analysis/analyze_stray_points.py
+ create mode 100644 bags/analysis/analyze_w3_scan.py
+ create mode 100644 bags/analysis/browse_avoid_bags.py
+ create mode 100644 bags/analysis/build_map.py
+ create mode 100644 bags/analysis/filter_person_blobs.py
+ create mode 100644 bags/analysis/inspect_relog_frames.py
+ create mode 100644 bags/analysis/lowobstacle_0904/box_top_height.py
+ create mode 100644 bags/analysis/lowobstacle_0904/points_anchor.py
+ create mode 100644 bags/analysis/lowobstacle_0904/points_scan_low.py
+ create mode 100644 bags/analysis/lowobstacle_0904/points_scan_low_out.txt
+ create mode 100644 bags/analysis/lowobstacle_0904/points_ybin.py
+ create mode 100644 bags/analysis/lowobstacle_0904/ring_angle_table.py
+ create mode 100644 bags/analysis/lowobstacle_0904/ring_angles_out.txt
+ create mode 100644 bags/analysis/lowobstacle_0904/scan_frontlanes.py
+ create mode 100644 bags/analysis/lowobstacle_0904/scan_highres.py
+ create mode 100644 bags/analysis/lowobstacle_0904/scan_highres2.py
+ create mode 100644 bags/analysis/lowobstacle_0904/scan_highres2_out.txt
+ create mode 100644 bags/analysis/lowobstacle_0904/scan_highres_out.txt
+ create mode 100644 bags/analysis/lowobstacle_0904/scan_panorama.py
+ create mode 100644 bags/analysis/lowobstacle_0904/scan_process.py
+ create mode 100644 bags/analysis/lowobstacle_0904/scan_process_out.txt
+ create mode 100644 bags/analysis/out/avoid_0825_1357_1401_1405_full.txt
+ create mode 100644 bags/analysis/pcd_to_map.py
+ create mode 100644 bags/analysis/relog_timeline_err.txt
+ create mode 100644 bags/analysis/relog_timeline_out.txt
+ create mode 100644 bags/analysis/scan_map.py
+ create mode 100644 bags/analysis/stats_map_run.py
+ create mode 100644 bags/analysis/w3_scan_recon_out.txt
+ create mode 100644 bags/csv/r2_slip_test.bag.csv
+ create mode 100644 bags/csv/r2_slip_test_after.csv
+ create mode 100644 bags/csv/r2_square_test.bag.csv
+ create mode 100644 bags/csv/r2_square_test_after.csv
+ create mode 100644 bags/csv/r2_turn_test.bag.csv
+ create mode 100644 bags/csv/r2_turn_test_after.csv
+ create mode 100644 bags/rviz_nav2_first_loop.png
+ create mode 100644 bags/rviz_nav2_first_loop_2.png
+ create mode 100644 doc/analysis-methods.md
+ rename doc/{ => archive}/project_landscape.md (88%)
+ rename doc/{ => archive}/project_status.md (83%)
+ create mode 100644 doc/doc-engineering.md
+ rename doc/{ => n97}/02-deploy-checklist.md (100%)
+ rename doc/{ => n97}/fastlio2-n97-deploy.md (94%)
+ rename doc/{ => n97}/greenwave-monitor-deploy.md (94%)
+ rename doc/{ => n97}/n97_remote_desktop.md (100%)
+ rename doc/{ => n97}/n97info.md (99%)
+ rename doc/{ => n97}/velodyne_r2.patch (100%)
+ create mode 100644 doc/pending-tasks.md
+ create mode 100644 doc/profiles/README.md
+ create mode 100644 doc/profiles/spec.md
+ create mode 100644 doc/retrospect/2026-09-03_costmap_far_refresh_closed.md
+ create mode 100644 doc/retrospect/2026-09-03_doc_engineering.md
+ create mode 100644 doc/retrospect/2026-09-04_bags_migration.md
+ create mode 100644 doc/retrospect/2026-09-04_experience-layer-decision.md
+ create mode 100644 doc/retrospect/2026-09-04_lowobstacle_breakpoint.md
+ create mode 100644 doc/retrospect/2026-09-05_lowobstacle_fixB_vm_acceptance.md
+ create mode 100644 doc/retrospect/README.md
+ rename doc/{ => roadmaps}/motion-control-roadmap.md (98%)
+ rename doc/{ => roadmaps}/nav2-knowledge-tree.md (96%)
+ rename doc/{ => roadmaps}/planning-control-roadmap.md (95%)
+ rename doc/{ => roadmaps}/recruitment-learning-plan-review.md (94%)
+ rename doc/{ => roadmaps}/recruitment-learning-plan.md (83%)
+ create mode 100644 doc/startup.md
+ create mode 100644 doc/surveys/3d-lidar-2d-navigation-survey.md
+ create mode 100644 scripts/check_doc_links.py
+lin@lin-Default-string:~/Lin_workspace/r2_integration$
+lin@lin-Default-string:~/Lin_workspace/r2_integration$ colcon build
+Starting >>> g354_imu_driver
+Starting >>> r2_bringup
+Starting >>> r2_sensors
+Finished <<< r2_sensors [1.52s]
+Finished <<< g354_imu_driver [1.55s]
+Finished <<< r2_bringup [1.93s]
+
+Summary: 3 packages finished [1.93s]
+lin@lin-Default-string:~/Lin_workspace/r2_integration$ git pull
+已经是最新的。
+lin@lin-Default-string:~/Lin_workspace/r2_integration$
