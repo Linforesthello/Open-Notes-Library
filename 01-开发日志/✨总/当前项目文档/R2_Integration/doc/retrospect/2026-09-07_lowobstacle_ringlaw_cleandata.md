@@ -1,10 +1,10 @@
 # 低物近距可见性标定 · 纯净数据三录与 ring 几何律实锤（1.6m 盲区边界）
 
-> - **日期**：2026-09-08
+> - **日期**：2026-09-07
 > - **任务**：近距丢黑块（crashbox 09-06）修复链路的纯净数据采集 + VLP-16 低带几何律标定 + 旧/新配置 VM A/B 验收数据准备
-> - **状态**：数据采集 + ring 几何律标定 ✅（三包分析完毕、产物归档）；VM 两相重放验收 ✅（09-08 执行 PASS，结果见 [2026-09-08_lowobstacle_fixB_ab_acceptance.md](2026-09-08_lowobstacle_fixB_ab_acceptance.md)）
+> - **状态**：数据采集 + ring 几何律标定 ✅（三包分析完毕、产物归档）；VM 两相重放验收 ✅（09-07 执行 PASS，结果见 [2026-09-07_lowobstacle_fixB_ab_acceptance.md](2026-09-07_lowobstacle_fixB_ab_acceptance.md)）
 > - **关联互指**：[2026-09-06 crashbox 复盘（根因：全局 costmap 无低带源 → 254 近距衰减归零）](2026-09-06_lowobstacle_fixB_crashbox.md) ｜ [修法 B VM 验收 09-05](2026-09-05_lowobstacle_fixB_vm_acceptance.md)（问题源头）｜ [低物盲区断点 09-04](2026-09-04_lowobstacle_breakpoint.md)｜ [surveys/3d-lidar-2d-navigation-survey.md §三B](../surveys/3d-lidar-2d-navigation-survey.md)（09-06 物理边界实锤）
-> - **证据落位**：三 bag `bags/raw/`（不入 git）；脚本+全量输出 `bags/analysis/box_lowband_20260908/`；用户口述原始留档 `raw_data/raw_箱体扫掠现场记录_2026-09-08_1056.md`
+> - **证据落位**：三 bag `bags/raw/`（不入 git）；脚本+全量输出 `bags/analysis/box_lowband_20260907/`；用户口述原始留档 `raw_data/raw_箱体扫掠现场记录_2026-09-07_1056.md`
 > - **改动**：修复配置 = `r2_bringup/config/nav2_params_low.yaml`（obstacle_low_layer 独立 mark-only，uncommitted，验收 PASS 后提交）
 
 ---
@@ -15,7 +15,7 @@
 2. **ring 几何律标定**（校准权威源 VLP16db.yaml，H=0.775m 光心）：0.35m 箱对每条向下 ring 存在可见窗 `[d_top, d_gnd]`；**盲区边界 = -15° ring 打顶距离 1.59m（传感轴参照）——低于此距离任何 ring 均过顶不可见**。理论窗表与逐帧实测对账偏差 <1cm（face 2.10m 处理论 0.212/0.290 vs 实测 0.215/0.295）。
 3. **口述 ↔ 数据互证（佐证口径）**：用户三句现场观察全部与几何律一致——150cm（车边）≈1.92m 轴 → 2 面束 ± 顶擦临界 =「两三根线」✓；120cm ≈1.62m 轴 → 仅 -15° 亚噪声级 =「根本扫不到」✓；最终停位 220-230cm → 数据 face 2.10-2.11m、中心 2.28m、3 束命中（-15/-13 打面 0.215/0.295 + -11 顶面擦边 0.351-0.355）✓。
 4. **盲区段全量留证**：sweep 前 35.2s（348 帧）箱在 <1.58m 完全无命中，35.2s 首命中 face 1.58m 仅 8 点——盲区→出现边界实测 ≈1.6m，与理论 1.59m 帧级吻合。
-5. **验收设计 → 已执行 ✅**：sweep 反转重放 = 一包自证接近链（mark 相 3 束 254 → 盲区相输入消失）：旧配置把 254 清归零（25→2，撞箱复现），新配置 mark-only 保留（24→117 稳定）——同 09-06 撞击因果链的 VM 级还原，A/B 对照见 [2026-09-08_lowobstacle_fixB_ab_acceptance.md §四](2026-09-08_lowobstacle_fixB_ab_acceptance.md)。
+5. **验收设计 → 已执行 ✅**：sweep 反转重放 = 一包自证接近链（mark 相 3 束 254 → 盲区相输入消失）：旧配置把 254 清归零（25→2，撞箱复现），新配置 mark-only 保留（24→117 稳定）——同 09-06 撞击因果链的 VM 级还原，A/B 对照见 [2026-09-07_lowobstacle_fixB_ab_acceptance.md §四](2026-09-07_lowobstacle_fixB_ab_acceptance.md)。
 6. **会话纪律四条（本次被叫停提炼）**：重渐变/专项 bag 必须逐帧全量分析（禁跳帧/随意裁剪）；正式分析动手前先与用户定调总体方案并获准；复用成熟脚本参数化而非每次重写；用户口述 = 佐证非定论、先数据后互证——见 §八 E1-E4。
 
 ---
@@ -25,7 +25,7 @@
 - 09-06 实车撞击 0.35m 箱（前向 static obstacle A1 窗口）：根因链 = 全局 costmap 无低带源（`velodyne` max 0.55 光带在上，`velodyne_low` [0,0.40] 属本地层）→ 254 标记随接近被本地层 scan 清除线衰减归零 → 障碍物"消失"。
 - 修复方案：把 `velodyne_low` 拆成**独立 obstacle_low_layer（mark: True / clearing: False）**，obstacle_layer 只留 scan——低带 254 只增不消，config 已改（uncommitted）。
 - VM 验收卡在数据源：102944 手推窗包两重污染（推车人腿进低带常驻 + 窗内含墙/杂物），且 new 配置运行结果被残留旧 costmap 进程（同名 topic 双发布者）污染，jsonl 首帧与旧配置末帧字节相同——证据链作废。
-- 决定：**重录纯净数据**（用户 09-08 发起）——完全无人介入、车完全静止、正前方仅数只不同高度箱体、箱子动态远离全过程。
+- 决定：**重录纯净数据**（用户 09-07 发起）——完全无人介入、车完全静止、正前方仅数只不同高度箱体、箱子动态远离全过程。
 
 ## 二、录制协议与数据资产
 
@@ -36,11 +36,11 @@
 
 | bag | 时长/帧 | 大小 | 场景 | 用途 |
 |:---|:---|:---|:---|:---|
-| box_static_20260908_1019 | 21.5s / 213 帧 | 127MB | 主箱 face 2.05m 静止；侧参盒 2.72-2.83m；墙 4.9m | 3 束命中签名、背景物 ID |
-| box_near_20260908_1020 | 15.7s / 156 帧 | 93MB | 主箱置于 ~1.0-1.7m（盲区带） | 盲区实锤（正前零簇） |
-| box_TrendsParallel_20260908_1056 | 85.9s / 853 帧 | 502MB | 主箱 1.0→2.1m 远离 + 停驻 2.10-2.11m | **A/B 验收主输入**（反转=接近） |
+| box_static_20260907_1019 | 21.5s / 213 帧 | 127MB | 主箱 face 2.05m 静止；侧参盒 2.72-2.83m；墙 4.9m | 3 束命中签名、背景物 ID |
+| box_near_20260907_1020 | 15.7s / 156 帧 | 93MB | 主箱置于 ~1.0-1.7m（盲区带） | 盲区实锤（正前零簇） |
+| box_TrendsParallel_20260907_1056 | 85.9s / 853 帧 | 502MB | 主箱 1.0→2.1m 远离 + 停驻 2.10-2.11m | **A/B 验收主输入**（反转=接近） |
 
-> 全部落 `bags/raw/`（不入 git）；scp 传输记录见 [raw_箱体扫掠现场记录](../raw_data/raw_箱体扫掠现场记录_2026-09-08_1056.md)。
+> 全部落 `bags/raw/`（不入 git）；scp 传输记录见 [raw_箱体扫掠现场记录](../raw_data/raw_箱体扫掠现场记录_2026-09-07_1056.md)。
 
 ## 三、ring 几何律（低带可见性标定）
 
@@ -92,7 +92,7 @@
 | 120cm 根本扫不到 | 1.62m 轴 | 仅 -15 打顶 1.59m 亚噪声临界 | ✓（near 包零簇 + 窗表） |
 | 停 220-230cm、3 线 0.34-0.35 | 中心 2.28m | face 2.10-2.11 → 3 束 | ✓（顶擦 0.351-0.355 即口述 0.34-0.35 层；另两束 0.215/0.295 亦同箱面） |
 
-## 五、VM 验收设计（两相反转自证，09-08 已执行 ✅）
+## 五、VM 验收设计（两相反转自证，09-07 已执行 ✅）
 
 **原理**：bag 顺序反转 = 时间反演。TrendsParallel 记录"远离 + 停驻"，**反序重放**即"箱从 2.10m 匀速接近到 <1.59m"——不用诱导切割，一包还原 mark→blind 完整因果链：
 - **mark 相**（反转初期）：3 束输入 → 新/旧配置都在局部层打 254（全局 0.4m 低带 mark-only 层语义：全局 mark 必须依赖低带来源存在，旧配置全局根本无低带源——此处 A/B 对照的是**局部** obstacle_low_layer 是否把 254 带入全局 → 以全局 254 存在性判新旧）；
@@ -104,13 +104,13 @@
 | mark 相接近段 | 254 产生后部分被后续扫线清 | 254 产生且留存 |
 | blind 相（<1.6m） | 254 → 0（撞击复现） | 254 持续 ≥ 消退慢（留残影，属预期 tradeoff，见遗留 #2） |
 
-**执行前置**（吸取 09-06/09-08 污染教训）：A/B 两轮间必须 `pkill` 全量 costmap 进程链 + 进程残留自查（[ros2-ops.md §10](../ros2-ops.md)）；两轮输出做**首帧字节一致性**检查防双发布者污染。rig 已入库 `bags/analysis/box_lowband_20260908/`（两版 costmap yaml / vm_replay_sweep_rev.py / vm_run_ab_sweep.sh / vm_read_marks.py / 原始 jsonl）。
+**执行前置**（吸取 09-06/09-07 污染教训）：A/B 两轮间必须 `pkill` 全量 costmap 进程链 + 进程残留自查（[ros2-ops.md §10](../ros2-ops.md)）；两轮输出做**首帧字节一致性**检查防双发布者污染。rig 已入库 `bags/analysis/box_lowband_20260907/`（两版 costmap yaml / vm_replay_sweep_rev.py / vm_run_ab_sweep.sh / vm_read_marks.py / 原始 jsonl）。
 
 ## 六、遗留与下一步
 
 | # | 项 | 入口 |
 |:---|:---|:---|
-| 1 | ~~VM 两相重放验收~~ → **✅ 已执行 PASS（09-08）：OLD 箱区 254 25→2 归零 vs NEW 117 保留** | [acceptance 复盘](2026-09-08_lowobstacle_fixB_ab_acceptance.md) §四 |
+| 1 | ~~VM 两相重放验收~~ → **✅ 已执行 PASS（09-07）：OLD 箱区 254 25→2 归零 vs NEW 117 保留** | [acceptance 复盘](2026-09-07_lowobstacle_fixB_ab_acceptance.md) §四 |
 | 2 | **全速版 nav2_params.yaml 同步改造**：膨胀 0.55→0.30 + 同构 obstacle_low_layer（mark-only）——07 §三警示重申 | [07-handover §三](../07-handover.md) |
 | 3 | 实车验证 = N97 install 同步（colcon build）→ 修法 B 检查单流程 | [09-05 复盘 §X](2026-09-05_lowobstacle_fixB_vm_acceptance.md) |
 | 4 | A1 避障收口（判据 5/5）在 09-10 硬切换线前视窗口补跑 | [recruitment-learning-plan.md §4.1](../roadmaps/recruitment-learning-plan.md) |
@@ -148,7 +148,7 @@
 
 ---
 
-## 八、经验点层次标注节（2026-09-08 会话）
+## 八、经验点层次标注节（2026-09-07 会话）
 
 > 四层制见 [2026-09-04_experience-layer-decision.md](2026-09-04_experience-layer-decision.md)。本次全部经验 = 会话中被用户逐次纠正后提炼。
 
@@ -169,9 +169,9 @@
 
 ## 相关文件
 
-- 分析脚本与全量输出：`bags/analysis/box_lowband_20260908/`（ring_law.py / cleanbag_clusters.py / sweep_frames.py + *_out.txt）
-- 原始数据：`bags/raw/box_static_20260908_1019` `bags/raw/box_near_20260908_1020` `bags/raw/box_TrendsParallel_20260908_1056`（不入 git）
-- 口述留档：[raw_箱体扫掠现场记录_2026-09-08_1056.md](../raw_data/raw_箱体扫掠现场记录_2026-09-08_1056.md)
+- 分析脚本与全量输出：`bags/analysis/box_lowband_20260907/`（ring_law.py / cleanbag_clusters.py / sweep_frames.py + *_out.txt）
+- 原始数据：`bags/raw/box_static_20260907_1019` `bags/raw/box_near_20260907_1020` `bags/raw/box_TrendsParallel_20260907_1056`（不入 git）
+- 口述留档：[raw_箱体扫掠现场记录_2026-09-07_1056.md](../raw_data/raw_箱体扫掠现场记录_2026-09-07_1056.md)
 - 修复配置（uncommitted）：`r2_bringup/config/nav2_params_low.yaml`（旧版 `git show HEAD:` 可回查）
 - 上游：[2026-09-06 crashbox 复盘](2026-09-06_lowobstacle_fixB_crashbox.md) ｜ [09-05 修法 B 验收](2026-09-05_lowobstacle_fixB_vm_acceptance.md) ｜ [09-04 断点](2026-09-04_lowobstacle_breakpoint.md)
 - 09-06 参考脚本：`bags/analysis/box_lowband_20260906/`（本次脚本的成熟母版）

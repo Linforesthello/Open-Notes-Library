@@ -1,13 +1,13 @@
-# 09-08 近距丢黑块修复（修法 B·global 独立层）VM A/B 验收 PASS + ring 几何律实测定稿
+# 09-07 近距丢黑块修复（修法 B·global 独立层）VM A/B 验收 PASS + ring 几何律实测定稿
 
-> 日期：2026-09-08
+> 日期：2026-09-07
 > 任务：近距丢黑块修复的纯净数据源重录 + VM A/B 对照验收（config 修复已在 09-07 前完成，见下）
 > 状态：✅ A/B 验收 PASS（OLD 箱区 254 25→2 归零复现 / NEW 24→117 稳定保留）；留档完成
 > 关联：前篇 [2026-09-06_lowobstacle_fixB_crashbox.md](2026-09-06_lowobstacle_fixB_crashbox.md)（近距丢黑块发现与取证）、
 >       [2026-09-05_lowobstacle_fixB_vm_acceptance.md](2026-09-05_lowobstacle_fixB_vm_acceptance.md)（修法 B 首版 VM PASS + 抽帧重发法模板）、
 >       [07-handover.md](../07-handover.md)（交接状态）、[pending-tasks.md](../pending-tasks.md)（待办）
-> 证据落位：3 个纯净 bag 于 N97 录制、VM 副本 `bags/raw/box_static_20260908_1019` / `box_near_20260908_1020` /
->       `box_TrendsParallel_20260908_1056`；分析脚本 `bags/analysis/box_lowband_20260908/`（12 件，含 A/B 验证台）
+> 证据落位：3 个纯净 bag 于 N97 录制、VM 副本 `bags/raw/box_static_20260907_1019` / `box_near_20260907_1020` /
+>       `box_TrendsParallel_20260907_1056`；分析脚本 `bags/analysis/box_lowband_20260907/`（12 件，含 A/B 验证台）
 > 方法模板：见 §七（反转重放 A/B 操作卡）；经验点清单：见 §八
 
 ---
@@ -32,12 +32,12 @@
 | 09-06 | N97 实车取证：导航撞 0.35m 矮箱；低带源近距丢箱 → scan 同层清除 → 254 归零 → 规划盲 | [crashbox retrospect](2026-09-06_lowobstacle_fixB_crashbox.md) |
 | 09-06~07 | config 修复（工作区 `nav2_params_low.yaml`）：`velodyne_low` 拆出为独立 `obstacle_low_layer`，mark-only（clearing: False）；主 `obstacle_layer` 只留 scan | 工作区未提交改动 |
 | 09-06 | VM A/B 初试（102944 手动推车接近窗 [81,108]s）失败：手动推车段人腿在低带持续 mark + 车动箱格移动，全图 254 上涨淹没箱格信号，old 版未现归零 | 教训 → 用户提议纯净重录 |
-| 09-08 | 用户 N97 重录 3 个纯净 bag（无人介入、车静止、正前不同距离箱体 + 动态远离过程） | 本日数据源 |
-| 09-08 | ring 几何律标定 + 反转重放 A/B | 本文 ✅ |
+| 09-07 | 用户 N97 重录 3 个纯净 bag（无人介入、车静止、正前不同距离箱体 + 动态远离过程） | 本日数据源 |
+| 09-07 | ring 几何律标定 + 反转重放 A/B | 本文 ✅ |
 
 ---
 
-## 二、纯净数据源（3 bag，2026-09-08 录制）
+## 二、纯净数据源（3 bag，2026-09-07 录制）
 
 录制命令（N97，仅雷达栈，`ros2 launch r2_sensors velodyne.launch.py`；话题
 `/velodyne_points /scan /tf_static`）：
@@ -51,15 +51,15 @@ ros2 bag record -o box_TrendsParallel_$(date +%Y%m%d_%H%M) /velodyne_points /sca
 
 | bag（VM 副本） | dur | 帧数 | 场景 | 数据角色 |
 |:---|:---|:---|:---|:---|
-| box_static_20260908_1019 | 21.5s | points 213 / scan 214 | 车静止，35cm 立方箱面 1.95~2.3m（3 ring 命中） | 初筛/簇定位 |
-| box_near_20260908_1020 | 15.7s | 156/156 | 同一箱移至近距（实测 ≈0 命中） | **盲区旁证**（近距确实扫不到） |
-| box_TrendsParallel_20260908_1056 | 85.9s | 853/853 | 箱沿车头轴从 ~1.0m 逐档远离至 2.11m 静止（末 8s 停驻） | **A/B 验收主数据** |
+| box_static_20260907_1019 | 21.5s | points 213 / scan 214 | 车静止，35cm 立方箱面 1.95~2.3m（3 ring 命中） | 初筛/簇定位 |
+| box_near_20260907_1020 | 15.7s | 156/156 | 同一箱移至近距（实测 ≈0 命中） | **盲区旁证**（近距确实扫不到） |
+| box_TrendsParallel_20260907_1056 | 85.9s | 853/853 | 箱沿车头轴从 ~1.0m 逐档远离至 2.11m 静止（末 8s 停驻） | **A/B 验收主数据** |
 
 - 布局：35cm 立方箱正前方（实测 az +1.3~1.5°、横向宽 ~0.37m，在 ±10° 内）；旁侧 ~13~15° 有对照箱
   （顶高 ~0.5m）；~4.9m 处背景（两包均一致）。
 - 移箱人站箱后偏出轴线（±16° 锥外低带数据与背景一致，未见人腿污染）。
 - tf_static：`base_link→velodyne (0,0,0.655)`（两包实测一致，与 VM 测试台硬编码同值）。
-- VM 传包：`scp -r lin@192.168.1.210:.../bag*  ~/Lin_workspace/r2_integration/bags/raw/`（2026-09-08 完成）。
+- VM 传包：`scp -r lin@192.168.1.210:.../bag*  ~/Lin_workspace/r2_integration/bags/raw/`（2026-09-07 完成）。
 
 ---
 
@@ -140,7 +140,7 @@ box_near 包实证近距（1.0~1.7m 区）低带命中 ≈ 0：盲区本底。
 
 ### 4.3 复现方法（资产化）
 
-分析/验证资产 `bags/analysis/box_lowband_20260908/`：
+分析/验证资产 `bags/analysis/box_lowband_20260907/`：
 
 | 文件 | 用途 |
 |:---|:---|
@@ -158,7 +158,7 @@ box_near 包实证近距（1.0~1.7m 区）低带命中 ≈ 0：盲区本底。
 
 ## 五、现场经验补充（raw_data）
 
-用户现场观察与录制/scp 日志原文 → [raw_data/raw_箱体实测观察_2026-09-08](../raw_data/raw_箱体实测观察_2026-09-08_1027.md)（不入 git）。
+用户现场观察与录制/scp 日志原文 → [raw_data/raw_箱体实测观察_2026-09-07](../raw_data/raw_箱体实测观察_2026-09-07_1027.md)（不入 git）。
 要点：140cm 首线观察（模型外推 ≈ 参照点含 ±20cm 不确定性，以点云为准）；±10° 内 35cm 箱；
 150cm 2~3 线 / 120cm 无；终停 220~230cm 3 线 0.34~0.35m —— 全部与 ring 律自洽（§3.2）。
 
@@ -200,9 +200,9 @@ box_near 包实证近距（1.0~1.7m 区）低带命中 ≈ 0：盲区本底。
 
 | # | 经验点（含教训） | 建议去向 |
 |:---|:---|:---|
-| 1 | **手动推车段 bag 不适合做低带 A/B**：人腿在低带持续 mark + 车动箱格移动/拖尾 → 全图 254 淹没箱格信号；验证数据源必须"无人介入 + 物距可重复" | 事件层留存（09-06/09-08 互指） |
+| 1 | **手动推车段 bag 不适合做低带 A/B**：人腿在低带持续 mark + 车动箱格移动/拖尾 → 全图 254 淹没箱格信号；验证数据源必须"无人介入 + 物距可重复" | 事件层留存（09-06/09-07 互指） |
 | 2 | **反转重放 = 用"远离"录制自证"接近"因果链**（含盲区边界时间对齐的自验），免真车撞箱/免掐点源 | draft：analysis-methods（成熟后并入 ros2-ops §9/§7） |
-| 3 | **成熟分析脚本复用纪律**（用户 09-08 明确要求）：先读既有 find_box_in_points/render_frames/sweep_frames 再参数化，不每次新写；新写正确率低、效率低 | 规则层候选：ros2-ops §7（需用户批准后写入） |
+| 3 | **成熟分析脚本复用纪律**（用户 09-07 明确要求）：先读既有 find_box_in_points/render_frames/sweep_frames 再参数化，不每次新写；新写正确率低、效率低 | 规则层候选：ros2-ops §7（需用户批准后写入） |
 | 4 | **几何问题先标定后解释**：ring 角来自校准文件实源，现场目测（140/150/120cm）只作佐证不反推结论；逐帧高度谱与理论偏差 <1cm = 可信判据 | analysis-methods 数据验证法（draft） |
 | 5 | **A/B 台进程卫生与串行纪律**：同话题双发布者数据逐字节污染（09-06 byte-identical 首帧教训）；预检守卫 + pkill -f 精确清理 + 轮间验证 | 规则层：ros2-ops §10 已有进程卫生；补充 A/B 并发污染案例（待批） |
 | 6 | **固有盲区 ≠ 回归**：近距丢黑有两成分——几何盲区（本底，任何配置都无输入）与"见后清"竞争（本修复对象）；报告必须二分，避免把本底误判为 bug 残留 | 事件层留存 |
@@ -214,4 +214,4 @@ box_near 包实证近距（1.0~1.7m 区）低带命中 ≈ 0：盲区本底。
 
 - 前篇：[2026-09-06_lowobstacle_fixB_crashbox.md](2026-09-06_lowobstacle_fixB_crashbox.md) ｜ [2026-09-05_lowobstacle_fixB_vm_acceptance.md](2026-09-05_lowobstacle_fixB_vm_acceptance.md)
 - 调研：低矮障碍感知全景 [surveys/3d-lidar-2d-navigation-survey.md](../surveys/3d-lidar-2d-navigation-survey.md)
-- 资产：`bags/analysis/box_lowband_20260908/`（脚本 + 输出 + A/B 台 + 原始 jsonl）
+- 资产：`bags/analysis/box_lowband_20260907/`（脚本 + 输出 + A/B 台 + 原始 jsonl）
