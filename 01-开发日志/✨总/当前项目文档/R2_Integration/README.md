@@ -17,67 +17,122 @@ r2_integration/
 │
 ├── README.md                          ← 本文件，入口导航
 │
-├── doc/                               ← 文档（按阶段组织）
-│   ├── standards.md                  文档标准 ← 先看这个
-│   ├── obsidian-tags.md              Obsidian 标签体系习惯
-│   ├── ros2-ops.md                   ROS/ROS2 操作规范（构建/启动/录包/分析）
-│   ├── ros2-qos-dds.md               QoS/DDS 问题手册（hz 大消息坑/兼容矩阵/排查四步法）
-│   ├── obsidian-sync.md              Obsidian 镜像同步规范（全局适用）
-│   ├── 01-plan.md                    五阶段集成方案总纲
-│   ├── minimal-loop/                  最小闭环计划（plan.md）+ W1/W2/W3 操作手册（w1/w2/w3-operation.md）+ Nav2 bringup + 审计数据
-│   ├── 02-deploy-checklist.md        N97 部署清单
-│   ├── n97_remote_desktop.md         N97 远程桌面方案（TigerVNC 定型，NoMachine/RealVNC 弃用）
-│   ├── fastlio2-n97-deploy.md        FAST-LIO2 N97 实车部署手册（依赖/外参/运行纪律/验证）
-│   ├── planning-control-roadmap.md   规划控制与视觉集成路线（离线/实时两大阵营 + 标定工具线）
-│   ├── motion-control-roadmap.md     运动控制与具身智能路线（三大方向：四足/机械臂/全车协调 + SO-101+LeRobot+OXE 开源生态）
-│   ├── 02-progress.md                全局进度一览（各Phase完成度）
-│   ├── project_status.md              全项目现状总结（08-06）
-│   ├── project_landscape.md            项目全景（R2在更大系统中的位置）
-│   ├── 03-current_state.md           当前完成状态
-│   ├── 07-handover.md                状态交接（新会话用）
+├── doc/                               ← 文档（顶层 = 规范 + 阅读主线 + 待办索引）
+│   ├── standards.md         文档标准 ← 先看这个
+│   ├── obsidian-tags.md     Obsidian 标签体系习惯
+│   ├── ros2-ops.md          ROS/ROS2 操作规范（构建/启动/录包/分析/感知覆盖判据）
+│   ├── ros2-qos-dds.md      QoS/DDS 问题手册（hz 大消息坑/兼容矩阵/排查四步法）
+│   ├── obsidian-sync.md     Obsidian 镜像同步规范（全局适用）
+│   ├── 01-plan.md           五阶段集成方案总纲
+│   ├── 02-progress.md       全局进度一览（各Phase完成度）
+│   ├── 03-current_state.md  当前完成状态
+│   ├── 07-handover.md       状态交接（新会话用）
+│   ├── startup.md           R2 启动手册（全栈启动命令唯一权威，09-04 从 07 §三 拆出）
+│   ├── pending-tasks.md     近期待办汇总索引（每条一句话+源文档入口，09-03 建）
+│   ├── doc-engineering.md   文档工程规范（整理/重构/校验/双仓同步，跨项目通用，09-03 建）
+│   ├── analysis-methods.md  方法经验长文档（draft 层：新经验先落此，成熟后抽取入规范，09-04 建）
+│   ├── vscode-workspace-guide.md  VSCode 工作区建立规范（Claude 会话归属；独立 doc 先行，盘点后抽调，09-09 建）
 │   │
-│   ├── phase0/                       ← Phase 0 专题
-│   │   ├── chassis_definition.md     底盘完整定义（映射/参数/公式）
-│   │   ├── sensor-mount.md            传感器安装定义（IMU/雷达位置朝向）
-│   │   ├── completion_report.md      Phase 0 完成记录
-│   │   └── debug_log.md              踩坑调试日志
+│   ├── minimal-loop/        最小闭环执行史（plan + w1/w2/w3-operation.md + Nav2 bringup + 审计数据）
+│   ├── minimal-loop2/       最小闭环 2·现行（plan.md + execution/relog/costmap 执行卡）
 │   │
-│   ├── phase1/                       ← Phase 1 专题
-│   │   ├── g354-wiring.md            G354 IMU 接线/配置
-│   │   ├── ekf-verification.md       EKF 实车验证清单（测试方法+判合格标准）
-│   │   ├── ekf-yaw-plan.md           EKF yaw 融合预案（08-12 方案①已实施验证）
+│   ├── phase0/  ← Phase 0 专题
+│   │   ├── chassis_definition.md  底盘完整定义（映射/参数/公式）
+│   │   ├── sensor-mount.md        传感器安装定义（IMU/雷达位置朝向）
+│   │   ├── completion_report.md   Phase 0 完成记录
+│   │   └── debug_log.md           踩坑调试日志
+│   │
+│   ├── phase1/  ← Phase 1 专题
+│   │   ├── g354-wiring.md                         G354 IMU 接线/配置
+│   │   ├── ekf-verification.md                    EKF 实车验证清单（测试方法+判合格标准）
+│   │   ├── ekf-yaw-plan.md                        EKF yaw 融合预案（08-12 方案①已实施验证）
 │   │   └── 2026-08-04_ekf-verification-result.md  EKF 验证结果记录
 │   │
-│   └── retrospect/                   ← 事件记录（按日期排序）
-│       ├── 2026-08-24_n97_fan_control.md       N97 风扇调速（ACPI 空壳死路→IT8613E force_id=0x8622 突破，sysfs pwm2 即刻调速可撤销）
-│       ├── 2026-08-23_doc_source_traceback.md  文档真实性回溯：roadmap 全篇来源规范化（1.11 落地案例 + 可复用检查清单）
-│       ├── 2026-08-17_nav2_initialpose_inflation_fix.md  初始位姿诊断 + 膨胀参数 0.30 过缝修复（08-17 实车验证，全速暂缓）
-│       ├── 2026-08-15_nav2_bringup.md             Nav2 首闭环跑通（D4 验证 + 降额实机 + 7 条排障 + 盲区/footprint 修复）
-│       ├── 2026-08-15_kiss_drift_170058.md          KISS 长录整程漂移留档（旋转+空窗→航向漂163°，双录对比）
-│       ├── 2026-08-15_r2_sensors_extract.md       velodyne 抽包 r2_sensors + g354 marker 补全（全流程/坑/决策/经验）
-│       ├── 2026-08-15_clean_bag_rerecord.md       干净 bag 重录 + 人形块过滤（清洗版导航图 map_0815_clean）
-│       ├── 2026-08-15_velodyne_perf_tuning.md     VLP-16 链路性能调优（供电不足根因 + organize_cloud/max_range）
-│       ├── 2026-08-15_vscode_intellisense_include_fix.md  VS Code 1696 修复（Humble include 双嵌套布局）
-│       ├── 2026-08-14_vm_vlp16_dds_fix.md         VM 单机 DDS 根因修复（bashrc 跨机配置 + daemon 缓存）
-│       ├── 2026-08-13_layer_map_3d2d.md           分层3D→2D导航层生成（多层对比+选层+seg3剔除）
-│       ├── 2026-08-13_map_chain_investigation.md 建图链路排查（重影根因+z_min修正+time字段之谜）
-│       ├── 2026-08-11_kiss_frame_rate_fix.md      KISS 帧率修复（3.6→9.5Hz，重影根因）
-│       ├── 2026-08-11_r2_bringup_code_review.md   r2_bringup 代码审查
-│       ├── 2026-08-10_vocalinux语音输入.md        Vocalinux 本地语音输入调试总结
-│       ├── 2026-08-09_ekf_z_drift_fix.md          EKF z 漂移修复（two_d_mode 钳位）
-│       ├── 2026-08-09_map_double_ghost.md         地图重影排查
-│       ├── 2026-08-06_git_ops_lessons.md          Git 操作教训（reset 误伤/Co-Authored-By 规则）
-│       ├── 2026-08-05_chassis_ekf_debug.md        底盘里程计修复+EKF过程噪声225值矩阵排障
-│       ├── 2026-08-05_imu_covariance_ekf_nan.md   IMU 协方差病态→EKF NaN 排障
-│       ├── 2026-08-05_n97_remote_desktop.md       N97 远程桌面三方案排障（NoMachine/RealVNC/TigerVNC）
-│       ├── 2026-08-03_r2_repo_repair.md           r2_integration 仓库修复全记录
-│       ├── 2026-08-02_vlp16_switch_network.md     VLP-16 交换机接入方案（+vlp16-switch-network-topology.png）
-│       ├── 2026-08-02_ekf_tf_fusion_fix.md        EKF/TF 融合排障全记录（7 问题）
-│       ├── 2026-07-31_chassis_launch_fix.md       chassis.launch.py 路径修复
-│       ├── 2026-07-31_claude_md_import_setup.md   流程模式：Claude 优先读到文档
-│       ├── 2026-07-31_teleop_keyboard_fix.md      键盘控制修复全记录（WASD 遥控）
-│       ├── 2026-07-31_workspace_check_fix.md      r2_integration 工作区检查与修复
-│       └── vlp16_slam_exploration.md              VLP-16 SLAM 方案探索
+│   ├── retrospect/  ← 事件记录（按日期排序；索引见目录内 README）
+│   │   ├── README.md                      目录索引（结论速查，09-04 建，从 07 §五/§八 拆出）
+│   │   ├── 2026-08-24_fastlio2_verification.md            FAST-LIO2 N97 实车验证原始数据（旋转 <2°/平移 0.5%，A2 决策输入）
+│   │   ├── 2026-08-24_n97_fan_control.md                  N97 风扇调速（ACPI 空壳死路→IT8613E force_id=0x8622 突破，sysfs pwm2 即刻调速可撤销）
+│   │   ├── 2026-08-23_doc_source_traceback.md             文档真实性回溯：roadmap 全篇来源规范化（1.11 落地案例 + 可复用检查清单）
+│   │   ├── 2026-08-18_fast_lio2_deploy.md                 FAST-LIO2 部署首记录（N97 编译坑：PATH 前置 /usr/bin）
+│   │   ├── 2026-08-18_fastlio_laser_map_debug.md          FAST-LIO /Laser_map 22MB hz 之谜排障（QoS 大消息手册源头）
+│   │   ├── 2026-08-17_nav2_initialpose_inflation_fix.md   初始位姿诊断 + 膨胀参数 0.30 过缝修复（08-17 实车验证，全速暂缓）
+│   │   ├── 2026-08-15_nav2_bringup.md                     Nav2 首闭环跑通（D4 验证 + 降额实机 + 7 条排障 + 盲区/footprint 修复）
+│   │   ├── 2026-08-15_kiss_drift_170058.md                KISS 长录整程漂移留档（旋转+空窗→航向漂163°，双录对比）
+│   │   ├── 2026-08-15_r2_sensors_extract.md               velodyne 抽包 r2_sensors + g354 marker 补全（全流程/坑/决策/经验）
+│   │   ├── 2026-08-15_clean_bag_rerecord.md               干净 bag 重录 + 人形块过滤（清洗版导航图 map_0815_clean）
+│   │   ├── 2026-08-15_velodyne_perf_tuning.md             VLP-16 链路性能调优（供电不足根因 + organize_cloud/max_range）
+│   │   ├── 2026-08-15_vscode_intellisense_include_fix.md  VS Code 1696 修复（Humble include 双嵌套布局）
+│   │   ├── 2026-08-14_vm_vlp16_dds_fix.md                 VM 单机 DDS 根因修复（bashrc 跨机配置 + daemon 缓存）
+│   │   ├── 2026-08-13_layer_map_3d2d.md                   分层3D→2D导航层生成（多层对比+选层+seg3剔除）
+│   │   ├── 2026-08-13_map_chain_investigation.md          建图链路排查（重影根因+z_min修正+time字段之谜）
+│   │   ├── 2026-08-11_kiss_frame_rate_fix.md              KISS 帧率修复（3.6→9.5Hz，重影根因）
+│   │   ├── 2026-08-11_r2_bringup_code_review.md           r2_bringup 代码审查
+│   │   ├── 2026-08-10_vocalinux语音输入.md                    Vocalinux 本地语音输入调试总结
+│   │   ├── 2026-08-09_ekf_z_drift_fix.md                  EKF z 漂移修复（two_d_mode 钳位）
+│   │   ├── 2026-08-09_map_double_ghost.md                 地图重影排查
+│   │   ├── 2026-08-06_git_ops_lessons.md                  Git 操作教训（reset 误伤/Co-Authored-By 规则）
+│   │   ├── 2026-08-05_chassis_ekf_debug.md                底盘里程计修复+EKF过程噪声225值矩阵排障
+│   │   ├── 2026-08-05_imu_covariance_ekf_nan.md           IMU 协方差病态→EKF NaN 排障
+│   │   ├── 2026-08-05_n97_remote_desktop.md               N97 远程桌面三方案排障（NoMachine/RealVNC/TigerVNC）
+│   │   ├── 2026-08-03_r2_repo_repair.md                   r2_integration 仓库修复全记录
+│   │   ├── 2026-08-02_vlp16_switch_network.md             VLP-16 交换机接入方案（+vlp16-switch-network-topology.png）
+│   │   ├── 2026-08-02_ekf_tf_fusion_fix.md                EKF/TF 融合排障全记录（7 问题）
+│   │   ├── 2026-07-31_chassis_launch_fix.md               chassis.launch.py 路径修复
+│   │   ├── 2026-07-31_claude_md_import_setup.md           流程模式：Claude 优先读到文档
+│   │   ├── 2026-07-31_teleop_keyboard_fix.md              键盘控制修复全记录（WASD 遥控）
+│   │   ├── 2026-07-31_workspace_check_fix.md              r2_integration 工作区检查与修复
+│   │   ├── vlp16_slam_exploration.md                      VLP-16 SLAM 方案探索
+│   │   ├── 2026-09-03_costmap_far_refresh_closed.md       costmap 远距离刷新验证闭环（09-03）
+│   │   ├── 2026-09-03_doc_engineering.md                  文档工程整理复盘（09-03，规则化见 doc-engineering.md）
+│   │   ├── 2026-09-04_lowobstacle_breakpoint.md           低物盲区断点定位：relog 三层精分析（09-04）
+│   │   ├── 2026-09-04_experience-layer-decision.md        经验四层制定稿 + 抽取盘点方案 A（09-04，待整合 doc-engineering）
+│   │   ├── 2026-09-04_bags_migration.md                   数据资产目录跨仓迁移复盘（bags 入仓，09-04）
+│   │   ├── 2026-09-05_lowobstacle_fixB_vm_acceptance.md   修法 B VM 验收 PASS + bag 抽帧重发法模板 + 经验点（09-05）
+│   │   ├── 2026-09-06_lowobstacle_fixB_crashbox.md        修法 B 实车撞箱验证：local 254 / global 无 = 根因实锤（09-06）
+│   │   ├── 2026-09-08_lowobstacle_ringlaw_cleandata.md    纯净三录 + ring 几何律：盲区边界 1.59m 实锤（09-08）
+│   │   ├── 2026-09-08_lowobstacle_fixB_ab_acceptance.md   修复 VM A/B 验收 PASS：反转重放 OLD 归零 vs NEW 保留（09-08）
+│   │   ├── 2026-09-08_lowobstacle_pivot_decision.md       低物链收手定论 + 主线转 3D 规控（用户 09-08 定）
+│   │   ├── 2026-09-08_lowobstacle_secondfail_clearevent.md 二次失效根因实锤：global 整层清空抹保留 mark（09-08 bag 逐帧）
+│   │   ├── 2026-09-09_datefix_linkfix_dual_repo.md          日期实证修正 + 坏链 29 条修复双仓闭环（同型聚合/cp 平铺坑经验）
+│   │   ├── 2026-09-09_experience_preinventory.md          经验盘点 A1 预盘点：7 批检索 → 分桶批准 → 双批落地（流程入 draft 主题 F）
+│   │   ├── 2026-09-11_a1_closing_review.md                A1 收口终核：六维核对 + 残留修复 + 底稿升格处置（09-11）
+│   │   ├── 2026-09-16_a1_item1_extraction.md              A1 收口盘点项 1 执行：30 条抽入规则层 + E5 裁定落 ros2-ops §12（09-16）
+│   │   └── 2026-09-16_checker_codespan_fix.md             校验器代码跨度排除：缺失 14→0（其中 12 条系误报）+ 闸门集合比对验证（09-16）
+│   │
+│   ├── n97/  ← N97 部署/运维手册
+│   │   ├── 02-deploy-checklist.md       N97 部署清单（已部署，保留作部署手册）
+│   │   ├── n97_remote_desktop.md        N97 远程桌面方案（TigerVNC 定型，NoMachine/RealVNC 弃用）
+│   │   ├── n97info.md                   N97 硬件信息·风扇调速速查（细节以 retrospect 08-24 为准）
+│   │   ├── fastlio2-n97-deploy.md       FAST-LIO2 N97 实车部署手册（依赖/外参/运行纪律/验证）
+│   │   ├── greenwave-monitor-deploy.md  R2 话题自主化监测（Greenwave Monitor）部署手册（08-25 方案 B）
+│   │   └── velodyne_r2.patch            FAST-LIO2 velodyne 适配补丁（fastlio2 手册附件）
+│   │
+│   ├── roadmaps/  ← 路线/学习计划
+│   │   ├── planning-control-roadmap.md          规划控制与视觉集成路线（离线/实时两大阵营 + 标定工具线）
+│   │   ├── motion-control-roadmap.md            运动控制与具身智能路线（三大方向：四足/机械臂/全车协调 + 开源生态）
+│   │   ├── recruitment-learning-plan.md         求职与学习三阶段总纲（2027届，09-02 定稿，当前排期权威）
+│   │   ├── recruitment-learning-plan-review.md  三阶段总纲评审稿（判断 1-3 + W1-W4 决策记录）
+│   │   └── nav2-knowledge-tree.md               Nav2 知识树（R2 实战版）
+│   │
+│   ├── surveys/  ← 调研/选型留档区（问题导向调研清单，跟项目走，2026-09-05 建）
+│   │   ├── 3d-lidar-2d-navigation-survey.md           低矮障碍感知手段调研（09-05；09-06 实车更新 §三B：物理边界实锤）
+│   │   ├── navigation-behavior-safety-survey.md       导航行为病×安全设计调研（Q1 灰格/Q2 转弯 margin/Q5 IMU 安全，09-06）
+│   │   ├── chassis-kinematics-controller-survey.md    底盘运动学×控制器选型调研（Q3 全向轮行为/Q4 舵轮 MPPI 路线，09-06）
+│   │   └── sensor-mounting-layout-survey.md           MID-70+D435 安装位置与倾角评价（拟定装法覆盖包络/应用评价：FAST-LIO2·explore·视觉栈，09-16）
+│   │
+│   ├── profiles/  ← 对象档案层（实体为中心横切视图：spec v0.1 + README，09-04 建）
+│   │   ├── spec.md              对象档案规范（建档门槛/模板/纪律，v0.1 试行）
+│   │   └── README.md            对象档案目录与整体介绍
+│   │
+│   ├── archive/  ← 过时状态档（已过时，状态以 07-handover 为准）
+│   │   ├── project_status.md     全项目现状总结（08-06/08-12，已过时）
+│   │   └── project_landscape.md  项目全景·R2 在更大系统中的位置（08-06，已过时）
+│   │
+│   └── raw_data/  ← 原始数据留档（不入 git）
+│   │   ├── raw_实操路线_2026-09-02_2139.txt         阶段一实操路线（AI 会话原文留档）
+│   │   └── raw_*.txt ×5                        终端输出实录（ekf_update_rate/imu_hz/nav2_launch_param/relog_0903/rosbag_record_log）
+│
+├── r2.code-workspace                  ← R2 多根工作区（方案 B：仓根入 git，09-09 建；说明见 doc/vscode-workspace-guide.md）
 │
 ├── r2_bringup/                        ← ROS2 底盘控制包
 │   ├── r2_bringup/chassis_node.py    核心节点
@@ -94,7 +149,7 @@ r2_integration/
 ├── r2_sensors/                        ← ROS2 传感器外设包（包名 r2_sensors，08-15 从 r2_bringup 抽出）
 │   ├── README.md                     包说明（话题/参数/启动）
 │   ├── launch/velodyne.launch.py     VLP-16 雷达启动（driver+transform+laserscan+TF，两机通用）
-│   └── config/r2.urdf                base_link→velodyne TF（z=0.56m，08-06 定案）
+│   └── config/r2.urdf                base_link→velodyne TF（z=0.655m，08-24 复测）
 │
 ├── g354_driver/                       ← ROS2 IMU 驱动包（包名 g354_imu_driver）
 │   ├── README.md                     包说明（话题/参数/启动）
@@ -104,11 +159,20 @@ r2_integration/
 │   ├── doc/                           G354 专题文档（completion-report/debug-log/observation-methods/test-flow）
 │   └── scripts/                       测试脚本
 │
-└── scripts/                           ← 标定工具
+├── bags/                                ← 实验数据资产（N97 采集 + VM 分析副本，09-04 入仓）
+│   ├── README.md                       数据目录导航（bag 清单/maps 产物）
+│   ├── analysis/                       分析脚本 + 输出（入库；raw/maps 不入库，白名单见 .gitignore）
+│   ├── csv/                            底盘测试全帧分析导出（入库）
+│   ├── raw/                            bag 原始录制（不入库，本地保留）
+│   ├── maps/                           建图产物（不入库，本地保留）
+│   └── rviz_nav2_first_loop*.png       Nav2 首闭环截图（入库）
+│
+└── scripts/                           ← 标定/文档工具
     ├── r2_startup.sh                 CAN + 底盘 + IMU + EKF 一键启动
     ├── measure_r2_ticks.py           编码器 ticks/圈 测量
     ├── map_chassis.py                CAN ID → 物理位置映射
-    └── calibrate_direction.py        运动方向标定（8组测试）
+    ├── calibrate_direction.py        运动方向标定（8组测试）
+    └── check_doc_links.py            文档链接完整性校验器（doc 工程闸门，见 doc-engineering.md）
 ```
 
 ---
