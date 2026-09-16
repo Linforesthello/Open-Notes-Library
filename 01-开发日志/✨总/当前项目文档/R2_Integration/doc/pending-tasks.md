@@ -59,7 +59,7 @@
 - **waypoint 雷达闭环**：基于 /kiss/odometry 的自主行走节点（待做）— [07-handover.md §四](07-handover.md)
 - 全速版 Nav2 验证 — **暂缓（08-17 决策）**；切回前须先同步 nav2_params.yaml 膨胀 0.55→0.30 **及 obstacle_low_layer 独立 mark-only 结构**（09-08 修复，同 07-handover 警示）— [07-handover.md §四](07-handover.md)、[retrospect 09-08](retrospect/2026-09-08_lowobstacle_fixB_ab_acceptance.md)
 - 可选：VLP-16 rpm 600→1200（20Hz）帧内畸变试验 — [07-handover.md §四](07-handover.md)
-- 可选：VLP-16 vs MID-70 实机 A/B（触发条件已满足，未做）— [planning-control-roadmap.md §3.4](roadmaps/planning-control-roadmap.md)
+- 可选：VLP-16 vs MID-70 实机 A/B（触发条件已满足，未做；**装法与几何已定档** → 见 §⑥ 传感器加装）— [planning-control-roadmap.md §3.4](roadmaps/planning-control-roadmap.md)、[sensor-mounting-layout-survey.md](surveys/sensor-mounting-layout-survey.md)
 - 可选：MPPI batch 调优（视 N97 CPU 实测）— [nav2-bringup.md](minimal-loop/nav2-bringup.md)
 - 遗留现象（算法本底非故障）：KISS 抖动/旋转点云滞后 → 长期方案已由 FAST-LIO2 承接 — [07-handover.md §三](07-handover.md)
 - **09-10 收口盘点（方案 A 首轮）余项**：~~以 retrospect/README 过新增事件 → 筛跨事件可复用 → 归入规范 + analysis-methods 抽取状态表更新~~（**09-16 完成**：30 条抽入 ros2-ops §5.1/§7.1/§11/§12、doc-engineering §十三/§十四、startup §4.4，draft 收薄回指；B1~B3 按成熟条件未满足留 draft — [事件档](retrospect/2026-09-16_a1_item1_extraction.md)）；**剩 4 项**：
@@ -69,7 +69,7 @@
      ④ standards §2.1 树内 ros2-ops 行是否补小节描述（09-16 请示，未改以免破该树统一风格）
      — [decision 09-04 §三/§五](retrospect/2026-09-04_experience-layer-decision.md)、[profiles/spec.md §5](profiles/spec.md)、[09-11 收口档 §七](retrospect/2026-09-11_a1_closing_review.md)、[09-16 事件档 §七](retrospect/2026-09-16_a1_item1_extraction.md)、[nav2-knowledge-tree §5](roadmaps/nav2-knowledge-tree.md)
 - **L4 近距兜底策略待决策（09-16 建位）**：盲区锥 <1.6m 的限速/停车/plan cost 惩罚**是否实施** + 验收口径（感知解决 vs 感知+行为联合）——承载位已建 ros2-ops §12.2，决策前不动 — [ros2-ops §12](ros2-ops.md)、[survey §四](surveys/3d-lidar-2d-navigation-survey.md)
-- **WIP 泄漏处置（09-16 发生）**：`b2caad1` 带入用户并发新增的 `sensor-mounting-layout-survey.md` 树行（该文件仍未跟踪，远端该行暂 404）；处置三选：等文档写完一起提交 / 现在提交 / 回退该行（新增 commit，不重写历史）— [checker fix 档 §八](retrospect/2026-09-16_checker_codespan_fix.md)、[doc-engineering §七 协作边界](doc-engineering.md)（经验点 G4）
+- **~~WIP 泄漏处置~~（09-16 发生 → 09-16 闭环）**：`b2caad1` 误带入的 `sensor-mounting-layout-survey.md` 树行，已随该文档定稿 **commit `c6a9853` 提交并推送**（采纳"等文档写完一起提交"）→ 远端该行现有实际文件对应，404 消除 — [checker fix 档 §八](retrospect/2026-09-16_checker_codespan_fix.md)、[doc-engineering §七 协作边界](doc-engineering.md)（经验点 G4）
 - **围栏内真实引用是否纳入闸门**：校验器代码跨度排除后，代码围栏内的真实引用（如 01-plan §8.2 状态块）脱离闸门——可加「围栏内白名单」一档，待用户定 — [checker fix 档 §五](retrospect/2026-09-16_checker_codespan_fix.md)
 - **下轮盘点抽取候选（09-16 事件档 §五/§六）**：抽取执行六步卡（draft→规则层流程，拟抽入 doc-engineering）+ E2/E3/E6 三条规则层候选（域外条目不硬塞 / 条数口径先行 / 抽取连带动权威树）— [09-16 事件档](retrospect/2026-09-16_a1_item1_extraction.md)
 - **~~R2 会话/工作区迁出 STM32_Now~~（09-05 记 → 09-09 完成主体）**：`r2.code-workspace` 建仓根（方案 B）+ 源哈希含 r2_integration 的 78 会话全量迁至新哈希 `-home-lin-Lin-workspace-r2-integration`（全文 grep 判据；VS Code 实测目录 + Reload 验证通过，cmp 77/79 一致）— 落地记录与后续待办（本会话补最终同步 / 旧源副本去留 / robot.code-workspace 收敛）见 [vscode-workspace-guide.md §四](vscode-workspace-guide.md)
@@ -80,6 +80,7 @@
 - 运动线：Go2 地形扩展（SO-101/机械臂明确不做）— [recruitment-learning-plan.md §5.1](roadmaps/recruitment-learning-plan.md)、[motion-control-roadmap.md §七](roadmaps/motion-control-roadmap.md)
 - LocoWiki 两轮扫读 + 复现 1~2 开源项目；里程碑：10 底 A2+RL 首数据 / 11 底复现 1 / 12 底题库骨架 — [recruitment-learning-plan.md §5.2](roadmaps/recruitment-learning-plan.md)
 - 全向轮运动模式方案①运动学专项（未定论，秋招后处理）— [planning-control-roadmap.md §5.7ter](roadmaps/planning-control-roadmap.md)
+- **传感器加装：MID-70 + D435（阶段二，装法与几何已定档 09-16）**：MID-70 装 VLP-16 下方（离地 0.55~0.65m、前倾 15~20°）、D435 夹两雷达之间、拟走双雷达组合（roadmap 方案 b）；**待办** = ① 实车安装结构核算（三层叠装机械实现/供电余量/交换机口）② 外参标定（含 MID-70 倾角旋转）③ 实机验证或 A/B — [surveys/sensor-mounting-layout-survey.md](surveys/sensor-mounting-layout-survey.md)、[roadmap §三](roadmaps/planning-control-roadmap.md)
 - Phase 4 D435+Jetson 视觉（0%）与 Phase 5 气动+异常+编排（0%）— [02-progress.md](02-progress.md)
 - MBD 状态机（MATLAB/Simulink 部署路径未定，秋招后优先）；探索效率升级路 explore_lite — [planning-control-roadmap.md §5.7bis/§5.8](roadmaps/planning-control-roadmap.md)
 - STM32/MCLM 技术栈 LocoWiki「翻译层」整理（低优先级）— [planning-control-roadmap.md §6.8](roadmaps/planning-control-roadmap.md)
