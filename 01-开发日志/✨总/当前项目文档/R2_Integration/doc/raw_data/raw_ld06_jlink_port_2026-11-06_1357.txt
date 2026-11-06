@@ -1,0 +1,38 @@
+# 来源: 用户会话粘贴 + 本地复核命令输出
+# Session 话题: LD06 手册对比 / J-Link 串口识别
+# 数据时间: 2026-11-06 13:52（用户 ls 输出时间戳）
+# 落盘时间: 2026-11-06 13:57
+# 说明: raw_data 原始留档，不入 git；命令输出按原样保存。
+
+## 用户粘贴的原始输出
+
+lin@lin-virtual-machine:~$ ls /dev/serial/by-id/*
+/dev/serial/by-id/usb-SEGGER_J-Link_000063728647-if00
+lin@lin-virtual-machine:~$
+
+lin@lin-virtual-machine:~$ ls -l /dev/serial/by-id/*
+lrwxrwxrwx 1 root root 13 11月  6 13:52 /dev/serial/by-id/usb-SEGGER_J-Link_000063728647-if00 -> ../../ttyACM0
+lin@lin-virtual-machine:~$
+
+## 本地复核输出（AI 执行，2026-11-06）
+
+lin@lin-virtual-machine:~$ ls -l /dev/ttyACM0
+crw-rw-rw-+ 1 root dialout 166, 0 11月  6 13:52 /dev/ttyACM0
+
+lin@lin-virtual-machine:~$ lsusb | grep -i SEGGER
+Bus 003 Device 005: ID 1366:0105 SEGGER J-Link
+
+lin@lin-virtual-machine:~$ udevadm info -q property -n /dev/ttyACM0 | grep -E '^(ID_VENDOR_ID|ID_MODEL_ID|ID_VENDOR|ID_MODEL|ID_SERIAL|ID_SERIAL_SHORT|ID_USB_INTERFACE_NUM)='
+ID_VENDOR_ID=1366
+ID_MODEL_ID=0105
+ID_VENDOR=SEGGER
+ID_MODEL=J-Link
+ID_SERIAL=SEGGER_J-Link_000063728647
+ID_SERIAL_SHORT=000063728647
+ID_USB_INTERFACE_NUM=00
+
+lin@lin-virtual-machine:~$ ls /dev/ttyUSB* 2>&1
+ls: cannot access '/dev/ttyUSB*': No such file or directory
+
+lin@lin-virtual-machine:~$ ls -l /dev/serial/by-id/*
+lrwxrwxrwx 1 root root 13 11月  6 13:52 /dev/serial/by-id/usb-SEGGER_J-Link_000063728647-if00 -> ../../ttyACM0

@@ -1,0 +1,106 @@
+/* ============================================================================
+ * resume-正式-重排版.css  (v2.2 · Noto · 结构适配重排版)
+ *
+ * 配：李泽林_机器人规划控制工程师_重排版.md（82 行 / 5,849 字 / 预计 2 页）
+ *
+ * 与单页版 v2.1 的关系：字体、字号、行距、间距全部沿用（同一套观感），
+ * 只做 3 处「结构相关」的适配 —— 因为重排版和单页版的元素形态不同：
+ *
+ *   [适配 A] 核心能力限定为「第一个 h2 后面的列表」
+ *            单页版用 h2 + ul 是安全的（只有核心能力是列表）；
+ *            重排版里「技能特长」也是 9 条列表，h2 + ul 会把它一起命中
+ *            → 技能特长将失去圆点且不换行，直接溢出。故收窄为 h2:first-of-type + ul。
+ *
+ *   [适配 B] 技能特长的类别标签在 li 里（li > strong），不是在 p 里
+ *            → 用 li > strong:first-child { white-space: nowrap } 防止「导航与 SLAM」被折断
+ *
+ *   [适配 C] 项目的「**负责范围**：」是 p > strong
+ *            → 保留 p > strong:first-child { white-space: nowrap }
+ *
+ * 其余（字体 Noto Sans SC 优先、姓名左对齐、h1 下边距 2px、分页保护）与单页版一致。
+ * ============================================================================ */
+
+body {
+  font-family: 'Noto Sans SC', 'Noto Sans CJK SC', 'Droid Sans Fallback', 'Microsoft YaHei', sans-serif;
+  font-size: 10pt;
+  line-height: 1.45;
+  color: #222;
+  padding: 0;
+}
+
+/* —— 标题 —— */
+h1 {
+  font-size: 18pt;
+  margin: 0 0 2px 0;
+  text-align: left;
+  letter-spacing: 0.5px;
+}
+h2 {
+  font-size: 11.5pt;
+  border-bottom: 1px solid #333;
+  padding-bottom: 2px;
+  margin: 10px 0 4px 0;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 10.5pt;
+  margin: 8px 0 2px 0;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* —— 段落与列表（原版数值） —— */
+p  { margin: 2px 0; }
+ul { margin: 2px 0 6px 0; padding-left: 16px; }
+ol { margin: 2px 0 6px 0; padding-left: 16px; }
+li {
+  margin: 1.5px 0;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* —— [适配 A] 核心能力索引块：只命中「第一个 h2 紧跟的列表」 ——
+   重排版里 技能特长 同样是列表，必须排除，否则会丢圆点 + 不换行 */
+h2:first-of-type + ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 1px 0 4px 0;
+}
+h2:first-of-type + ul li {
+  white-space: nowrap;
+  line-height: 1.35;
+  margin: 0.3px 0;
+}
+
+/* —— [适配 B] 技能特长：类别标签不折行（li 内） —— */
+li > strong:first-child {
+  white-space: nowrap;
+}
+
+/* —— [适配 C] 项目内「**负责范围**：」标签不折行（p 内） —— */
+p > strong:first-child {
+  white-space: nowrap;
+}
+
+/* —— 其他（照抄原版） —— */
+hr { border: none; border-top: 1px solid #ddd; margin: 8px 0; }
+a  { color: #1a5fb4; text-decoration: none; word-break: break-all; }
+strong { color: #111; }
+blockquote {
+  border-left: 3px solid #ccc;
+  margin: 8px 0;
+  padding: 2px 10px;
+  color: #666;
+  font-size: 9pt;
+}
+
+/* ============================================================================
+ * 备用开关
+ * ----------------------------------------------------------------------------
+ * 内容超 2 页想更紧：   body { font-size: 9.8pt; line-height: 1.4; }
+ *                        p { margin: 1.5px 0; }  li { margin: 1px 0; }
+ * 姓名想回居中：        h1 { text-align: center; }
+ * 核心能力想恢复圆点：  h2:first-of-type + ul { list-style: disc; padding-left: 16px; }
+ * 警示：不要用 padding-left + text-indent 做悬挂缩进（会把标签推出页面裁掉）。
+ * ============================================================================ */

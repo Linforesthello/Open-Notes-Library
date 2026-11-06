@@ -1,0 +1,133 @@
+# 来源: 用户会话粘贴
+# Session 话题: LD06 J-Link 串口 + ROS2 驱动首次跑通
+# 数据时间: 2026-11-06 14:06:07（launch 日志时间）
+# 落盘时间: 2026-11-06 14:15
+# 说明: 原始命令输出，按原样保存；raw_data 不入 git。
+
+lin@lin-virtual-machine:~$ ls -l /dev/ttyACM0
+crw-rw-rw-+ 1 root dialout 166, 0 11月  6 13:52 /dev/ttyACM0
+lin@lin-virtual-machine:~$ stty -F /dev/ttyACM0 -a | grep -E 'speed|cs8|-cstopb|-parenb|crtscts'
+speed 9600 baud; rows 0; columns 0; line = 0;
+-parenb -parodd -cmspar cs8 hupcl -cstopb cread clocal -crtscts
+lin@lin-virtual-machine:~$ ros2 launch ldlidar_stl_ros2 ld06.launch.py
+[INFO] [launch]: All log files can be found below /home/lin/.ros/log/2026-11-06-14-06-07-317194-lin-virtual-machine-11405
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [ldlidar_stl_ros2_node-1]: process started with pid [11406]
+[INFO] [static_transform_publisher-2]: process started with pid [11408]
+[static_transform_publisher-2] [WARN] [1793945167.400735327] []: Old-style arguments are deprecated; see --help for new-style arguments
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430409771] [LD06]: LDLiDAR SDK Pack Version is: v3.0.3
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430509260] [LD06]: <product_name>: LDLiDAR_LD06
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430517398] [LD06]: <topic_name>: scan
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430520238] [LD06]: <frame_id>: base_laser
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430522853] [LD06]: <port_name>: /dev/ttyACM0
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430548710] [LD06]: <port_baudrate>: 230400
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430552409] [LD06]: <laser_scan_dir>: Counterclockwise
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430555264] [LD06]: <enable_angle_crop_func>: false
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430558092] [LD06]: <angle_crop_min>: 135.000000
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.430564164] [LD06]: <angle_crop_max>: 225.000000
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.431835112] [LD06]: ldlidar node start is success
+[static_transform_publisher-2] [INFO] [1793945167.437851752] [base_link_to_base_laser_ld06]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.180000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'base_link' to 'base_laser'
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.443541855] [LD06]: ldlidar communication is normal.
+[ldlidar_stl_ros2_node-1] [INFO] [1793945167.447155546] [LD06]: Publish topic message:ldlidar scan data.
+[ldlidar_stl_ros2_node-1] [LDS][INFO][1793945167.431755386][Actual BaudRate reported:230400]
+
+
+
+lin@lin-virtual-machine:~$ ros2 topic info -v /scan
+Type: sensor_msgs/msg/LaserScan
+
+Publisher count: 1
+
+Node name: LD06
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: PUBLISHER
+GID: 01.0f.d4.2b.8e.2c.33.43.00.00.00.00.00.00.12.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 1
+
+Node name: rqt_gui_py_node_11868
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.d4.2b.5c.2e.32.83.00.00.00.00.00.00.00.16.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+lin@lin-virtual-machine:~$ ros2 topic hz /scan
+average rate: 10.004
+	min: 0.099s max: 0.101s std dev: 0.00051s window: 11
+average rate: 10.001
+	min: 0.099s max: 0.101s std dev: 0.00048s window: 21
+average rate: 10.001
+	min: 0.099s max: 0.101s std dev: 0.00043s window: 32
+average rate: 10.000
+	min: 0.099s max: 0.101s std dev: 0.00045s window: 43
+lin@lin-virtual-machine:~$ ros2 topic echo /scan --once --field headerer
+stamp:
+  sec: 1793945657
+  nanosec: 47658083
+frame_id: base_laser
+---
+lin@lin-virtual-machine:~$ ros2 run tf2_ros tf2_echo base_link base_laser
+[INFO] [1793945663.257806434] [tf2_echo]: Waiting for transform base_link ->  base_laser: Invalid frame ID "base_link" passed to canTransform argument target_frame - frame does not exist
+[INFO] [1793945665.247284630] [tf2_echo]: Waiting for transform base_link ->  base_laser: Invalid frame ID "base_link" passed to canTransform argument target_frame - frame does not exist
+At time 0.0
+- Translation: [0.000, 0.000, 0.180]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+- Rotation: in RPY (degree) [0.000, -0.000, 0.000]
+- Matrix:
+  1.000  0.000  0.000  0.000
+  0.000  1.000  0.000  0.000
+  0.000  0.000  1.000  0.180
+  0.000  0.000  0.000  1.000
+At time 0.0
+- Translation: [0.000, 0.000, 0.180]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+- Rotation: in RPY (degree) [0.000, -0.000, 0.000]
+- Matrix:
+  1.000  0.000  0.000  0.000
+  0.000  1.000  0.000  0.000
+  0.000  0.000  1.000  0.180
+  0.000  0.000  0.000  1.000
+At time 0.0
+- Translation: [0.000, 0.000, 0.180]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+- Rotation: in RPY (degree) [0.000, -0.000, 0.000]
+- Matrix:
+  1.000  0.000  0.000  0.000
+  0.000  1.000  0.000  0.000
+  0.000  0.000  1.000  0.180
+  0.000  0.000  0.000  1.000
+^C[INFO] [1793945668.298179042] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+lin@lin-virtual-machine:~$
+
+## 补充复核（AI 执行，2026-11-06 14:16）
+
+# 驱动运行中 stty 看到 speed 0：因为驱动用 termios2 BOTHER 设置 230400，
+# 老式 stty 读不到自定义速率，不代表实际 0 baud；以驱动日志 Actual BaudRate reported:230400 为准。
+# 行设置仍为 8N1、无校验、无硬件流控。
+lin@lin-virtual-machine:~$ stty -F /dev/ttyACM0 -a | grep -E 'speed|cs8|cstopb|parenb|crtscts'
+speed 0 baud; rows 0; columns 0; line = 0;
+-parenb -parodd -cmspar cs8 hupcl -cstopb cread clocal -crtscts
+

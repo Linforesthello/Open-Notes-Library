@@ -1,0 +1,94 @@
+/* ============================================================================
+ * 【对照基准版】resume.css
+ *
+ * 目的：给你一个"最接近 Linux 原版"的观感基准，用来和原版 PDF 直观对比。
+ *
+ * 与原版的差异：
+ *   1) 字体栈改为 Noto Sans SC 优先 —— 你机器上已装 NotoSansSC-VF.ttf，
+ *      它与原版实际使用的 DroidSansFallback 同为 Google 系中文字体，字形最接近。
+ *      原版 CSS 写的 'Noto Sans CJK SC' 在 Windows 上不存在（名字差一个词），
+ *      才会回退到微软雅黑——这是"看起来不像原版"的主因。
+ *   2) h2 + ul li { white-space: nowrap } → 核心能力 5 行不折行
+ *   3) break-after / break-inside 分页保护
+ *   其余字体尺寸、行距、间距、颜色**逐条照抄原版**。
+ *
+ * 想回到微软雅黑对照：把下面 font-family 第一行换回
+ *   font-family: 'Noto Sans CJK SC', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+ * ============================================================================ */
+
+body {
+  font-family: 'Droid Sans Fallback', 'Noto Sans CJK SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  font-size: 10pt;
+  line-height: 1.45;
+  color: #222;
+  padding: 0;          /* 覆盖插件默认 padding: 0 26px，避免与页边距叠加导致左右留白过大 */
+}
+
+/* —— 标题（字重沿用插件默认的 normal，即细体；不加粗） —— */
+h1 {
+  font-size: 18pt;
+  margin: 0 0 4px 0;
+  text-align: center;
+}
+h2 {
+  font-size: 11.5pt;
+  border-bottom: 1px solid #333;
+  padding-bottom: 2px;
+  margin: 10px 0 4px 0;
+  break-after: avoid;          /* 新增：标题不与正文分离 */
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 10.5pt;
+  margin: 8px 0 2px 0;
+  break-after: avoid;          /* 新增 */
+  page-break-after: avoid;
+}
+
+/* —— 段落与列表（保持原版数值） —— */
+p  { margin: 2px 0; }
+ul { margin: 2px 0 6px 0; padding-left: 16px; }
+ol { margin: 2px 0 6px 0; padding-left: 16px; }
+li {
+  margin: 1.5px 0;
+  break-inside: avoid;         /* 新增：单条不跨页断开 */
+  page-break-inside: avoid;
+}
+
+/* —— 新增：核心能力索引块，一行一族不折行 —— */
+h2 + ul li {
+  white-space: nowrap;
+}
+
+/* —— 其他（照抄原版） —— */
+hr { border: none; border-top: 1px solid #ddd; margin: 8px 0; }
+a  { color: #1a5fb4; text-decoration: none; }
+strong { color: #111; }
+blockquote {
+  border-left: 3px solid #ccc;
+  margin: 8px 0;
+  padding: 2px 10px;
+  color: #666;
+  font-size: 9pt;
+}
+
+/* ============================================================================
+ * 微调区：只有在"确实溢出、必须单页"时才动，按顺序一组一组试
+ * ----------------------------------------------------------------------------
+ * 第 1 组（温和，先试这个）：
+ *   body { line-height: 1.40; }
+ *   li   { margin: 1.2px 0; }
+ *
+ * 第 2 组（继续收）：
+ *   body { font-size: 9.8pt; line-height: 1.38; }
+ *   p    { margin: 1.5px 0; }
+ *   h2   { margin: 8px 0 3px 0; }
+ *   h3   { margin: 6px 0 2px 0; }
+ *
+ * 第 3 组（明显紧，开始偏离原版观感）：
+ *   body { font-size: 9.5pt; line-height: 1.35; }
+ *   li   { margin: 1px 0; }
+ *   ul   { margin: 1px 0 4px 0; }
+ *
+ * 注：内容层面减量（合并/删句）比压 CSS 更能保住观感。
+ * ============================================================================ */

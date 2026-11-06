@@ -1,0 +1,228 @@
+# raw_ld06_smoke_2026-11-06_1505
+# 来源：VM（lin-virtual-machine）只读冒烟检查；用户已从 r2 内新包启动 ld06.launch.py
+# Session 话题：LD06 接入 r2_integration 后的冒烟验证 / 掉电问题留档
+# 数据时间：2026-11-06 15:00:17 CST
+
+## ps -eo pid,lstart,args | grep ldlidar
+  13799 Fri Nov  6 14:26:12 2026 rviz2 -d /home/lin/ldlidar_ros2_ws/install/ldlidar_stl_ros2/share/ldlidar_stl_ros2/rviz2/ldlidar.rviz
+  15887 Fri Nov  6 14:52:33 2026 /usr/bin/python3 /opt/ros/humble/bin/ros2 launch ldlidar_stl_ros2 ld06.launch.py
+  15888 Fri Nov  6 14:52:33 2026 /home/lin/Lin_workspace/r2_integration/install/ldlidar_stl_ros2/lib/ldlidar_stl_ros2/ldlidar_stl_ros2_node --ros-args -r __node:=LD06 --params-file /tmp/launch_params_v7jbg43o --params-file /tmp/launch_params_lqulmhru --params-file /tmp/launch_params_8bqxju8_ --params-file /tmp/launch_params_qi0gpc76 --params-file /tmp/launch_params_kbkbee1z --params-file /tmp/launch_params_tge8zwbr --params-file /tmp/launch_params_wof1f91e --params-file /tmp/launch_params_34_c40ds --params-file /tmp/launch_params_81_sigwo
+  15890 Fri Nov  6 14:52:33 2026 /opt/ros/humble/lib/tf2_ros/static_transform_publisher 0 0 0.18 0 0 0 base_link base_laser --ros-args -r __node:=base_link_to_base_laser_ld06
+
+## ros2 pkg prefix ldlidar_stl_ros2
+/home/lin/ldlidar_ros2_ws/install/ldlidar_stl_ros2
+
+## ros2 topic info /scan -v
+Type: sensor_msgs/msg/LaserScan
+
+Publisher count: 1
+
+Node name: LD06
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: PUBLISHER
+GID: 01.0f.d4.2b.10.3e.41.5a.00.00.00.00.00.00.12.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 2
+
+Node name: rqt_gui_py_node_11868
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.d4.2b.5c.2e.32.83.00.00.00.00.00.00.1b.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: rviz
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.d4.2b.e7.35.e5.5f.00.00.00.00.00.00.20.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+
+## ros2 topic hz /scan (timeout 8s)
+average rate: 9.996
+	min: 0.099s max: 0.101s std dev: 0.00038s window: 11
+average rate: 10.001
+	min: 0.098s max: 0.103s std dev: 0.00117s window: 22
+average rate: 9.999
+	min: 0.098s max: 0.103s std dev: 0.00099s window: 33
+average rate: 10.000
+	min: 0.098s max: 0.103s std dev: 0.00087s window: 44
+average rate: 9.999
+	min: 0.098s max: 0.103s std dev: 0.00092s window: 54
+
+## ros2 topic echo /scan --once --field header
+stamp:
+  sec: 1793948428
+  nanosec: 677152570
+frame_id: base_laser
+---
+
+## ros2 topic echo /tf_static --once --qos-durability transient_local
+
+## tf2_echo base_link base_laser (timeout 6s)
+timeout: failed to run command 'tf2_echo': No such file or directory
+
+## ls -l /dev/serial/by-id/
+total 0
+lrwxrwxrwx 1 root root 13 11月  6 14:25 usb-SEGGER_J-Link_000063728647-if00 -> ../../ttyACM0
+
+############################################################
+## 补测/校正（2026-11-06 15:02:06 CST）
+# 说明：上一段 ros2 pkg prefix 命中外层 ~/ldlidar_ros2_ws，是本 shell 的 AMENT_PREFIX_PATH 顺序所致；
+#      运行中进程 PID 15888 的 executable 路径在 r2 install，二者不矛盾。以下为显式 source r2 后的结果。
+
+## (subshell) source r2 install -> ros2 pkg prefix ldlidar_stl_ros2
+/home/lin/Lin_workspace/r2_integration/install/ldlidar_stl_ros2
+
+## ros2 topic echo /tf_static --qos-durability transient_local (timeout 5s, 可能多帧)
+
+## ros2 run tf2_ros tf2_echo base_link base_laser (timeout 6s)
+[INFO] [1793948532.773600021] [tf2_echo]: Waiting for transform base_link ->  base_laser: Invalid frame ID "base_link" passed to canTransform argument target_frame - frame does not exist
+At time 0.0
+- Translation: [0.000, 0.000, 0.180]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+- Rotation: in RPY (degree) [0.000, -0.000, 0.000]
+- Matrix:
+  1.000  0.000  0.000  0.000
+  0.000  1.000  0.000  0.000
+  0.000  0.000  1.000  0.180
+  0.000  0.000  0.000  1.000
+At time 0.0
+- Translation: [0.000, 0.000, 0.180]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+- Rotation: in RPY (degree) [0.000, -0.000, 0.000]
+- Matrix:
+  1.000  0.000  0.000  0.000
+  0.000  1.000  0.000  0.000
+  0.000  0.000  1.000  0.180
+  0.000  0.000  0.000  1.000
+At time 0.0
+- Translation: [0.000, 0.000, 0.180]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+- Rotation: in RPY (degree) [0.000, -0.000, 0.000]
+- Matrix:
+  1.000  0.000  0.000  0.000
+  0.000  1.000  0.000  0.000
+  0.000  0.000  1.000  0.180
+  0.000  0.000  0.000  1.000
+At time 0.0
+- Translation: [0.000, 0.000, 0.180]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+- Rotation: in RPY (degree) [0.000, -0.000, 0.000]
+- Matrix:
+  1.000  0.000  0.000  0.000
+  0.000  1.000  0.000  0.000
+  0.000  0.000  1.000  0.180
+  0.000  0.000  0.000  1.000
+At time 0.0
+- Translation: [0.000, 0.000, 0.180]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+- Rotation: in RPY (degree) [0.000, -0.000, 0.000]
+- Matrix:
+  1.000  0.000  0.000  0.000
+  0.000  1.000  0.000  0.000
+  0.000  0.000  1.000  0.180
+  0.000  0.000  0.000  1.000
+[INFO] [1793948538.615053382] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+
+## /tf_static CLI 读数补查（15:02:33）
+## ros2 topic info /tf_static -v
+Type: tf2_msgs/msg/TFMessage
+
+Publisher count: 1
+
+Node name: base_link_to_base_laser_ld06
+Node namespace: /
+Topic type: tf2_msgs/msg/TFMessage
+Endpoint type: PUBLISHER
+GID: 01.0f.d4.2b.12.3e.bc.b4.00.00.00.00.00.00.12.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 2
+
+Node name: rqt_gui_py_node_11868
+Node namespace: /
+Topic type: tf2_msgs/msg/TFMessage
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.d4.2b.5c.2e.32.83.00.00.00.00.00.00.1c.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: transform_listener_impl_5c93d4a89da0
+Node namespace: /
+Topic type: tf2_msgs/msg/TFMessage
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.d4.2b.e7.35.e5.5f.00.00.00.00.00.00.1f.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: TRANSIENT_LOCAL
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+
+## timeout 5 ros2 topic echo /tf_static --once
+transforms:
+- header:
+    stamp:
+      sec: 1793947954
+      nanosec: 102319161
+    frame_id: base_link
+  child_frame_id: base_laser
+  transform:
+    translation:
+      x: 0.0
+      y: 0.0
+      z: 0.18
+    rotation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+---
+
+## timeout 5 ros2 topic echo /tf_static --once --qos-durability transient_local --field transforms

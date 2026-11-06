@@ -1,0 +1,105 @@
+/* resume-two-col.css — 重排版简历专用样式（核心能力索引 + 紧凑两段式）
+ * 适用文件：李泽林_机器人运动控制工程师_重排版.md / 李泽林_机器人规划控制工程师_重排版.md
+ * 导出链路：VSCode Markdown PDF 插件（template.html + markdown.css + 本文件）→ Chromium printToPDF
+ * 与 resume.css 的差别：
+ *   1) 「核心能力」5 行按索引块渲染——更紧的行距、不换行、行首留标记位
+ *   2) 「技能特长」9 类按条目紧凑渲染——类别标签不单独占行
+ *   3) 增加分页保护（标题不孤立、条目不跨页断开）
+ * 启用方式：settings.json →
+ *   "markdown-pdf.styles": ["<本文件绝对路径>"]
+ *   （替换原 resume.css 条目，或两者同时列出、本文件在后即可覆盖）
+ * 调参顺序（越往后越伤观感）：字距 → line-height → li margin → 页面 margin
+ */
+
+/* ============ 页面与正文 ============ */
+body {
+  font-family: 'Noto Sans CJK SC', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+  font-size: 10pt;
+  line-height: 1.35;         /* 原 1.45 → 1.35，全文压缩约 7% 高度 */
+  color: #222;
+  padding: 0;                /* 必须为 0：覆盖插件默认 padding: 0 26px，避免与页边距叠加 */
+  margin: 0;
+}
+
+/* ============ 标题 ============ */
+h1 {
+  font-size: 18pt;
+  margin: 0 0 3px 0;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+h2 {
+  font-size: 11pt;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1.5px;
+  margin: 9px 0 3px 0;
+  break-after: avoid;        /* 标题不与正文分离 */
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 10.5pt;
+  margin: 7px 0 2px 0;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* ============ 段落与列表（间距收紧的关键区） ============ */
+p  { margin: 1.5px 0; }
+ul { margin: 1.5px 0 5px 0; padding-left: 15px; }
+ol { margin: 1.5px 0 5px 0; padding-left: 15px; }
+li {
+  margin: 1.2px 0;
+  break-inside: avoid;       /* 单条不跨页断开 */
+  page-break-inside: avoid;
+}
+
+/* 「负责范围」行（md 里以 **负责范围**： 开头的独立段落）——略加重，作为项目内的分界 */
+p > strong:first-child { color: #000; }
+p:has(> strong:first-child) { margin: 2px 0 3px 0; }
+
+/* ============ 核心能力：特征词索引块（5 行，一行一族，不换行） ============ */
+/* 结构：# 核心能力 → 紧随的 ul>li，每行以「 ｜ 」分隔 */
+h2 + ul li {
+  line-height: 1.25;
+  font-size: 9.5pt;
+  white-space: nowrap;       /* 关键：禁止折行，保证「一行看完」 */
+  letter-spacing: 0.1px;
+}
+/* 只作用于紧跟 h2 的第一个列表（即核心能力），避免影响项目内列表 */
+h2 + ul > li:first-child { margin-top: 0.5px; }
+h2 + ul > li:last-child  { margin-bottom: 1px; }
+
+/* ============ 技能特长（文档末尾 9 类，紧凑分类） ============ */
+/* 类别标签（- **嵌入式**：…）不换行，正文自然紧随，节省整行高度 */
+li > strong:first-child { white-space: nowrap; }
+
+/* ============ 其他 ============ */
+hr { border: none; border-top: 1px solid #ddd; margin: 6px 0; }
+a  { color: #1a5fb4; text-decoration: none; word-break: break-all; }
+strong { color: #111; }
+code {
+  font-size: 9pt;
+  background: #f5f5f5;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* 末尾说明性引用（若从 md 保留组织逻辑/写法原则）：浅色兜底，投递前建议删除 */
+blockquote {
+  border-left: 3px solid #ccc;
+  margin: 6px 0;
+  padding: 2px 9px;
+  color: #666;
+  font-size: 8.5pt;
+}
+
+/* ============ 兜底压缩档（内容超 2 页时把下面整段取消注释） ============ */
+/*
+body { font-size: 9.5pt; line-height: 1.28; }
+p    { margin: 1px 0; }
+ul, ol { margin: 1px 0 4px 0; padding-left: 14px; }
+li   { margin: 1px 0; }
+h2   { font-size: 10.5pt; margin: 8px 0 2px 0; }
+h3   { font-size: 10pt;  margin: 6px 0 2px 0; }
+h2 + ul li { font-size: 9pt; line-height: 1.2; }
+*/

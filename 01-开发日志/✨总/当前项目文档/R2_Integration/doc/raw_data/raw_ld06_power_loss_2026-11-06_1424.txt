@@ -1,0 +1,76 @@
+# 来源: 用户会话粘贴 + 用户现场观察
+# Session 话题: LD06 首次运行后突然超时 / 雷达掉电
+# 数据时间: 2026-11-06 14:24:43–14:25:18（日志时间）
+# 落盘时间: 2026-11-06 14:26
+# 现场观察: 正常转动时蓝色 LED 转圈；超时前灯灭，判断雷达掉电；
+#           重新插拔后恢复，之后启动节点如常。
+# 说明: 原始日志首行从超时中段开始（原文截断）；raw_data 不入 git。
+
+k your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946283.447572371] [LD06]: get ldlidar data is time out, please check your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946283.547261667] [LD06]: get ldlidar data is time out, please check your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946283.647711771] [LD06]: get ldlidar data is time out, please check your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946283.747541934] [LD06]: get ldlidar data is time out, please check your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946283.847516191] [LD06]: get ldlidar data is time out, please check your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946283.947776303] [LD06]: get ldlidar data is time out, please check your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946284.047357225] [LD06]: get ldlidar data is time out, please check your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946284.147321620] [LD06]: get ldlidar data is time out, please check your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946284.247242853] [LD06]: get ldlidar data is time out, please check your lidar device.
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946284.347246229] [LD06]: get ldlidar data is time out, please check your lidar device.
+^C[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[ldlidar_stl_ros2_node-1] [INFO] [1793946284.446838318] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[static_transform_publisher-2] [INFO] [1793946284.446833866] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ldlidar_stl_ros2_node-1] [INFO] [1793946284.543330859] [LD06]: ldlidar_published is end
+[INFO] [static_transform_publisher-2]: process has finished cleanly [pid 11408]
+[INFO] [ldlidar_stl_ros2_node-1]: process has finished cleanly [pid 11406]
+lin@lin-virtual-machine:~$ ros2 launch ldlidar_stl_ros2 ld06.launch.py
+[INFO] [launch]: All log files can be found below /home/lin/.ros/log/2026-11-06-14-24-46-754057-lin-virtual-machine-13588
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [ldlidar_stl_ros2_node-1]: process started with pid [13589]
+[INFO] [static_transform_publisher-2]: process started with pid [13591]
+[static_transform_publisher-2] [WARN] [1793946286.793316515] []: Old-style arguments are deprecated; see --help for new-style arguments
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153810352] [LD06]: LDLiDAR SDK Pack Version is: v3.0.3
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153897983] [LD06]: <product_name>: LDLiDAR_LD06
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153919940] [LD06]: <topic_name>: scan
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153926760] [LD06]: <frame_id>: base_laser
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153930698] [LD06]: <port_name>: /dev/ttyACM0
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153934566] [LD06]: <port_baudrate>: 230400
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153938159] [LD06]: <laser_scan_dir>: Counterclockwise
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153942912] [LD06]: <enable_angle_crop_func>: false
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153946503] [LD06]: <angle_crop_min>: 135.000000
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.153954275] [LD06]: <angle_crop_max>: 225.000000
+[ldlidar_stl_ros2_node-1] [INFO] [1793946287.155045601] [LD06]: ldlidar node start is success
+[static_transform_publisher-2] [INFO] [1793946287.157201315] [base_link_to_base_laser_ld06]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.180000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'base_link' to 'base_laser'
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946290.155251854] [LD06]: ldlidar communication is abnormal.
+[ldlidar_stl_ros2_node-1] [LDS][INFO][1793946287.154989138][Actual BaudRate reported:230400]
+[ERROR] [ldlidar_stl_ros2_node-1]: process has died [pid 13589, exit code 1, cmd '/home/lin/ldlidar_ros2_ws/install/ldlidar_stl_ros2/lib/ldlidar_stl_ros2/ldlidar_stl_ros2_node --ros-args -r __node:=LD06 --params-file /tmp/launch_params_pk_zr0hn --params-file /tmp/launch_params_ja1wmw37 --params-file /tmp/launch_params_6uw9eq9b --params-file /tmp/launch_params_xa80pcyl --params-file /tmp/launch_params_i57nfm4j --params-file /tmp/launch_params_ojisxug6 --params-file /tmp/launch_params_ey3cggnx --params-file /tmp/launch_params_yc8oos5j --params-file /tmp/launch_params__ng1wrzg'].
+^C[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[static_transform_publisher-2] [INFO] [1793946312.111888257] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [static_transform_publisher-2]: process has finished cleanly [pid 13591]
+lin@lin-virtual-machine:~$ ros2 launch ldlidar_stl_ros2 ld06.launch.py
+[INFO] [launch]: All log files can be found below /home/lin/.ros/log/2026-11-06-14-25-15-031326-lin-virtual-machine-13679
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [ldlidar_stl_ros2_node-1]: process started with pid [13680]
+[INFO] [static_transform_publisher-2]: process started with pid [13682]
+[static_transform_publisher-2] [WARN] [1793946315.089044994] []: Old-style arguments are deprecated; see --help for new-style arguments
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.103976860] [LD06]: LDLiDAR SDK Pack Version is: v3.0.3
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.104203162] [LD06]: <product_name>: LDLiDAR_LD06
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.104224931] [LD06]: <topic_name>: scan
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.104231644] [LD06]: <frame_id>: base_laser
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.104237611] [LD06]: <port_name>: /dev/ttyACM0
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.104243507] [LD06]: <port_baudrate>: 230400
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.104249627] [LD06]: <laser_scan_dir>: Counterclockwise
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.104255627] [LD06]: <enable_angle_crop_func>: false
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.104261294] [LD06]: <angle_crop_min>: 135.000000
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.104273364] [LD06]: <angle_crop_max>: 225.000000
+[ldlidar_stl_ros2_node-1] [INFO] [1793946315.106486145] [LD06]: ldlidar node start is success
+[static_transform_publisher-2] [INFO] [1793946315.118533261] [base_link_to_base_laser_ld06]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.180000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'base_link' to 'base_laser'
+[ldlidar_stl_ros2_node-1] [ERROR] [1793946318.107782732] [LD06]: ldlidar communication is abnormal.
+[ldlidar_stl_ros2_node-1] [LDS][INFO][1793946315.106351103][Actual BaudRate reported:230400]
+[ERROR] [ldlidar_stl_ros2_node-1]: process has died [pid 13680, exit code 1, cmd '/home/lin/ldlidar_ros2_ws/install/ldlidar_stl_ros2/lib/ldlidar_stl_ros2/ldlidar_stl_ros2_node --ros-args -r __node:=LD06 --params-file /tmp/launch_params_cxixlma_ --params-file /tmp/launch_params_x_04drxl --params-file /tmp/launch_params_mg92d_53 --params-file /tmp/launch_params_aovj9isf --params-file /tmp/launch_params_oqht8qqz --params-file /tmp/launch_params_jrj8468w --params-file /tmp/launch_params_n5gb0sec --params-file /tmp/launch_params_w0bqqvll --params-file /tmp/launch_params_bl8ki25h'].
