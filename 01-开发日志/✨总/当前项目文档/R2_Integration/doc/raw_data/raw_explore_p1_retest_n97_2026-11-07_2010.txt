@@ -1,0 +1,171 @@
+================================================================
+原始数据留档 — explore_lite P1 干净复测（N97）
+================================================================
+来源      : AI 经 SSH 在 N97（lin-Default-string）执行（用户批准"去检查"）
+session 话题: R2 老车 S1 —— 复核另一个 session 的 P1 判定
+              （`return_to_init` 是否存在 / 7 参数是否未声明）
+日期时间  : 2026-11-07 20:10（留档时间；实测约 19:50~20:05）
+处理说明  : 终端输出如实留档，未改写；判读段标注为后加
+不入 git  : 本文件按 doc/raw_data 惯例仅本地保留
+
+背景：2026-11-07 12:53 首次冒烟得结论"return_to_init 不存在、7 参数未声明"，
+      与上游 326cf8a 源码矛盾。本复测用于裁定。
+
+相关文档：
+  - doc/surveys/exploration-prior-map-survey.md §2.3（P1 原始判定）
+  - doc/minimal-loop2/explore-plan.md §3.1.2
+  - r2_bringup/config/explore_params.yaml
+
+----------------------------------------------------------------
+一、源码证据（N97 实机，commit 326cf8a）
+----------------------------------------------------------------
+lin@lin-Default-string:~/Lin_workspace/explore_ws/src/m-explore-ros2/explore/src/explore.cpp
+  54: Explore::Explore()
+  55:   : Node("explore_node")
+  56:   , logger_(this->get_logger())
+  57:   , tf_buffer_(this->get_clock())
+  58:   , tf_listener_(tf_buffer_)
+  59:   , costmap_client_(*this, &tf_buffer_)      ← 成员，先于构造函数体构造
+  ...
+  65:   this->declare_parameter<float>("planner_frequency", 1.0);
+  66:   this->declare_parameter<float>("progress_timeout", 30.0);
+  67:   this->declare_parameter<bool>("visualize", false);
+  68:   this->declare_parameter<float>("potential_scale", 1e-3);
+  69:   this->declare_parameter<float>("orientation_scale", 0.0);
+  70:   this->declare_parameter<float>("gain_scale", 1.0);
+  71:   this->declare_parameter<float>("min_frontier_size", 0.5);
+  72:   this->declare_parameter<bool>("return_to_init", false);
+  74-81: this->get_parameter(...) 逐项读取上述 8 项
+ 111:   RCLCPP_INFO(logger_, "Waiting to connect to move_base nav2 server");
+ 112:   move_base_client_->wait_for_action_server();     ← 无超时，阻塞
+
+explore.h:
+ 120:   Costmap2DClient costmap_client_;
+
+costmap_client.cpp（Costmap2DClient 构造函数）:
+  55-59: declare_parameter costmap_topic / costmap_updates_topic /
+         robot_base_frame / transform_tolerance    （4 项）
+  69-72: create_subscription<nav_msgs::msg::OccupancyGrid>(costmap_topic, 1000, ...)
+         ← 默认 QoS（reliable / volatile / keep_last 1000）
+  86-88: RCLCPP_INFO "Waiting for costmap to become available, topic: %s"
+  89-93: while (!costmap_received_) { spin_some; usleep(1s); }   ← 阻塞点①
+  118+:  while (...) 等 map→base_link TF                          ← 阻塞点②
+
+----------------------------------------------------------------
+二、A 腿：节点起在无 Nav2 环境（复现首次冒烟）
+----------------------------------------------------------------
+$ source /opt/ros/humble/setup.bash && source ~/Lin_workspace/explore_ws/install/setup.bash
+$ setsid nohup ros2 run explore_lite explore --ros-args \
+    --params-file ~/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/config/params_costmap.yaml
+
+节点日志：
+[INFO] [1794048844.009620534] [explore_node]: Waiting for costmap to become available, topic: /global_costmap/costmap
+
+$ ros2 param list /explore_node
+  costmap_topic
+  costmap_updates_topic
+  qos_overrides./parameter_events.publisher.depth
+  qos_overrides./parameter_events.publisher.durability
+  qos_overrides./parameter_events.publisher.history
+  qos_overrides./parameter_events.publisher.reliability
+  robot_base_frame
+  transform_tolerance
+  use_sim_time
+
+$ ros2 node list
+/explore_node
+/transform_listener_impl_624f6a1a84d8
+
+判读：与 12:53 首次冒烟完全一致——只有 costmap_client 的 4 项 + use_sim_time
+      + qos_overrides 4 条。**此时 8 个 declare_parameter 尚未执行**（阻塞点①）。
+
+----------------------------------------------------------------
+三、B 腿第一步：发 costmap，节点进到阻塞点②
+----------------------------------------------------------------
+$ ros2 topic pub --once /global_costmap/costmap nav_msgs/msg/OccupancyGrid \
+    "{header: {frame_id: map}, info: {resolution: 0.05, width: 4, height: 4, ...}, data:[16×0]}"
+→ 未生效（volatile QoS + 发现未完成，--once 消息丢失），节点仍停在原地。
+
+改用 1 Hz 连续发（timeout 20）后，节点日志：
+[WARN] [1794052860.541206150] [explore_node]: Timed out waiting for transform from base_link
+       to map to become available before subscribing to costmap, tf error: Invalid frame ID "map" ...
+[WARN] ... 每 5s 重复 ...
+→ costmap 已收到（costmap_received_ = true），进入阻塞点②（等 TF）。
+
+----------------------------------------------------------------
+四、B 腿第二步：补静态 TF → 节点越过阻塞点②，打印 L111
+----------------------------------------------------------------
+$ ros2 run tf2_ros static_transform_publisher --x 0 --y 0 --z 0 --yaw 0 --pitch 0 --roll 0 \
+    --frame-id map --child-frame-id base_link
+
+节点日志（1794052900）：
+[INFO] [1794052900.254482453] [explore_node]: Waiting to connect to move_base nav2 server
+
+判读：该行为 explore.cpp:111，位于 65-72 的 8 个 declare_parameter **之后** →
+      **声明已执行**。但节点随即阻塞在 L112 的无超时 wait_for_action_server()，
+      不 spin → 参数服务不响应（此时 ros2 param list 报
+      "Exception while calling service of node '/explore_node': None"，
+      ros2 param get 挂起直至超时，服务端日志：
+      "failed to send response to /explore_node/list_parameters (timeout)"）。
+
+----------------------------------------------------------------
+五、B 腿第三步：补假 NavigateToPose action server → 完整 B 腿
+----------------------------------------------------------------
+$ python3 -c "import rclpy; from rclpy.action import ActionServer;
+  from nav2_msgs.action import NavigateToPose; ... ActionServer(n, NavigateToPose,
+  'navigate_to_pose', cb); rclpy.spin(n)"
+
+节点日志：
+[WARN] [1794053139.535383333] [explore_node]: No frontiers found, stopping.
+[INFO] [1794053139.535426851] [explore_node]: Exploration stopped.
+→ 构造函数完成，makePlan() 已执行，进入 rclcpp::spin()。
+
+$ ros2 param list /explore_node
+  costmap_topic
+  costmap_updates_topic
+  gain_scale
+  min_frontier_size
+  orientation_scale
+  planner_frequency
+  potential_scale
+  progress_timeout
+  qos_overrides./parameter_events.publisher.depth
+  qos_overrides./parameter_events.publisher.durability
+  qos_overrides./parameter_events.publisher.history
+  qos_overrides./parameter_events.publisher.reliability
+  return_to_init
+  robot_base_frame
+  transform_tolerance
+  use_sim_time
+  visualize
+
+$ ros2 param get /explore_node return_to_init      → Boolean value is: False
+$ ros2 param get /explore_node planner_frequency   → Double value is: 0.15
+$ ros2 param get /explore_node visualize           → Boolean value is: True
+$ ros2 param get /explore_node potential_scale     → Double value is: 3.0
+
+判读：8 项全部出现，取值与 params_costmap.yaml 一致。
+
+----------------------------------------------------------------
+六、后加判读（非原始输出）
+----------------------------------------------------------------
+1. **P1 冲突裁定：上游正确，本地文档（explore-plan §3.1.2 / explore_params.yaml /
+   raw_explore_smoke_...txt 判读）结论错误。**
+   `return_to_init` 存在且可取；7 参数是 declare_parameter（不是 get_parameter_or）。
+
+2. **首次冒烟假阴性的根因 = 三个顺序阻塞点，参数声明被挡在构造链后段：**
+   ① costmap_client.cpp:89  等 costmap（无 Nav2 时永不返回）
+   ② costmap_client.cpp:~118 等 map→base_link TF
+   ③ explore.cpp:112        等 NavigateToPose action server（无超时）
+   阻塞点①②在 Costmap2DClient 构造函数内 → Explore 构造函数体（含 8 个 declare）不执行；
+   阻塞点③在 declare 之后，但节点不 spin → 参数服务不可用。
+   → 结论：**explore_lite 无法在"只有雷达"的裸环境下用 param list 验证参数**。
+
+3. 另一个 session §2.3 给的三个假设（同名残留 / overlay 串台 / daemon 缓存）均不成立：
+   本次复测已先 `ros2 daemon stop`、只 source 目标工作区、A/B 同一进程对照。
+
+4. 副产物：`ros2 topic pub --once` 在 DDS 发现完成前发送会丢消息（volatile），
+   对已在等待的订阅者要用 `-r 1` 连续发。
+
+5. 设备状态：本次启动的 explore / static_transform_publisher / fake action server
+   已全部 kill（ps -p 复核"全部已退出"），`ros2 daemon stop` 已执行。

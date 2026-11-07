@@ -1,0 +1,326 @@
+================================================================
+原始数据留档 — explore_lite 在 N97 的 clone + 首次构建实录
+================================================================
+来源      : 用户在 N97（lin-Default-string, 192.168.1.210）终端亲手执行后粘贴
+session 话题: R2 老车 S1 —— explore_lite 下载安装（官方路径）
+日期时间  : 2026-11-07 12:40（留档时间）；执行时间以终端输出为准
+处理说明  : 终端逐字留档，仅去除提示符行首的空格对齐；未做任何改写
+不入 git  : 本文件按 doc/raw_data 惯例仅本地保留
+
+相关文档  :
+  - doc/minimal-loop2/explore-plan.md  Step 3（方案来源，引用 commit 326cf8a）
+  - doc/old-car/s1-readiness-gap.md     G5（explore_lite 缺口）
+  - doc/analysis-methods.md            主题 L（代理 TUN 前提）
+
+----------------------------------------------------------------
+一、仓库树与版本
+----------------------------------------------------------------
+lin@lin-Default-string:~/Lin_workspace/explore_ws/src/m-explore-ros2$ tree -l
+.
+├── explore
+│   ├── CHANGELOG.rst
+│   ├── CMakeLists.txt
+│   ├── config
+│   │   ├── params_costmap.yaml
+│   │   └── params.yaml
+│   ├── doc
+│   │   ├── architecture.dia
+│   │   ├── screenshot.png
+│   │   └── wiki_doc.txt
+│   ├── include
+│   │   └── explore
+│   │       ├── costmap_client.h
+│   │       ├── costmap_tools.h
+│   │       ├── explore.h
+│   │       └── frontier_search.h
+│   ├── launch
+│   │   └── explore.launch.py
+│   ├── package.xml
+│   ├── src
+│   │   ├── costmap_client.cpp
+│   │   ├── explore.cpp
+│   │   └── frontier_search.cpp
+│   └── test
+│       └── test_explore.cpp
+├── explore_lite_msgs
+│   ├── CMakeLists.txt
+│   ├── msg
+│   │   └── ExploreStatus.msg
+│   └── package.xml
+├── LICENSE
+├── map_merge
+│   ├── CHANGELOG.rst
+│   ├── CMakeLists.txt
+│   ├── config
+│   │   └── params.yaml
+│   ├── doc
+│   │   ├── architecture.dia
+│   │   ├── screenshot.jpg
+│   │   └── wiki_doc.txt
+│   ├── include
+│   │   ├── combine_grids
+│   │   │   ├── grid_compositor.h
+│   │   │   ├── grid_warper.h
+│   │   │   └── merging_pipeline.h
+│   │   └── map_merge
+│   │       ├── map_merge.h
+│   │       └── ros1_names.hpp
+│   ├── launch
+│   │   ├── from_map_server.launch.py
+│   │   ├── map_merge.launch.py
+│   │   ├── map_merge.rviz
+│   │   └── tb3_simulation
+│   │       ├── bringup_launch.py
+│   │       ├── config
+│   │       │   ├── nav2_multirobot_params_1.yaml
+│   │       │   └── nav2_multirobot_params_2.yaml
+│   │       ├── multi_tb3_simulation_launch.py
+│   │       ├── slam_toolbox.py
+│   │       ├── tb3_simulation_launch.py
+│   │       └── worlds
+│   │           └── world_only.model
+│   ├── package.xml
+│   ├── src
+│   │   ├── combine_grids
+│   │   │   ├── estimation_internal.h
+│   │   │   ├── grid_compositor.cpp
+│   │   │   ├── grid_warper.cpp
+│   │   │   └── merging_pipeline.cpp
+│   │   └── map_merge.cpp
+│   └── test
+│       ├── download_data.sh
+│       ├── download.sh
+│       ├── testing_helpers.h
+│       └── test_merging_pipeline.cpp
+└── README.md
+
+23 directories, 53 files
+
+lin@lin-Default-string:~/Lin_workspace/explore_ws/src/m-explore-ros2$ git log --oneline -1
+326cf8a (HEAD -> main, origin/main, origin/HEAD) Do not blacklist for preempted goal (#51)
+
+----------------------------------------------------------------
+二、构建（colcon build --packages-up-to explore_lite）
+----------------------------------------------------------------
+lin@lin-Default-string:~/Lin_workspace/explore_ws$ source /opt/ros/humble/setup.bash
+lin@lin-Default-string:~/Lin_workspace/explore_ws$ colcon build --packages-up-to explore_lite
+Starting >>> explore_lite_msgs
+--- stderr: explore_lite_msgs
+CMake Warning (deprecated) at CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+CMake Warning (policy) at /opt/ros/humble/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:20 (find_package):
+  Policy CMP0148 is not set: The FindPythonInterp and FindPythonLibs modules
+  are removed.  Run "cmake --help-policy CMP0148" for policy details.  Use
+  the cmake_policy command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake:48 (include)
+  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:286 (ament_execute_extensions)
+  CMakeLists.txt:7 (rosidl_generate_interfaces)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress this warning.
+
+CMake Warning (policy) at /opt/ros/humble/share/python_cmake_module/cmake/Modules/FindPythonExtra.cmake:52 (find_package):
+  Policy CMP0148 is not set: The FindPythonInterp and FindPythonLibs modules
+  are removed.  Run "cmake --help-policy CMP0148" for policy details.  Use
+  the cmake_policy command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  /opt/ros/humble/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:23 (find_package)
+  /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_execute_extensions.cmake:48 (include)
+  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:286 (ament_execute_extensions)
+  CMakeLists.txt:7 (rosidl_generate_interfaces)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress this warning.
+
+CMake Warning (policy) at /opt/ros/humble/share/python_cmake_module/cmake/Modules/FindPythonExtra.cmake:140 (find_package):
+  Policy CMP0148 is not set: The FindPythonInterp and FindPythonLibs modules
+  are removed.  Run "cmake --help-policy CMP0148" for policy details.  Use
+  the cmake_policy command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  /opt/ros/humble/share/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake:23 (find_package)
+  /opt/ros/humble/share/rosidl_cmake/cmake/core/ament_execute_extensions.cmake:48 (include)
+  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:286 (ament_execute_extensions)
+  CMakeLists.txt:7 (rosidl_generate_interfaces)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress this warning.
+
+---
+Finished <<< explore_lite_msgs [4.99s]
+Starting >>> explore_lite
+--- stderr: explore_lite
+CMake Warning (deprecated) at CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+CMake Warning (deprecated) at /opt/ros/humble/src/gtest_vendor/CMakeLists.txt:2 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+---
+Finished <<< explore_lite [18.3s]
+
+Summary: 2 packages finished [23.7s]
+  2 packages had stderr output: explore_lite explore_lite_msgs
+lin@lin-Default-string:~/Lin_workspace/explore_ws$ source install/setup.bash
+lin@lin-Default-string:~/Lin_workspace/explore_ws$
+
+================================================================
+三、留档要点（分析用，非原始输出）
+================================================================
+- 实际 clone 到 commit 326cf8a（= main HEAD），与 explore-plan.md 引用一致 ✓
+- --packages-up-to explore_lite 只构建了 explore_lite_msgs + explore_lite；
+  map_merge 在 src 里但**未构建**（本次不在范围内）
+- 全程只有 CMake 弃用/策略警告（CMake < 3.10 弃用 + CMP0148 FindPythonInterp 移除），
+  **无 error、无编译失败**；exit 正常
+- source install/setup.bash 无报错输出（overlay 加载成功）
+- 尚未执行的验证项：ros2 pkg executables explore_lite（应输出 explore_lite explore）
+
+----------------------------------------------------------------
+四、验证输出（用户后续粘贴，2026-11-07 12:4x）
+----------------------------------------------------------------
+lin@lin-Default-string:~/Lin_workspace/explore_ws$ source install/setup.bash
+lin@lin-Default-string:~/Lin_workspace/explore_ws$ ros2 pkg executables explore_lite
+explore_lite explore
+lin@lin-Default-string:~/Lin_workspace/explore_ws$ ls ~/Lin_workspace/explore_ws/install/explore_lite/lib/explore_lite/ ~/Lin_workspace/explore_ws/install/explore_lite/share/explore/config/
+ls: 无法访问 '/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore/config/': 没有那个文件或目录
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/lib/explore_lite/:
+explore
+lin@lin-Default-string:~/Lin_workspace/explore_ws$
+
+留档判读：
+- `ros2 pkg executables explore_lite` = `explore_lite explore` → 包发现 + 入口名均正确 ✓
+- `lib/explore_lite/explore` 存在 → 可执行文件安装到位 ✓
+- share/explore/config/ 不存在 = **AI 给错路径**（share 子目录按包名 explore_lite 命名，
+  不是源码目录名 explore），该报错不代表参数文件缺失，待用正确路径复核
+
+----------------------------------------------------------------
+五、安装产物完整清单（正确路径复核，2026-11-07 12:5x）
+----------------------------------------------------------------
+lin@lin-Default-string:~/Lin_workspace/explore_ws$ find ~/Lin_workspace/explore_ws/install/explore_lite/share -type f | sort
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/ament_index/resource_index/package_run_dependencies/explore_lite
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/ament_index/resource_index/packages/explore_lite
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/ament_index/resource_index/parent_prefix_path/explore_lite
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/colcon-core/packages/explore_lite
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/cmake/ament_cmake_export_dependencies-extras.cmake
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/cmake/ament_cmake_export_include_directories-extras.cmake
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/cmake/explore_liteConfig.cmake
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/cmake/explore_liteConfig-version.cmake
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/config/params_costmap.yaml
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/config/params.yaml
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/environment/ament_prefix_path.dsv
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/environment/ament_prefix_path.sh
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/environment/path.dsv
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/environment/path.sh
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/hook/cmake_prefix_path.dsv
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/hook/cmake_prefix_path.ps1
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/hook/cmake_prefix_path.sh
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/launch/explore.launch.py
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/local_setup.bash
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/local_setup.dsv
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/local_setup.sh
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/local_setup.zsh
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/package.bash
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/package.dsv
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/package.sh
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/package.ps1
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/package.xml
+/home/lin/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/package.zsh
+
+留档判读：
+- config/ 下 **两个参数文件都在**：params_costmap.yaml + params.yaml → G3 母本可直取安装版
+- launch/explore.launch.py 已安装 → 可用 ros2 launch explore_lite explore.launch.py
+- 上一档的「share/explore/config 不存在」确认为纯路径笔误，产物无缺失
+- G5（explore_lite 源码与构建产物均无）→ **可销项**
+
+----------------------------------------------------------------
+六、官方参数母本 + launch 内容（2026-11-07 13:0x）
+----------------------------------------------------------------
+lin@lin-Default-string:~/Lin_workspace/explore_ws$ cat ~/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/config/params_costmap.yaml
+explore_node:
+  ros__parameters:
+    robot_base_frame: base_link
+    costmap_topic: /global_costmap/costmap
+    costmap_updates_topic: /global_costmap/costmap_updates
+    visualize: true
+    planner_frequency: 0.15
+    progress_timeout: 30.0
+    potential_scale: 3.0
+    orientation_scale: 0.0
+    gain_scale: 1.0
+    transform_tolerance: 0.3
+    min_frontier_size: 0.5
+
+lin@lin-Default-string:~/Lin_workspace/explore_ws$ cat ~/Lin_workspace/explore_ws/install/explore_lite/share/explore_lite/launch/explore.launch.py
+import os
+
+from ament_index_python.packages import get_package_share_directory
+from launch_ros.actions import Node
+
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+
+
+def generate_launch_description():
+    ld = LaunchDescription()
+    config = os.path.join(
+        get_package_share_directory("explore_lite"), "config", "params.yaml"
+    )
+    use_sim_time = LaunchConfiguration("use_sim_time")
+    namespace = LaunchConfiguration("namespace")
+
+    declare_use_sim_time_argument = DeclareLaunchArgument(
+        "use_sim_time", default_value="true", description="Use simulation/Gazebo clock"
+    )
+    declare_namespace_argument = DeclareLaunchArgument(
+        "namespace",
+        default_value="",
+        description="Namespace for the explore node",
+    )
+
+    # Map fully qualified names to relative ones so the node's namespace can be prepended.
+    # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
+    # https://github.com/ros/geometry2/issues/32
+    # https://github.com/ros/robot_state_publisher/pull/30
+    remappings = [("/tf", "tf"), ("/tf_static", "tf_static")]
+
+    node = Node(
+        package="explore_lite",
+        name="explore_node",
+        namespace=namespace,
+        executable="explore",
+        parameters=[config, {"use_sim_time": use_sim_time}],
+        output="screen",
+        remappings=remappings,
+    )
+    ld.add_action(declare_use_sim_time_argument)
+    ld.add_action(declare_namespace_argument)
+    ld.add_action(node)
+    return ld
+
+留档判读（**两处陷阱**）：
+1. 官方 launch **写死加载 params.yaml，不是 params_costmap.yaml**
+   → 直接用 `ros2 launch explore_lite explore.launch.py` 会订阅 `/map` 直连，
+     绕过 Nav2 代价地图，正是 explore-plan Step 3.2 明令避免的那份参数。
+2. `use_sim_time` **默认 true** → 实车无 /clock，节点拿不到时间。
+3. launch **未提供 params_file 覆盖参数**（config 是硬编码 join，不接受 LaunchConfiguration）
+   → 无法通过 launch 参数换 yaml；只能：自写 launch / 直接 ros2 run / 覆盖安装副本（不推荐，重建即丢）
