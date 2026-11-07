@@ -1,0 +1,168 @@
+================================================================
+原始数据：VM 网络诊断（三次对照，同一台机不同网络/代理状态）
+================================================================
+来源      ：用户终端粘贴（lin@lin-virtual-machine），2026-11-07 12:10~12:13 CST
+Session 话题：S1 老车平替 —— 阻塞① explore_lite 源码构建（GitHub 不通）根因定位
+采集方式  ：AI 提供的只读诊断命令块，用户手工粘贴执行，输出原样回传
+备注      ：多行命令块粘贴时换行丢失，部分段落（3b/第6段）被污染未取到，
+            不影响主结论（第 0/1/2/3/4/5 段三run对照充分）
+处置      ：原文留档，不作改写；结论另见会话报告
+================================================================
+
+################ RUN 1  2026-11-07 12:10:23 CST ################
+
+### 0 机器/网络环境 ###
+2026-11-07 12:10:23 CST
+lin-virtual-machine
+  lo 127.0.0.1/8
+  ens33 192.168.1.204/24
+  ens37 10.10.3.2/24
+--- 默认路由 ---
+default via 192.168.1.50 dev ens33 proto static metric 101
+--- DNS ---
+nameserver 127.0.0.53
+options edns0 trust-ad
+search .
+--- 代理变量 ---
+  (无)
+
+### 1 DNS 解析 ###
+20.205.243.166  github.com
+  gitee 解析 OK
+
+### 2 ICMP ###
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 37.419/38.896/40.229/1.151 ms
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 101.828/107.544/115.056/5.547 ms
+
+### 3 TCP 443（/dev/tcp，免装 nc）###
+  github:443 TCP 可连
+
+### 3b HTTP/TLS 分段耗时 ###
+(空 —— curl 15s 内无输出，被 timeout 杀死)
+
+### 4 国内基线对照 ###
+  baidu http=200 total=1.447843s
+  gitee http=200 total=2.549014s
+
+### 5 git 层（卡在哪一步）###
+  exit=124
+  12:10:54.127869 http.c:664              == Info: Couldn't find host github.com in the (nil) file; using defaults
+  12:10:54.317181 http.c:664              == Info:   Trying 20.205.243.166:443...
+
+### 6 本地是否已有 explore_lite ###
+(未取到)
+
+
+################ RUN 2  2026-11-07 12:11:39 CST ################
+（粘贴换行丢失，部分行被污染为 "echo" 参数，以下为可用部分）
+
+### 0 机器/网络环境 ###
+2026-11-07 12:11:39 CST
+lin-virtual-machine
+  lo 127.0.0.1/8
+  ens33 192.168.1.204/24
+  ens37 10.10.3.2/24
+--- 默认路由 ---
+default via 192.168.1.50 dev ens33 proto static metric 101
+--- DNS ---
+nameserver 127.0.0.53
+options edns0 trust-ad
+search .
+--- 代理变量 ---
+  (无)
+
+### 1 DNS 解析 ###
+20.205.243.166  github.com
+  gitee 解析 OK
+
+### 2 ICMP ###
+3 packets transmitted, 3 received, 0% packet loss, time 2005ms
+rtt min/avg/max/mdev = 36.956/40.986/44.536/3.113 ms
+(ping github.com 段被污染，未取到)
+
+### 3 TCP 443（/dev/tcp，免装 nc）###
+  !! github:443 TCP 连不上/超时
+
+### 3b HTTP/TLS 分段耗时 ###
+(空)
+
+### 4 国内基线对照 ###
+  baidu http=200 total=0.782361s
+  gitee http=200 total=2.426550s
+
+### 5 git 层（卡在哪一步）###
+  exit=124
+
+### 6 本地是否已有 explore_lite ###
+(未取到)
+
+
+################ RUN 3  2026-11-07 12:12:49 CST ################
+（此 run 新增 Meta 198.18.0.1/30 接口）
+
+### 0 机器/网络环境 ###
+2026-11-07 12:12:49 CST
+lin-virtual-machine
+  lo 127.0.0.1/8
+  ens33 192.168.1.204/24
+  ens37 10.10.3.2/24
+  Meta 198.18.0.1/30
+--- 默认路由 ---
+default via 192.168.1.50 dev ens33 proto static metric 101
+--- DNS ---
+nameserver 127.0.0.53
+options edns0 trust-ad
+search .
+--- 代理变量 ---
+  (无)
+
+### 1 DNS 解析 ###
+198.18.0.4      github.com
+  gitee 解析 OK
+
+### 2 ICMP ###
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 43.154/44.331/46.659/1.645 ms
+
+### 3 TCP 443（/dev/tcp，免装 nc）###
+  github:443 TCP 可连
+
+### 3b HTTP/TLS 分段耗时 ###
+  github http=200 dns=0.000758s conn=0.001608s tls=0.724060s total=2.060934s
+
+### 4 国内基线对照 ###
+  baidu http=200 total=0.345048s
+  gitee http=200 total=1.660092s
+
+### 5 git 层（卡在哪一步）###
+  exit=0
+
+### 6 本地是否已有 explore_lite ###
+(未取到)
+
+
+================================================================
+三次对照关键差异（原始记录）
+================================================================
+           代理接口         github 解析        TCP443      curl https      git ls-remote
+RUN 1      无              20.205.243.166     可连        15s 无输出      exit=124（超时）
+RUN 2      无              20.205.243.166     连不上      无输出          exit=124（超时）
+RUN 3      Meta 198.18.0.1 198.18.0.4（fake-ip） 可连      http=200 2.06s  exit=0（成功）
+
+三 run 中恒定不变项：ens33 192.168.1.204/24、ens37 10.10.3.2/24、
+默认路由 via 192.168.1.50、DNS 127.0.0.53、无 proxy 环境变量
+================================================================
+
+
+================================================================
+补充：第 6 段补测（VM，用户 2026-11-07 12:20 前后回传）
+================================================================
+$ dpkg -l | grep -i explore; find ~ -maxdepth 5 -type d -iname '*m-explore*' 2>/dev/null | head
+lin@lin-virtual-machine:~$
+（命令返回后无任何输出）
+
+判读：VM 上既无 explore 相关 deb 包，也无 m-explore* 源码目录
+      → explore_lite 在 VM 侧完全不存在，必须外部获取（不能靠本地副本解阻塞）
+================================================================

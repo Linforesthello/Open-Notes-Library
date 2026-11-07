@@ -1,0 +1,140 @@
+# LD06 /scan 规格实测原始数据
+# 日期时间：2026-11-07 11:33 CST（消息 stamp 1794022406.10 → 2026-11-07 11:33:26 CST）
+# 来源：N97（192.168.1.210）本地实测，驱动 ldlidar_stl_ros2 直接 ros2 run 启动（不带 launch 静态 TF）
+# 会话话题：补测 LD06 beam 数、角度分辨率等实测值（此前 N97 离线未做）
+# 执行命令（N97）：
+#   source /opt/ros/humble/setup.bash
+#   source ~/Lin_workspace/r2_integration/install/setup.bash
+#   ros2 run ldlidar_stl_ros2 ldlidar_stl_ros2_node --ros-args \
+#     -p product_name:=LDLiDAR_LD06 -p topic_name:=scan -p frame_id:=base_laser \
+#     -p port_name:=/dev/r2_ld06_a -p port_baudrate:=230400 \
+#     -p laser_scan_dir:=true -p enable_angle_crop_func:=false
+# 说明：本次 crop 关闭（默认），测的是原始全周扫描；探针抓 3 帧，脚本见 /tmp/probe_scan.py（N97）
+#
+# 首次尝试卡死说明（2026-11-07，已清理）：探针在 callback 里调 rclpy.shutdown() 导致
+# Humble 单线程 executor 死锁；rclpy 安装的 SIGINT/SIGTERM handler 使外部 timeout 的
+# SIGTERM 无法终止（实测卡 100s+）。改版为 spin_once 轮询 + os._exit(0) 硬退出后正常。
+# ============================================================================
+
+== topic info ==
+Type: sensor_msgs/msg/LaserScan
+
+Publisher count: 1
+
+Node name: ldlidar_published
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: PUBLISHER
+GID: 01.0f.99.fd.2d.0f.04.fe.00.00.00.00.00.00.12.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 0
+
+== probe ==
+probe: subscribed /scan, waiting ...
+probe: got msg #1 len(ranges)=455
+probe: got msg #2 len(ranges)=452
+probe: got msg #3 len(ranges)=454
+=== msg #0 ===
+frame_id            : base_laser
+stamp               : 1794022406.101985109
+len(ranges)         : 455
+len(intensities)    : 455
+angle_min (deg)     : 0.0000
+angle_max (deg)     : 360.0000
+angle_increment(deg): 0.7930
+(n-1)*inc (deg)     : 360.0000
+time_increment (s)  : 0.000220191  (0.2202 ms)
+scan_time (s)       : 0.099966764  (implies 10.003 Hz)
+range_min           : 0.019999999552965164
+range_max           : 25.0
+finite range count  : 370  (nan/inf: 85)
+finite range min/max: 0.000 / 6.034 m
+nan index span      : 33..454 contiguous=False
+nan angle span (deg): 26.17 .. 360.00  width=333.83
+
+=== msg #1 ===
+frame_id            : base_laser
+stamp               : 1794022406.201979675
+len(ranges)         : 452
+len(intensities)    : 452
+angle_min (deg)     : 0.0000
+angle_max (deg)     : 360.0000
+angle_increment(deg): 0.7982
+(n-1)*inc (deg)     : 360.0000
+time_increment (s)  : 0.000221718  (0.2217 ms)
+scan_time (s)       : 0.099994659  (implies 10.001 Hz)
+range_min           : 0.019999999552965164
+range_max           : 25.0
+finite range count  : 372  (nan/inf: 80)
+finite range min/max: 0.000 / 6.081 m
+nan index span      : 19..451 contiguous=False
+nan angle span (deg): 15.17 .. 360.00  width=344.83
+
+=== msg #2 ===
+frame_id            : base_laser
+stamp               : 1794022406.301996521
+len(ranges)         : 454
+len(intensities)    : 454
+angle_min (deg)     : 0.0000
+angle_max (deg)     : 360.0000
+angle_increment(deg): 0.7947
+(n-1)*inc (deg)     : 360.0000
+time_increment (s)  : 0.000220788  (0.2208 ms)
+scan_time (s)       : 0.100016832  (implies 9.998 Hz)
+range_min           : 0.019999999552965164
+range_max           : 25.0
+finite range count  : 374  (nan/inf: 80)
+finite range min/max: 0.000 / 5.941 m
+nan index span      : 37..453 contiguous=False
+nan angle span (deg): 29.40 .. 360.00  width=330.60
+
+len consistency     : [455, 452, 454]  all_equal = False
+angle_increment set : [0.792952, 0.794702, 0.798226] deg
+stamp deltas (ms)   : ['99.99', '100.02']
+
+== driver log (head) ==
+[INFO] [1794022401.598169124] [ldlidar_published]: LDLiDAR SDK Pack Version is: v3.0.3
+[INFO] [1794022401.598308990] [ldlidar_published]: <product_name>: LDLiDAR_LD06
+[INFO] [1794022401.598325628] [ldlidar_published]: <topic_name>: scan
+[INFO] [1794022401.598336269] [ldlidar_published]: <frame_id>: base_laser
+[INFO] [1794022401.598346014] [ldlidar_published]: <port_name>: /dev/r2_ld06_a
+[INFO] [1794022401.598355644] [ldlidar_published]: <port_baudrate>: 230400
+[INFO] [1794022401.598368439] [ldlidar_published]: <laser_scan_dir>: Counterclockwise
+[INFO] [1794022401.598378469] [ldlidar_published]: <enable_angle_crop_func>: false
+[INFO] [1794022401.598387803] [ldlidar_published]: <angle_crop_min>: 0.000000
+[INFO] [1794022401.598400072] [ldlidar_published]: <angle_crop_max>: 0.000000
+[INFO] [1794022401.598691868] [ldlidar_published]: ldlidar node start is success
+[INFO] [1794022401.600826897] [ldlidar_published]: ldlidar communication is normal.
+[INFO] [1794022401.601914694] [ldlidar_published]: Publish topic message:ldlidar scan data.
+
+== cleanup ==
+fallback: killing node process(es)
+leftover processes:
+  (none)
+EXIT_PROBE=0
+
+# ============================================================================
+# 源码对照（ldlidar_stl_ros2/src/demo.cpp，2026-11-07 读源）：
+#   L168  int beam_size = src.size();                      // 本圈点数，逐帧不同
+#   L169  angle_increment = 2π / (beam_size - 1);          // 增量由点数反推，不是固定传感器常数
+#   L187  ranges 先全部填 NaN
+#   L194  distance==0 且 intensity==0 → NaN（无回波点）
+#   L199-204 angle crop：dir_angle 单位是度，单段闭区间，NaN 掩盖
+#   L207  index = ceil((angle - angle_min) / angle_increment)
+#   L214-225 laser_scan_dir=true 时 index 反向（CCW），同 bin 多点取更小距离
+# 结论：
+#   - beam 数 = 每圈实际点数，实测 455/452/454（非固定值；452~455 点/圈 × 10Hz ≈ 4.5k 点/s）
+#   - 标称角分辨率 = 360/(beam_size-1)，实测 0.793/0.798/0.795°
+#   - 0° 与 360° 落在数组两端，方向重复 → 唯一角格数 = beam_size-1
+#   - range_max=25.0 是驱动常量（消息字段），不是 LD06 实测/规格量程；
+#     本次室内有效回波最大 6.03~6.08m；distance==0 且 intensity≠0 的点会以 range=0.0 发布（驱动 quirk）
+#   - NaN 约 80~85 个/圈（≈18%）：无回波 bin（不是 crop；本次 crop 关闭）
+# ============================================================================

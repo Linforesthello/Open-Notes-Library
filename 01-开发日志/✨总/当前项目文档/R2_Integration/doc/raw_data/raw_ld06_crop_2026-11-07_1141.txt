@@ -1,0 +1,126 @@
+# LD06 angle crop 实测原始数据（两用例）
+# 日期时间：2026-11-07 11:41~11:42 CST（驱动启动 stamp 1794022917 / 1794022929）
+# 来源：N97（192.168.1.210）本地实测，ldlidar_stl_ros2 直接 ros2 run 启动（不带 launch 静态 TF）
+# 会话话题：用户指令「再跑一次 crop 开启实测」——验证驱动 angle crop 掩盖行为与角度坐标约定
+# 执行命令（N97）：
+#   用例 1: -p enable_angle_crop_func:=true -p angle_crop_min:=135.0 -p angle_crop_max:=225.0
+#   用例 2: -p enable_angle_crop_func:=true -p angle_crop_min:=0.0   -p angle_crop_max:=90.0
+#   其余参数同 raw_ld06_scan_spec_2026-11-07_1133.txt
+# 探针：probe_scan_crop.py（N97 /tmp，已并入仓 scripts/probe_laserscan.py）
+# 说明：published angle = index * angle_increment（angle_min=0）
+# ============================================================================
+
+=== CASE symmetric-135-225 : crop [135.0, 225.0] deg (driver wrapper pid=17020) ===
+[INFO] [1794022917.005148924] [ldlidar_published]: <product_name>: LDLiDAR_LD06
+[INFO] [1794022917.005205198] [ldlidar_published]: <port_name>: /dev/r2_ld06_a
+[INFO] [1794022917.005231913] [ldlidar_published]: <laser_scan_dir>: Counterclockwise
+[INFO] [1794022917.005245685] [ldlidar_published]: <enable_angle_crop_func>: true
+[INFO] [1794022917.005258358] [ldlidar_published]: <angle_crop_min>: 135.000000
+[INFO] [1794022917.005278211] [ldlidar_published]: <angle_crop_max>: 225.000000
+[INFO] [1794022917.005687210] [ldlidar_published]: ldlidar node start is success
+[INFO] [1794022917.009345967] [ldlidar_published]: ldlidar communication is normal.
+
+probe: subscribed /scan, waiting ...
+probe: got msg #1 len(ranges)=453
+probe: got msg #2 len(ranges)=454
+probe: got msg #3 len(ranges)=454
+=== msg #0 ===
+len(ranges)=453  angle_min=0  angle_max=360.00  angle_increment=0.7965 deg  finite=304 nan=149
+contiguous NaN runs (top 5, published angle = index * angle_increment):
+  idx 170..281  bins=112  angle  135.40.. 224.60 deg  width= 89.20 deg
+  idx  97..103  bins=  7  angle   77.26..  82.83 deg  width=  5.58 deg
+  idx 152..157  bins=  6  angle  121.06.. 125.84 deg  width=  4.78 deg
+  idx  49.. 52  bins=  4  angle   39.03..  42.21 deg  width=  3.19 deg
+  idx  93.. 95  bins=  3  angle   74.07..  76.46 deg  width=  2.39 deg
+DOMINANT_NaN_RUN: bins=112  published_angle=135.40..224.60  width=89.20
+
+=== msg #1 ===
+len(ranges)=454  angle_min=0  angle_max=360.00  angle_increment=0.7947 deg  finite=293 nan=161
+contiguous NaN runs (top 5, published angle = index * angle_increment):
+  idx 169..282  bins=114  angle  134.30.. 224.90 deg  width= 90.60 deg
+  idx  93..104  bins= 12  angle   73.91..  83.44 deg  width=  9.54 deg
+  idx 152..161  bins= 10  angle  120.79.. 128.74 deg  width=  7.95 deg
+  idx  48.. 53  bins=  6  angle   38.15..  42.91 deg  width=  4.77 deg
+  idx 132..134  bins=  3  angle  104.90.. 107.28 deg  width=  2.38 deg
+DOMINANT_NaN_RUN: bins=114  published_angle=134.30..224.90  width=90.60
+
+=== msg #2 ===
+len(ranges)=454  angle_min=0  angle_max=360.00  angle_increment=0.7947 deg  finite=299 nan=155
+contiguous NaN runs (top 5, published angle = index * angle_increment):
+  idx 170..283  bins=114  angle  135.10.. 225.70 deg  width= 90.60 deg
+  idx 158..162  bins=  5  angle  125.56.. 129.54 deg  width=  3.97 deg
+  idx  50.. 53  bins=  4  angle   39.74..  42.91 deg  width=  3.18 deg
+  idx  82.. 84  bins=  3  angle   65.17..  67.55 deg  width=  2.38 deg
+  idx  86.. 88  bins=  3  angle   68.34..  70.73 deg  width=  2.38 deg
+DOMINANT_NaN_RUN: bins=114  published_angle=135.10..225.70  width=90.60
+
+probe exit=0
+
+leftover after case:
+  (none)
+
+=== CASE asymmetric-0-90 : crop [0.0, 90.0] deg (driver wrapper pid=17651) ===
+[INFO] [1794022929.734859450] [ldlidar_published]: <product_name>: LDLiDAR_LD06
+[INFO] [1794022929.734906375] [ldlidar_published]: <port_name>: /dev/r2_ld06_a
+[INFO] [1794022929.734929952] [ldlidar_published]: <laser_scan_dir>: Counterclockwise
+[INFO] [1794022929.734942077] [ldlidar_published]: <enable_angle_crop_func>: true
+[INFO] [1794022929.734953612] [ldlidar_published]: <angle_crop_min>: 0.000000
+[INFO] [1794022929.734969061] [ldlidar_published]: <angle_crop_max>: 90.000000
+[INFO] [1794022929.735296625] [ldlidar_published]: ldlidar node start is success
+[INFO] [1794022929.737452080] [ldlidar_published]: ldlidar communication is normal.
+
+probe: subscribed /scan, waiting ...
+probe: got msg #1 len(ranges)=454
+probe: got msg #2 len(ranges)=453
+probe: got msg #3 len(ranges)=454
+=== msg #0 ===
+len(ranges)=454  angle_min=0  angle_max=360.00  angle_increment=0.7947 deg  finite=262 nan=192
+contiguous NaN runs (top 5, published angle = index * angle_increment):
+  idx 339..453  bins=115  angle  269.40.. 360.79 deg  width= 91.39 deg
+  idx 201..212  bins= 12  angle  159.74.. 169.27 deg  width=  9.54 deg
+  idx 172..181  bins= 10  angle  136.69.. 144.64 deg  width=  7.95 deg
+  idx 254..261  bins=  8  angle  201.85.. 208.21 deg  width=  6.36 deg
+  idx  49.. 53  bins=  5  angle   38.94..  42.91 deg  width=  3.97 deg
+DOMINANT_NaN_RUN: bins=115  published_angle=269.40..360.79  width=91.39
+
+=== msg #1 ===
+len(ranges)=453  angle_min=0  angle_max=360.00  angle_increment=0.7965 deg  finite=260 nan=193
+contiguous NaN runs (top 5, published angle = index * angle_increment):
+  idx 339..452  bins=114  angle  270.00.. 360.80 deg  width= 90.80 deg
+  idx 201..212  bins= 12  angle  160.09.. 169.65 deg  width=  9.56 deg
+  idx 152..162  bins= 11  angle  121.06.. 129.82 deg  width=  8.76 deg
+  idx  92..100  bins=  9  angle   73.27..  80.44 deg  width=  7.17 deg
+  idx 173..180  bins=  8  angle  137.79.. 144.16 deg  width=  6.37 deg
+DOMINANT_NaN_RUN: bins=114  published_angle=270.00..360.80  width=90.80
+
+=== msg #2 ===
+len(ranges)=454  angle_min=0  angle_max=360.00  angle_increment=0.7947 deg  finite=260 nan=194
+contiguous NaN runs (top 5, published angle = index * angle_increment):
+  idx 340..453  bins=114  angle  270.20.. 360.79 deg  width= 90.60 deg
+  idx 173..185  bins= 13  angle  137.48.. 147.81 deg  width= 10.33 deg
+  idx 204..215  bins= 12  angle  162.12.. 171.66 deg  width=  9.54 deg
+  idx  93..102  bins= 10  angle   73.91..  81.85 deg  width=  7.95 deg
+  idx 152..161  bins= 10  angle  120.79.. 128.74 deg  width=  7.95 deg
+DOMINANT_NaN_RUN: bins=114  published_angle=270.20..360.79  width=90.60
+
+probe exit=0
+
+leftover after case:
+  (none)
+
+== final leftover check ==
+  (none)
+
+# ============================================================================
+# 结论（2026-11-07）：
+# 1) crop 生效：两个用例都出现 ~90.6° 的连续 NaN 带（112~115 bin），
+#    其余 NaN 为无回波散点（3~13 bin 小段）。
+# 2) 参数坐标 = 雷达原始角（度，闭区间）：
+#    crop [135,225] → 发布角 [134.3,225.7]（对称带，两种约定重合）
+#    crop [0,90]   → 发布角 [269.4,360.8]（镜像）⇒ 发布角 = 360° − 原始角
+#    该镜像由 laser_scan_dir=true 时驱动反向填数组造成（demo.cpp L214-225）。
+# 3) 掩盖带宽度 ≈ 90.6°，比名义 90° 多约 1 个 bin（ceil 索引 + 区间端点含入 + 角量化）。
+# 4) 消息长度不变（453/454），angle_min/max 仍 0/360——crop 只把值置 NaN，
+#    下游（slam_toolbox / costmap）按"无回波"处理；不会缩短扫描范围。
+# 5) 配置换算：要掩盖发布角 [α1,α2]，crop 设 [360−α2, 360−α1]；对称于 180° 的带两种写法一致。
+# ============================================================================

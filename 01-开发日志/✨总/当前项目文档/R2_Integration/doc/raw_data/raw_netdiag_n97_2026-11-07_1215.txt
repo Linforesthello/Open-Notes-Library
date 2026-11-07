@@ -1,0 +1,155 @@
+================================================================
+原始数据：N97 网络诊断（三次 run，同一台机）
+================================================================
+来源      ：用户终端粘贴（lin@lin-Default-string = N97, 192.168.1.210），2026-11-07 12:15~12:17 CST
+Session 话题：S1 老车平替 —— 阻塞① explore_lite 源码构建（GitHub 不通）在 N97 侧的复核
+采集方式  ：AI 提供的只读诊断命令块，用户手工粘贴执行，输出原样回传
+备注      ：多行命令块粘贴时换行丢失，多次污染为 "echo" 参数（tail/sed 报错），
+            但第 0/1/3/3b/4/5 段数据完整，结论不受影响
+处置      ：原文留档，不作改写
+================================================================
+
+################ 前置：本地是否已有 explore_lite ################
+$ dpkg -l | grep -i explore; find ~ -maxdepth 5 -type d -iname '*m-explore*' 2>/dev/null | head
+lin@lin-Default-string:~$
+（无输出 —— N97 上既无 explore 相关 deb 包，也无 m-explore* 源码目录）
+
+
+################ RUN 1  2026-11-07 12:15:56 CST ################
+
+### 0 机器/网络环境 ###
+2026-11-07 12:15:56 CST
+lin-Default-string
+  lo 127.0.0.1/8
+  wlp2s0 192.168.1.210/24
+  docker0 172.17.0.1/16
+  Meta 198.18.0.1/30
+--- 默认路由 ---
+default via 192.168.1.50 dev wlp2s0 proto static metric 20600
+--- DNS ---
+nameserver 127.0.0.53
+options edns0 trust-ad
+search .
+--- 代理变量 ---
+  (无)
+
+### 1 DNS 解析 ###
+198.18.0.7      github.com
+  gitee 解析 OK
+
+### 2 ICMP ###
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 35.585/37.114/38.934/1.382 ms      <- ping 223.5.5.5
+3 packets transmitted, 3 received, 0% packet loss, time 2024ms
+rtt min/avg/max/mdev = 0.154/0.191/0.250/0.042 ms          <- ping github.com（fake-ip 本地回环，非真实 RTT）
+
+### 3 TCP 443（/dev/tcp，免装 nc）###
+  github:443 TCP 可连
+
+### 3b HTTP/TLS 分段耗时 ###
+  github http=200 dns=0.001102s conn=0.001356s tls=0.976460s total=2.156660s
+
+### 4 国内基线对照 ###
+  baidu http=200 total=0.809421s
+curl: (35) error:0A000126:SSL routines::unexpected eof while reading
+  gitee http=000 total=1.102956s        <- gitee 走该代理失败
+
+### 5 git 层（卡在哪一步）###
+  exit=0
+  0c076af657228ed133c5a6aadc44ee9dee81f020	refs/tags/release-kilted-20250728
+  99a021fa6f7c2b2b76b7af6f7c08248d6a0cc835	refs/tags/release-kilted-20250728^{}
+  0f48a2b9bdea7867bdf2c3c00e28f01a9d0389f9	refs/tags/release-kilted-beta-20250430
+  5cdb74bcf9398583be168b650a0c00498bfec862	refs/tags/release-kilted-beta-20250430^{}
+  acccc26c97f41e0e64084b6e0d184d422514223f	refs/tags/release-kilted-beta2-20250507
+  cbe850ea4ca60cbeddc65cd30d27088fac6ae8d6	refs/tags/release-kilted-beta2-20250507^{}
+  5a7323fd3dfdc66c45c9c2d841a2d412764f5184	refs/tags/release-latest
+  fc6770a33f7fca892d74ebc5d6a8afcbbde5f50e	refs/tags/release-lyrical-20260522
+  5281e3bb364f735ee8ac09a42451fc199f0ade7c	refs/tags/release-lyrical-20260623
+  8b631e62aadee50d564c7388bb24c34da9433b81	refs/tags/release-lyrical-20260807
+  58ff30817ac94ed1f6536b53012e2167c2c51c7d	refs/tags/release-lyrical-beta-20260429
+  7cdbc6ddf916e931a165d975b72bd631d90d0cd2	refs/tags/release-lyrical-beta-20260429-1
+  0f0be89aacc0c819595d9e877661bb1e29b35538	refs/tags/release-lyrical-beta-20260430
+  0be188e4b093c718eafb409e8535f7c47b9a48c7	refs/tags/release-rolling-nightlies
+  3648fb3998eebf42cb7bd376f77e0df49046b491	refs/tags/typed-ast-archives
+
+
+################ RUN 2  2026-11-07 12:16:12 CST ################
+
+### 0 机器/网络环境 ###
+2026-11-07 12:16:12 CST
+lin-Default-string
+  lo 127.0.0.1/8
+  wlp2s0 192.168.1.210/24
+  docker0 172.17.0.1/16
+  Meta 198.18.0.1/30
+--- 默认路由 ---
+default via 192.168.1.50 dev wlp2s0 proto static metric 20600
+--- DNS ---
+nameserver 127.0.0.53
+--- 代理变量 ---
+  (无)
+
+### 1 DNS 解析 ###
+198.18.0.7      github.com
+  gitee 解析 OK
+
+### 3 TCP 443 ###
+  github:443 TCP 可连
+
+### 3b HTTP/TLS 分段耗时 ###
+  github http=200 dns=0.000972s conn=0.001272s tls=0.333967s total=1.395862s
+
+### 4 国内基线对照 ###
+  baidu http=200 total=0.786390s
+curl: (35) error:0A000126:SSL routines::unexpected eof while reading
+  gitee http=000 total=1.253989s        <- 再次失败
+
+### 5 git 层 ###
+  exit=0
+
+
+################ RUN 3  2026-11-07 12:16:42 CST ################
+
+### 0 机器/网络环境 ###
+2026-11-07 12:16:42 CST
+lin-Default-string
+  lo 127.0.0.1/8
+  wlp2s0 192.168.1.210/24
+  docker0 172.17.0.1/16
+  Meta 198.18.0.1/30
+--- 默认路由 ---
+default via 192.168.1.50 dev wlp2s0 proto static metric 20600
+--- DNS ---
+nameserver 127.0.0.53
+--- 代理变量 ---
+  (无)
+
+### 1 DNS 解析 ###
+198.18.0.7      github.com
+  gitee 解析 OK
+
+### 3 TCP 443 ###
+  github:443 TCP 可连
+
+### 3b HTTP/TLS 分段耗时 ###
+  github http=200 dns=0.001007s conn=0.001237s tls=0.465315s total=1.591392s
+
+### 4 国内基线对照 ###
+  baidu http=200 total=0.337009s
+  gitee http=200 total=1.734370s        <- 本次成功（前两次均 SSL eof，不稳定）
+
+### 5 git 层 ###
+  exit=0
+
+
+================================================================
+N97 三次对照（原始记录）
+================================================================
+                     RUN1 12:15:56   RUN2 12:16:12   RUN3 12:16:42
+Meta 代理接口         198.18.0.1/30   198.18.0.1/30   198.18.0.1/30
+github 解析           198.18.0.7      198.18.0.7      198.18.0.7
+github https          http=200 2.16s  http=200 1.40s  http=200 1.59s
+gitee https           SSL eof (000)   SSL eof (000)   http=200 1.73s
+git ls-remote github  exit=0          exit=0          exit=0
+本地 explore_lite     无（前置检查，空输出）
+================================================================

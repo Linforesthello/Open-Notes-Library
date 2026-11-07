@@ -34,6 +34,10 @@ r2_integration/
 │   ├── vscode-workspace-guide.md  VSCode 工作区建立规范（Claude 会话归属；独立 doc 先行，盘点后抽调，09-09 建）
 │   ├── two-car-architecture.md    两车架构与接口（老车平替 + 新车升级 + 共用/分叉，11-06 建）
 │   │
+│   ├── old-car/  ← 老车平替专题（11-06 建）
+│   │   ├── ld06-dual-lidar.md     LD06 单/双雷达执行计划（VM 验收 V1–V6 完成；N97 udev/构建/双实例 10Hz + /scan 规格/crop 实测完成（11-07），供电长跑待测）
+│   │   └── s1-readiness-gap.md    S1 就绪差距清单（23 项缺口分级 P0/P1/P2 + 已完成前置 + 待定夺，11-06 盘点）
+│   │
 │   ├── minimal-loop/        最小闭环执行史（plan + w1/w2/w3-operation.md + Nav2 bringup + 审计数据）
 │   ├── minimal-loop2/       最小闭环 2·现行（plan.md + execution/relog/costmap 执行卡 + explore-plan.md 工作稿）
 │   │
@@ -165,7 +169,7 @@ r2_integration/
 │
 ├── ldlidar_stl_ros2/                  ← LD06 串口 2D 雷达驱动（vendor 上游，S1 老车用）
 │   ├── README_R2.md                  来源/上游 commit/本地改动
-│   ├── launch/ld06.launch.py         LD06 启动（当前 /dev/ttyACM0；S1 前改固定名）
+│   ├── launch/ld06.launch.py         LD06 启动（9 参数化；默认 /dev/r2_ld06_a，udev 固定名）
 │   ├── ldlidar_driver/               串口协议/解析实现
 │   └── rviz2/ldlidar.rviz            LD06 可视化配置
 │
@@ -182,7 +186,8 @@ r2_integration/
     ├── measure_r2_ticks.py           编码器 ticks/圈 测量
     ├── map_chassis.py                CAN ID → 物理位置映射
     ├── calibrate_direction.py        运动方向标定（8组测试）
-    └── check_doc_links.py            文档链接完整性校验器（doc 工程闸门，见 doc-engineering.md）
+    ├── check_doc_links.py            文档链接完整性校验器（doc 工程闸门，见 doc-engineering.md）
+    └── probe_laserscan.py            LaserScan 规格探针（波束数/角分辨率/连续 NaN 段，11-07）
 ```
 
 ---
@@ -228,7 +233,7 @@ Phase 5 气动 + 异常处理 + Robocon 编排   ⏳
 
 部署时（N97 Mini PC / 192.168.1.210）
 ├──  CAN 总线: slcan 转串口 (USB-CAN 适配器) → CanCmd 工具配置
-├──  IMU/G354: ttyACM1（JLink OB Mini 串口直连）
+├──  IMU/G354: /dev/r2_g354（udev 固定名；JLink OB Mini 串口直连）
 ├──  LiDAR:    VLP-16 经交换机转接（设备 IP 10.18.18.6）
 ├──  视觉:     D435 USB 直连（可选 Jetson 协同）
 └──  OS:       Ubuntu 22.04 + ROS2 Humble
@@ -255,7 +260,7 @@ ros2 launch r2_bringup chassis.launch.py publish_tf:=false
 # 3. 启动 IMU（在终端 2 运行；保持静止 3s 等校准完成）
 #    mount_axes:=y_front_x_left_z_down 是 R2 的 G354 出厂轴定义（x左/y前/z下），见 doc/phase0/sensor-mount.md
 source ~/Lin_workspace/r2_integration/install/setup.bash
-ros2 launch g354_imu_driver g354_rviz.launch.py rviz:=false serial_port:=/dev/ttyACM1 mount_axes:=y_front_x_left_z_down
+ros2 launch g354_imu_driver g354_rviz.launch.py rviz:=false serial_port:=/dev/r2_g354 mount_axes:=y_front_x_left_z_down
 
 # 4. 启动 EKF 融合（在终端 3 运行；⚠️ 必须在 IMU 校准完成后启动，重启 IMU 须同时重启 EKF）
 source ~/Lin_workspace/r2_integration/install/setup.bash
